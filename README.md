@@ -1,0 +1,2 @@
+# barber-app
+Aplicatie frizerie
