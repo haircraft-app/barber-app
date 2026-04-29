@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       BLOC 1 - SETĂRI GENERALE
+       Aici pregătim pagina ca să se vadă corect pe telefon și PC.
+    ========================================================= */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #020202;
+      color: #ffffff;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top center, rgba(120, 82, 10, 0.35) 0%, rgba(0,0,0,0.95) 45%, #000 100%);
+    }
+
+    /* =========================================================
+       BLOC 2 - CONTAINER PRINCIPAL
+       Aici ținem toată pagina pe verticală, de sus până jos.
+    ========================================================= */
+    .app {
+      min-height: 100vh;
+      padding: 18px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* =========================================================
+       BLOC 3 - HEADER / TITLU PAGINĂ
+       Aici sunt coroana, titlul BARBER SHOP și subtitlul.
+    ========================================================= */
+    .header {
+      text-align: center;
+    }
+
+    .crown {
+      font-size: 46px;
+      color: #f2c94c;
+      line-height: 1;
+      margin-bottom: 4px;
+      text-shadow: 0 0 14px rgba(242, 201, 76, 0.6);
+    }
+
+    .title {
+      font-size: 50px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #f2c94c;
+      line-height: 1;
+      text-shadow: 
+      0 2px 0 #111,
+      0 0 12px rgba(242,201,76,0.6);
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: #f2c94c;
+    }
+
+    /* =========================================================
+       BLOC 4 - LINIA DECORATIVĂ CU STEA
+       Aici este linia aurie de sub titlu.
+    ========================================================= */
+    .divider {
+      margin: 16px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #f2c94c;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 2px;
+      flex: 1;
+      max-width: 520px;
+      background: linear-gradient(90deg, transparent, #f2c94c);
+      box-shadow: 0 0 10px rgba(242, 201, 76, 0.5);
+    }
+
+    .divider::after {
+      background: linear-gradient(90deg, #f2c94c, transparent);
+    }
+
+    .star {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    /* =========================================================
+       BLOC 5 - TITLURI SECȚIUNI
+       Aici se controlează titlurile: REZUMAT AZI și ACȚIUNI RAPIDE.
+       REZUMAT AZI nu este bold exagerat.
+    ========================================================= */
+    .section-title {
+      font-size: 28px;
+      font-weight: 500;
+      color: #ffffff;
+      letter-spacing: 1px;
+      margin: 0 0 12px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    /* =========================================================
+       BLOC 6 - GRILA CU CELE 4 CĂSUȚE DE SUS
+       Aici sunt cele 4 carduri din REZUMAT AZI.
+    ========================================================= */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .summary-card {
+      min-height: 150px;
+      border-radius: 16px;
+      padding: 18px 16px 14px;
+      background:
+        linear-gradient(145deg, #ffe27a 0%, #d7a72b 55%, #b98208 100%);
+      border: 1px solid #ffd75a;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.65),
+        inset 0 -18px 30px rgba(90,55,0,0.20),
+        0 10px 22px rgba(0,0,0,0.65),
+        0 0 10px rgba(242,201,76,0.28);
+      color: #050505;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* =========================================================
+       BLOC 7 - INTERIOR CĂSUȚE DE SUS
+       Aici controlăm iconul, numărul mare și denumirea cardului.
+       Numerele și textele sunt centrate.
+    ========================================================= */
+    .summary-top {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      column-gap: 12px;
+      align-items: start;
+    }
+
+    .summary-icon {
+      width: 48px;
+      height: 48px;
+      color: #050505;
+      margin-top: 8px;
+    }
+
+    .summary-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      text-align: center;
+    }
+
+    .summary-number {
+      width: 100%;
+      font-size: 56px;
+      line-height: 0.9;
+      font-weight: 900;
+      color: #000000;
+      letter-spacing: -2px;
+      text-align: center;
+    }
+
+    .summary-name {
+      width: 100%;
+      margin-top: 14px;
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 900;
+      color: #000000;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .summary-link {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #000000;
+      margin-top: 14px;
+    }
+
+    .arrow-tip {
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 500;
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================
+       BLOC 8 - BARA URMĂTORUL CLIENT
+       Aici este banda neagră de sub cele 4 căsuțe de sus.
+       Toată informația glisează împreună: săgeți + text + săgeți.
+    ========================================================= */
+    .next-client {
+      min-height: 78px;
+      border-radius: 14px;
+      border: 2px solid #b98b18;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.95), rgba(22,22,22,0.95), rgba(0,0,0,0.95));
+      box-shadow:
+        inset 0 0 24px rgba(242,201,76,0.12),
+        0 0 16px rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .next-track {
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 18px;
+      padding-left: 100%;
+      animation: slideText 12s linear infinite;
+    }
+
+    .chevrons {
+      color: #f2c94c;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -6px;
+      text-shadow: 0 0 12px rgba(242,201,76,0.55);
+    }
+
+    .next-text {
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .next-red {
+      color: #ff3333;
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    .next-name {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    @keyframes slideText {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    /* =========================================================
+       BLOC 9 - GRILA CU ACȚIUNI RAPIDE
+       Aici sunt căsuțele de jos. Nu le-am rafinat acum.
+    ========================================================= */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .quick-card {
+      min-height: 160px;
+      border-radius: 14px;
+      border: 2px solid #b98b18;
+      background:
+        linear-gradient(145deg, #1a1a1a 0%, #070707 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 10px 20px rgba(0,0,0,0.6);
+      padding: 18px 18px;
+      display: grid;
+      grid-template-columns: 54px 1fr 24px;
+      align-items: center;
+      gap: 14px;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .quick-icon {
+      width: 54px;
+      height: 54px;
+      color: #f2c94c;
+      filter: drop-shadow(0 0 5px rgba(242,201,76,0.45));
+    }
+
+    .quick-title {
+      font-size: 21px;
+      line-height: 1.2;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .quick-tip {
+      color: #f2c94c;
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 500;
+    }
+
+    /* ===== TEXT PROGRAMARE NOUA ===== */
+    .quick-main {
+      font-size: 32px;
+      font-weight: 900;
+      color: #f2c94c;
+      letter-spacing: 1px;
+    }
+
+    .quick-sub {
+      font-size: 21px;
+      color: #ffffff;
+      font-weight: 400;
+      margin-top: 10px;
+    }
+
+    /* ===== ALINIERE TEXT ACTIUNI RAPIDE ===== */
+    .quick-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* =========================================================
+       BLOC 10 - BUTON HOME DE JOS
+       Aici este bara de jos cu HOME.
+    ========================================================= */
+    .footer-home {
+      margin-top: auto;
+      min-height: 72px;
+      border-radius: 14px;
+      border: 1px solid #9f7814;
+      background: linear-gradient(145deg, #171717, #050505);
+      color: #f2c94c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-size: 22px;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .home-icon {
+      width: 42px;
+      height: 42px;
+      color: #f2c94c;
+    }
+
+    /* =========================================================
+       BLOC 11 - AJUSTĂRI PENTRU TELEFON
+       Aici micșorăm elementele ca să încapă pe ecran mic.
+    ========================================================= */
+    @media (max-width: 700px) {
+      .app {
+        padding: 12px 8px 10px;
+        gap: 12px;
+      }
+
+      .crown {
+        font-size: 34px;
+      }
+
+      .title {
+        font-size: 30px;
+        letter-spacing: 2px;
+      }
+
+      .subtitle {
+        font-size: 12px;
+        letter-spacing: 2px;
+      }
+
+      .divider {
+        margin-top: 10px;
+      }
+
+      .star {
+        font-size: 22px;
+      }
+
+      .section-title {
+        font-size: 20px;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .summary-grid {
+        gap: 6px;
+      }
+
+      .summary-card {
+        min-height: 118px;
+        border-radius: 10px;
+        padding: 10px 6px 8px;
+      }
+
+      .summary-top {
+        grid-template-columns: 28px 1fr;
+        column-gap: 5px;
+      }
+
+      .summary-icon {
+        width: 28px;
+        height: 28px;
+        margin-top: 8px;
+      }
+
+      .summary-number {
+        font-size: 36px;
+        letter-spacing: -1px;
+      }
+
+      .summary-name {
+        margin-top: 10px;
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .summary-link {
+        font-size: 8px;
+        gap: 5px;
+        margin-top: 8px;
+      }
+
+      .arrow-tip {
+        font-size: 22px;
+      }
+
+      .next-client {
+        min-height: 56px;
+      }
+
+      .next-track {
+        gap: 12px;
+      }
+
+      .chevrons {
+        font-size: 24px;
+        letter-spacing: -5px;
+      }
+
+      .next-red,
+      .next-name {
+        font-size: 25px;
+        font-weight: 500;
+      }
+
+      .quick-grid {
+        gap: 6px;
+      }
+
+      .quick-card {
+        min-height: 100px;
+        border-radius: 10px;
+        padding: 10px 8px;
+        grid-template-columns: 28px 1fr 14px;
+        gap: 8px;
+      }
+
+      .quick-icon {
+        width: 28px;
+        height: 28px;
+      }
+
+      .quick-title {
+        font-size: 11px;
+      }
+
+      .quick-tip {
+        font-size: 22px;
+      }
+
+      .footer-home {
+        min-height: 52px;
+        font-size: 15px;
+      }
+
+      .home-icon {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- =========================================================
+       BLOC HTML 1 - PAGINA PRINCIPALĂ
+       Aici începe tot conținutul vizibil al paginii.
+  ========================================================= -->
+  <div class="app">
+
+    <!-- =========================================================
+         BLOC HTML 2 - HEADER
+         Aici sunt coroana, titlul și subtitlul.
+    ========================================================= -->
+    <div class="header">
+      <div class="crown"></div>
+      <div class="title">HAIR CRAFT</div>
+      <div class="subtitle">The Art of Men's Hair</div>
+      <div class="divider"><span class="star">★</span></div>
+    </div>
+
+    <!-- =========================================================
+         BLOC HTML 3 - REZUMAT AZI
+         Aici sunt cele 4 căsuțe de sus.
+    ========================================================= -->
+    <div>
+      <h2 class="section-title">REZUMAT AZI</h2>
+
+      <div class="summary-grid">
+
+        <!-- Card 1 - Programări azi -->
+        <div class="summary-card">
+          <div class="summary-top">
+            <svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="8" y1="13" x2="8" y2="13"></line>
+              <line x1="12" y1="13" x2="12" y2="13"></line>
+              <line x1="16" y1="13" x2="16" y2="13"></line>
+              <line x1="8" y1="17" x2="8" y2="17"></line>
+              <line x1="12" y1="17" x2="12" y2="17"></line>
+              <line x1="16" y1="17" x2="16" y2="17"></line>
+            </svg>
+            <div class="summary-info">
+              <div class="summary-number">12</div>
+              <div class="summary-name">Programări<br>azi</div>
+            </div>
+          </div>
+          <div class="summary-link">Vezi detalii <span class="arrow-tip">›</span></div>
+        </div>
+
+        <!-- Card 2 - Reminder de trimis -->
+        <div class="summary-card">
+          <div class="summary-top">
+            <svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M13.7 21a2 2 0 0 1-3.4 0"></path>
+            </svg>
+            <div class="summary-info">
+              <div class="summary-number">5</div>
+              <div class="summary-name">Reminder<br>de trimis</div>
+            </div>
+          </div>
+          <div class="summary-link">Vezi detalii <span class="arrow-tip">›</span></div>
+        </div>
+
+        <!-- Card 3 - Clienți înregistrați -->
+        <div class="summary-card">
+          <div class="summary-top">
+            <svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9.5" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <div class="summary-info">
+              <div class="summary-number">128</div>
+              <div class="summary-name">Clienți<br>înregistrați</div>
+            </div>
+          </div>
+          <div class="summary-link">Vezi detalii <span class="arrow-tip">›</span></div>
+        </div>
+
+        <!-- Card 4 - Statistici -->
+        <div class="summary-card">
+          <div class="summary-top">
+            <svg class="summary-icon" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="4" y="12" width="4" height="8" rx="1"></rect>
+              <rect x="10" y="8" width="4" height="12" rx="1"></rect>
+              <rect x="16" y="4" width="4" height="16" rx="1"></rect>
+            </svg>
+            <div class="summary-info">
+              <div class="summary-number">24</div>
+              <div class="summary-name">Statistici</div>
+            </div>
+          </div>
+          <div class="summary-link">Vezi detalii <span class="arrow-tip">›</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- =========================================================
+         BLOC HTML 4 - BARĂ URMĂTORUL CLIENT
+         Aici este textul care glisează de la dreapta la stânga.
+         Săgețile și textul sunt în același grup, ca să se miște împreună.
+    ========================================================= -->
+    <div class="next-client">
+      <div class="next-track">
+        <div class="chevrons">»»»</div>
+
+        <div class="next-text">
+          <span class="next-red">Următorul client:</span>
+          <span class="next-name">azi 10:30 - Ionuț Popescu</span>
+        </div>
+
+        <div class="chevrons">»»»</div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         BLOC HTML 5 - ACȚIUNI RAPIDE
+         Aici sunt căsuțele de jos. Momentan nu le rafinăm.
+    ========================================================= -->
+    <div>
+      <h2 class="section-title">ACȚIUNI RAPIDE</h2>
+
+      <div class="quick-grid">
+
+        <div class="quick-card" onclick="location.href='programare_pg1.html'">
+          <svg class="quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="12" y1="11" x2="12" y2="17"></line>
+            <line x1="9" y1="14" x2="15" y2="14"></line>
+          </svg>
+          <div class="quick-text">
+          <div class="quick-main">PROGRAMARE NOUA</div>
+          <div class="quick-sub">Creeaza rapid o programare</div>
+          </div>
+
+          <div class="quick-tip">›</div>
+        </div>
+
+        <div class="quick-card">
+        <svg class="quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+         <circle cx="12" cy="12" r="9"></circle>
+        <polyline points="12 7 12 12 16 15"></polyline>
+        </svg>
+
+        <div class="quick-text">
+        <div class="quick-main">ORAR</div>
+        <div class="quick-sub">Vezi rapid disponibilitati</div>
+        </div>
+
+        <div class="quick-tip">›</div>
+        </div>
+
+        <div class="quick-card" onclick="location.href='programari.html'">
+          <svg class="quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="8" y1="13" x2="8" y2="13"></line>
+            <line x1="12" y1="13" x2="12" y2="13"></line>
+            <line x1="16" y1="13" x2="16" y2="13"></line>
+          </svg>
+          <div class="quick-text">
+          <div class="quick-main">PROGRAMARI</div>
+          <div class="quick-sub">Vezi programari pe zile</div>
+          </div>
+          <div class="quick-tip">›</div>
+        </div>
+
+        <div class="quick-card" onclick="location.href='clienti.html'">
+          <svg class="quick-icon" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="8" cy="8" r="4"></circle>
+            <circle cx="17" cy="9" r="3"></circle>
+            <path d="M2 21v-2a6 6 0 0 1 12 0v2z"></path>
+            <path d="M14 21v-2a5 5 0 0 1 8 0v2z"></path>
+          </svg>
+          <div class="quick-text">
+          <div class="quick-main">CLIENTI</div>
+          <div class="quick-sub">Managementul clientilor</div>
+          </div>
+          <div class="quick-tip">›</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- =========================================================
+         BLOC HTML 6 - FOOTER HOME
+         Aici este butonul HOME de jos.
+    ========================================================= -->
+    <div class="footer-home">
+      <svg class="home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 11L12 3l9 8"></path>
+        <path d="M5 10v11h14V10"></path>
+        <path d="M9 21v-6h6v6"></path>
+      </svg>
+      HOME
+    </div>
+
+  </div>
+</body>
+</html>
