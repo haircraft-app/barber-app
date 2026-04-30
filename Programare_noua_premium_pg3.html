@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<!--
+VERSIUNE: v1.0 FINAL GITHUB
+DATA: 2026-04-30
+MODIFICARI:
+- eliminat ore blocate din cod
+- blocare doar pentru ziua curenta
+- fix subtitle 28px
+- linkuri GitHub
+-->
+
 <html>
 <head>
   <base target="_top">
@@ -45,7 +55,7 @@
 
     .subtitle {
       margin-top: 20px;
-      font-size: 50px;
+      font-size: 28px;
       color: white;
       font-weight: normal;
     }
@@ -553,6 +563,8 @@
     ];
 
     var ocupatePeZile = [
+      [],[],[],[],[],[],[]
+//
       [0, 1, 8, 9, 16, 17, 20, 21],
       [0, 1, 9, 10, 17, 22, 23],
       [2, 3, 12, 13, 14, 25],
@@ -626,6 +638,24 @@
       sloturi.forEach(function(slot, index) {
         var div = document.createElement('div');
         div.className = 'slot';
+
+const azi = new Date();
+const ziCurenta = new Date();
+ziCurenta.setHours(0,0,0,0);
+
+const ziVerificata = new Date();
+ziVerificata.setDate(azi.getDate() + ziSelectataIndex);
+ziVerificata.setHours(0,0,0,0);
+
+if (ziVerificata.getTime() === ziCurenta.getTime()) {
+  const oraCurenta = azi.getHours() * 60 + azi.getMinutes();
+  const oraSlot = 8 * 60 + (index * 30);
+
+  if (oraSlot < oraCurenta) {
+    div.classList.add('occupied');
+  }
+}
+
 
         if (ocupate.indexOf(index) !== -1) {
           div.classList.add('occupied');
@@ -803,19 +833,19 @@
     }
 
     function changeDuration() {
-      window.top.location.href = 'https://script.google.com/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/exec?page=Programare_noua_premium_pg2&_nav=1';
+      window.top.location.href = 'https://mihaiflorescu2017-droid.github.io/barber-app/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/execProgramare_noua_premium_pg2.html';
     }
 
     function goBack() {
-      window.top.location.href = 'https://script.google.com/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/exec?page=Programare_noua_premium_pg2&_nav=1';
+      window.top.location.href = 'https://mihaiflorescu2017-droid.github.io/barber-app/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/execProgramare_noua_premium_pg2.html';
     }
 
     function goHome() {
-      window.top.location.href = 'https://script.google.com/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/exec?page=index_premium&_nav=1';
+      window.top.location.href = 'https://mihaiflorescu2017-droid.github.io/barber-app/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/execindex_premium.html';
     }
 
     function nextStep() {
-      window.top.location.href = 'https://script.google.com/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/exec?page=Programare_noua_premium_pg4&_nav=1';
+      window.top.location.href = 'https://mihaiflorescu2017-droid.github.io/barber-app/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/execProgramare_noua_premium_pg4.html';
     }
 
     init();
