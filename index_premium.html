@@ -546,7 +546,7 @@
     ========================================================= -->
     <div class="header">
       <div class="logo-box">
-        <div id="logoMount"></div>
+        
       </div>
     </div>
 
@@ -764,16 +764,6 @@
   </script>
 
   </div>
-
-  <script>
-    fetch('logo.html')
-      .then(function(r) { return r.text(); })
-      .then(function(html) {
-        var mount = document.getElementById('logoMount');
-        if (mount) mount.innerHTML = html;
-      })
-      .catch(function() {});
-  </script>
 
   <script>
     if ('serviceWorker' in navigator) {
