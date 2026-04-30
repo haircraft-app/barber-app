@@ -47,7 +47,7 @@
 
     /* =========================================================
        BLOC 3 - HEADER / TITLU PAGINĂ
-       Aici sunt coroana, titlul BARBER SHOP și subtitlul.
+       Aici este sigla principală.
     ========================================================= */
     .header {
       text-align: center;
@@ -58,44 +58,12 @@
       margin-bottom: 4px;
     }
 
-    .text-logo {
+    .logo-box img {
+      width: 300px;
+      max-width: 82%;
+      height: auto;
       display: inline-block;
-      padding: 14px 24px 10px;
-      border: 3px solid #f2c94c;
-      background: transparent;
-      color: #f2c94c;
-      box-shadow: 0 0 18px rgba(242,201,76,0.28);
-    }
-
-    .logo-lines {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .logo-lines span {
-      width: 52px;
-      height: 2px;
-      background: #f2c94c;
-      box-shadow: 0 0 8px rgba(242,201,76,0.6);
-    }
-
-    .logo-lines strong {
-      font-size: 46px;
-      line-height: 0.9;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: #f2c94c;
-      text-shadow: 0 0 12px rgba(242,201,76,0.45);
-    }
-
-    .logo-sub {
-      margin-top: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #f2c94c;
-      letter-spacing: 0.4px;
+      filter: drop-shadow(0 0 14px rgba(242,201,76,0.30));
     }
 
     .crown {
@@ -452,53 +420,12 @@
 
       .header { flex: 0 0 auto; }
 
-      .text-logo {
-        padding: 8px 15px 6px;
-        border-width: 2px;
-        box-shadow: 0 0 16px rgba(242,201,76,0.28);
-      }
-
-      .logo-lines { gap: 7px; }
-      .logo-lines span { width: 30px; height: 1px; }
-      .logo-lines strong { font-size: 24px; letter-spacing: 0.5px; }
-      .logo-sub { margin-top: 3px; font-size: 7px; }
-
-      .divider, .crown, .title, .subtitle { display: none; }
-
-      .section-title {
-        font-size: 13px;
-        margin: 0 0 5px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-      }
-
-      .summary-grid { gap: 5px; }
-      .summary-card { min-height: 74px; border-radius: 9px; padding: 6px 4px 5px; }
-      .summary-top { grid-template-columns: 18px 1fr; column-gap: 3px; }
-      .summary-icon { width: 18px; height: 18px; margin-top: 5px; }
-      .summary-number { font-size: 24px; letter-spacing: -1px; }
-      .summary-name { margin-top: 3px; font-size: 7px; line-height: 1.15; }
-      .summary-link { font-size: 6px; gap: 3px; margin-top: 3px; }
-      .arrow-tip { font-size: 14px; }
-
-      .next-client { min-height: 32px; border-radius: 9px; }
-      .next-track { gap: 8px; }
-      .chevrons { font-size: 15px; letter-spacing: -3px; }
-      .next-red, .next-name { font-size: 13px; font-weight: 500; }
-
-      .quick-grid { gap: 5px; }
-      .quick-card {
-        min-height: 55px;
-        border-radius: 9px;
-        padding: 6px 7px;
-        grid-template-columns: 23px 1fr 12px;
-        gap: 7px;
-      }
-      .quick-icon { width: 23px; height: 23px; }
-      .quick-main { font-size: 14px; line-height: 1.05; }
-      .quick-sub { font-size: 9px; margin-top: 2px; }
-      .quick-tip { font-size: 18px; }
-      .footer-home { display: none; }
+      .logo-box img {
+      width: 300px;
+      max-width: 82%;
+      height: auto;
+      display: inline-block;
+      filter: drop-shadow(0 0 14px rgba(242,201,76,0.30));
     }
   </style>
 </head>
@@ -516,10 +443,7 @@
     ========================================================= -->
     <div class="header">
       <div class="logo-box">
-        <div class="text-logo" aria-label="HAIR CRAFT">
-          <div class="logo-lines"><span></span><strong>HAIR CRAFT</strong><span></span></div>
-          <div class="logo-sub">The Art of Men's Hair</div>
-        </div>
+        <img src="logo.svg?v=1335" alt="Logo">
       </div>
     </div>
 
