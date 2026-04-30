@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <!--
-VERSIUNE: v1.0 FINAL GITHUB
+VERSIUNE: PG3_GITHUB_FIX_v2
 DATA: 2026-04-30
 MODIFICARI:
-- eliminat ore blocate din cod
-- blocare doar pentru ziua curenta
-- fix subtitle 28px
-- linkuri GitHub
+- pagina redimensionata pentru telefon/PWA
+- eliminate orele blocate manual din cod
+- blocare automata doar pentru orele trecute din ziua curenta
+- selectie verde daca intervalul este liber
+- selectie rosie daca intervalul contine ora blocata
+- linkuri GitHub pentru BACK / HOME / NEXT / SCHIMBA
 -->
-
 <html>
 <head>
   <base target="_top">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
   <style>
     * { box-sizing: border-box; }
@@ -55,7 +56,7 @@ MODIFICARI:
 
     .subtitle {
       margin-top: 20px;
-      font-size: 28px;
+      font-size: 50px;
       color: white;
       font-weight: normal;
     }
@@ -464,6 +465,169 @@ MODIFICARI:
         font-size: 34px;
       }
     }
+    /* =========================================================
+       FIX TELEFON / PWA - REDIMENSIONARE PAGINA
+       Aici micsoram pagina ca sa incapa corect pe telefon.
+    ========================================================= */
+    @media (max-width: 520px) {
+      .page {
+        min-height: 100svh;
+        padding: 12px 10px 10px;
+        gap: 7px;
+      }
+
+      .header {
+        margin-bottom: 8px;
+      }
+
+      .title {
+        font-size: 24px !important;
+      }
+
+      .subtitle {
+        margin-top: 6px !important;
+        font-size: 28px !important;
+      }
+
+      .nav-back {
+        top: -4px;
+        gap: 4px;
+      }
+
+      .arrow {
+        font-size: 42px !important;
+      }
+
+      .back-text {
+        font-size: 14px !important;
+        margin-top: 10px;
+      }
+
+      .steps {
+        margin: 6px 0 8px;
+      }
+
+      .step {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+        border-width: 2px;
+      }
+
+      .line {
+        width: 22px;
+        height: 2px;
+      }
+
+      .info-card {
+        padding: 10px 12px;
+        border-radius: 14px;
+        gap: 10px;
+      }
+
+      .icon-circle {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 22px !important;
+      }
+
+      .info-label {
+        font-size: 14px !important;
+        margin-bottom: 3px;
+      }
+
+      .info-value {
+        font-size: 18px !important;
+      }
+
+      .change-btn {
+        font-size: 15px !important;
+        padding: 9px 12px !important;
+        border-radius: 12px;
+      }
+
+      .section-title,
+      .availability-title {
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      .days-row {
+        gap: 4px;
+      }
+
+      .day-card {
+        min-height: 53px !important;
+        border-radius: 9px;
+      }
+
+      .day-name {
+        font-size: 12px !important;
+        margin-bottom: 2px;
+      }
+
+      .day-number {
+        font-size: 17px !important;
+      }
+
+      .day-month {
+        margin-top: 2px;
+        font-size: 12px !important;
+      }
+
+      .slots-grid {
+        gap: 4px;
+      }
+
+      .slot {
+        height: 47px !important;
+        border-radius: 10px;
+        font-size: 19px !important;
+      }
+
+      .message-box {
+        min-height: 60px !important;
+        padding: 9px 10px;
+        border-radius: 12px;
+        gap: 8px;
+      }
+
+      .message-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+      }
+
+      .message-main {
+        font-size: 18px !important;
+        line-height: 1.05;
+      }
+
+      .confirm-btn {
+        padding: 10px 12px;
+        border-radius: 13px;
+        gap: 10px;
+      }
+
+      .confirm-icon {
+        font-size: 20px;
+      }
+
+      .confirm-title {
+        font-size: 15px;
+      }
+
+      .bottom-bar {
+        gap: 10px;
+      }
+
+      .box-btn {
+        height: 48px;
+        border-radius: 13px;
+        font-size: 18px;
+      }
+    }
+
   </style>
 </head>
 
@@ -562,17 +726,7 @@ MODIFICARI:
       '20:00', '20:30', '21:00', '21:30'
     ];
 
-    var ocupatePeZile = [
-      [],[],[],[],[],[],[]
-//
-      [0, 1, 8, 9, 16, 17, 20, 21],
-      [0, 1, 9, 10, 17, 22, 23],
-      [2, 3, 12, 13, 14, 25],
-      [5, 6, 7, 18, 19, 24],
-      [0, 1, 2, 15, 16, 27],
-      [10, 11, 12, 13, 14, 15],
-      [0, 1, 2, 3, 4, 5]
-    ];
+    var ocupatePeZile = [[], [], [], [], [], [], []];
 
     function init() {
       try { client = JSON.parse(localStorage.getItem('programare_client') || 'null'); } catch(e) {}
@@ -606,7 +760,8 @@ MODIFICARI:
           nume: zileNume[ziIndex],
           nr: nr,
           luna: luni[lunaIndex],
-          titlu: zileTitlu[ziIndex] + ', ' + nr + ' ' + luniTitlu[lunaIndex]
+          titlu: zileTitlu[ziIndex] + ', ' + nr + ' ' + luniTitlu[lunaIndex],
+          dataIso: formatDateIso(d)
         });
       }
     }
@@ -633,41 +788,25 @@ MODIFICARI:
       var grid = document.getElementById('slotsGrid');
       grid.innerHTML = '';
 
-      var ocupate = ocupatePeZile[ziSelectataIndex];
+      var ocupate = getOcupatePentruZi();
 
       sloturi.forEach(function(slot, index) {
         var div = document.createElement('div');
         div.className = 'slot';
 
-const azi = new Date();
-const ziCurenta = new Date();
-ziCurenta.setHours(0,0,0,0);
-
-const ziVerificata = new Date();
-ziVerificata.setDate(azi.getDate() + ziSelectataIndex);
-ziVerificata.setHours(0,0,0,0);
-
-if (ziVerificata.getTime() === ziCurenta.getTime()) {
-  const oraCurenta = azi.getHours() * 60 + azi.getMinutes();
-  const oraSlot = 8 * 60 + (index * 30);
-
-  if (oraSlot < oraCurenta) {
-    div.classList.add('occupied');
-  }
-}
-
-
         if (ocupate.indexOf(index) !== -1) {
           div.classList.add('occupied');
         }
 
-        if (esteInInterval(index)) {
-          if (ocupate.indexOf(index) !== -1) {
-            div.classList.add('conflict'); // roșu
+        if (confirmata && esteInInterval(index)) {
+          div.classList.add('confirmed');
+        } else if (!confirmata && esteInInterval(index)) {
+          if (intervalAreOcupate()) {
+            div.classList.add('conflict');
           } else {
-           div.classList.add('selected-range'); // verde
+            div.classList.add('selected-range');
           }
-       }
+        }
 
         div.textContent = slot;
         div.onclick = function() { selectSlot(index); };
@@ -714,19 +853,52 @@ if (ziVerificata.getTime() === ziCurenta.getTime()) {
     function intervalEsteLiber() {
       if (oraSelectataIndex === null) return false;
 
-      var ocupate = ocupatePeZile[ziSelectataIndex];
-
       if (oraSelectataIndex + sloturiNecesare > sloturi.length) {
         return false;
       }
 
+      return !intervalAreOcupate();
+    }
+
+    function intervalAreOcupate() {
+      if (oraSelectataIndex === null) return false;
+
+      var ocupate = getOcupatePentruZi();
+
       for (var i = 0; i < sloturiNecesare; i++) {
         if (ocupate.indexOf(oraSelectataIndex + i) !== -1) {
-          return false;
+          return true;
         }
       }
 
-      return true;
+      return false;
+    }
+
+    function getOcupatePentruZi() {
+      var ocupate = ocupatePeZile[ziSelectataIndex].slice();
+
+      if (ziSelectataIndex === 0) {
+        var acum = new Date();
+        var minuteCurente = acum.getHours() * 60 + acum.getMinutes();
+
+        sloturi.forEach(function(slot, index) {
+          var parti = slot.split(':');
+          var minuteSlot = Number(parti[0]) * 60 + Number(parti[1]);
+
+          if (minuteSlot < minuteCurente) {
+            ocupate.push(index);
+          }
+        });
+      }
+
+      return ocupate;
+    }
+
+    function formatDateIso(d) {
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      var zi = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + zi;
     }
 
     function getEndTime(startIndex) {
@@ -831,7 +1003,7 @@ if (ziVerificata.getTime() === ziCurenta.getTime()) {
     }
 
     function changeDuration() {
-      window.top.location.href = 'https://mihaiflorescu2017-droid.github.io/barber-app/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/execProgramare_noua_premium_pg2.html';
+      window.location.href = 'Programare_noua_premium_pg2.html';
     }
 
     function goBack() {
