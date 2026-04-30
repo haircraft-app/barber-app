@@ -661,15 +661,13 @@ if (ziVerificata.getTime() === ziCurenta.getTime()) {
           div.classList.add('occupied');
         }
 
-        if (confirmata && esteInInterval(index)) {
-          div.classList.add('confirmed');
-        } else if (!confirmata && esteInInterval(index)) {
+        if (esteInInterval(index)) {
           if (!intervalEsteLiber()) {
-            div.classList.add('conflict');
+            div.classList.add('conflict'); // roșu
           } else {
-            div.classList.add('selected-range');
+           div.classList.add('selected-range'); // verde
           }
-        }
+       }
 
         div.textContent = slot;
         div.onclick = function() { selectSlot(index); };
