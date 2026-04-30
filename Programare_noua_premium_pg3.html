@@ -662,7 +662,7 @@ if (ziVerificata.getTime() === ziCurenta.getTime()) {
         }
 
         if (esteInInterval(index)) {
-          if (!intervalEsteLiber()) {
+          if (ocupate.indexOf(index) !== -1) {
             div.classList.add('conflict'); // roșu
           } else {
            div.classList.add('selected-range'); // verde
