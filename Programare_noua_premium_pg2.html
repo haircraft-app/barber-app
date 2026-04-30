@@ -374,6 +374,165 @@
 
 
     }
+  
+    /* =========================================================
+       FIX GITHUB PWA TELEFON
+       Micșorează pagina pentru ecran de telefon în aplicația instalată.
+    ========================================================= */
+    @media (max-width: 520px) {
+      html, body {
+        width: 100%;
+        min-height: 100%;
+        overflow-x: hidden;
+      }
+
+      .page {
+        min-height: 100svh;
+        padding: 12px 10px 12px;
+        gap: 10px;
+      }
+
+      .header {
+        margin-bottom: 10px;
+        padding-top: 4px;
+      }
+
+      .title {
+        font-size: 24px !important;
+      }
+
+      .subtitle {
+        margin-top: 6px;
+        font-size: 28px !important;
+      }
+
+      .nav-back {
+        left: 0;
+        top: -4px;
+        gap: 3px;
+      }
+
+      .arrow {
+        font-size: 42px !important;
+      }
+
+      .back-text {
+        font-size: 14px !important;
+        margin-top: 10px;
+      }
+
+      .steps {
+        margin: 8px 0 10px;
+      }
+
+      .step {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+        border-width: 2px;
+      }
+
+      .line {
+        width: 22px;
+        height: 2px;
+      }
+
+      .bottom-bar {
+        gap: 10px;
+      }
+
+      .box-btn {
+        height: 56px;
+        border-radius: 14px;
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .client-card {
+        padding: 12px;
+        border-radius: 14px;
+      }
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+        font-size: 24px;
+      }
+
+      .label {
+        font-size: 12px;
+      }
+
+      .client-name {
+        font-size: 19px;
+      }
+
+      .phone {
+        display: none;
+      }
+
+      .section-title h2 {
+        font-size: 19px;
+      }
+
+      .clock-small {
+        width: 34px;
+        height: 34px;
+        font-size: 18px;
+      }
+
+      .duration-grid {
+        gap: 10px;
+      }
+
+      .duration-card {
+        min-height: 104px;
+        border-radius: 16px;
+      }
+
+      .duration-icon {
+        font-size: 32px;
+        margin-bottom: 6px;
+      }
+
+      .duration-main {
+        font-size: 22px;
+      }
+
+      .duration-sub {
+        font-size: 14px;
+      }
+
+      .check {
+        width: 28px;
+        height: 28px;
+        right: 10px;
+        top: 10px;
+        font-size: 20px;
+      }
+
+      .selected-box {
+        padding: 12px;
+        border-radius: 14px;
+        gap: 10px;
+      }
+
+      .calendar-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 22px;
+      }
+
+      .selected-label {
+        font-size: 16px;
+      }
+
+      .selected-value {
+        font-size: 26px;
+      }
+    }
+
   </style>
 </head>
 
@@ -502,16 +661,16 @@
     }
 
     function goBack() {
-      window.top.location.href = 'https://script.google.com/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/exec?page=Programare_noua_premium_pg1&_nav=1';
+      window.location.href = 'Programare_noua_premium_pg1.html';
     }
 
     function goHome() {
-      window.top.location.href = 'https://script.google.com/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/exec?page=index_premium&_nav=1';
+      window.location.href = 'index_premium.html';
     }
 
     function nextStep() {
       localStorage.setItem('programare_durata', String(durataSelectata));
-      window.top.location.href = 'https://script.google.com/macros/s/AKfycby2tjD2CatxPD8xtCS7eQle7_DxRzmvPITcsLwkEHfMvHilSy-jYx9fNPOcc_5D86dXDw/exec?page=Programare_noua_premium_pg3&_nav=1';
+      window.location.href = 'Programare_noua_premium_pg3.html';
     }
 
     init();
