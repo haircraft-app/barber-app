@@ -530,6 +530,168 @@
         height: 28px;
       }
     }
+  
+    /* =========================================================
+       BLOC 12 - FIX GITHUB PWA TELEFON
+       Compactează pagina principală pe ecran de telefon.
+       Nu schimbă structura, doar dimensiunile.
+    ========================================================= */
+    @media (max-width: 520px) {
+      html, body {
+        width: 100%;
+        min-height: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        min-height: 100svh;
+      }
+
+      .app {
+        min-height: 100svh;
+        padding: 8px 7px 8px;
+        gap: 8px;
+      }
+
+      .header {
+        margin: 0;
+        padding: 0;
+      }
+
+      .logo-box {
+        margin-bottom: 4px;
+        min-height: 42px;
+      }
+
+      .logo-box svg {
+        width: 86%;
+        max-width: 260px;
+        height: auto;
+      }
+
+      #logoMount:empty::before {
+        content: "BARBER SHOP";
+        display: inline-block;
+        color: #f2c94c;
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-shadow: 0 0 12px rgba(242,201,76,0.55);
+        padding-top: 8px;
+      }
+
+      .section-title {
+        font-size: 15px;
+        margin: 0 0 5px;
+        letter-spacing: 0.5px;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+      }
+
+      .summary-card {
+        min-height: 70px;
+        border-radius: 8px;
+        padding: 6px 3px 4px;
+      }
+
+      .summary-top {
+        grid-template-columns: 18px 1fr;
+        column-gap: 2px;
+      }
+
+      .summary-icon {
+        width: 17px;
+        height: 17px;
+        margin-top: 2px;
+      }
+
+      .summary-number {
+        font-size: 22px;
+        letter-spacing: -1px;
+      }
+
+      .summary-name {
+        margin-top: 4px;
+        font-size: 8px;
+        line-height: 1.15;
+      }
+
+      .summary-link {
+        font-size: 6px;
+        gap: 2px;
+        margin-top: 3px;
+      }
+
+      .arrow-tip {
+        font-size: 13px;
+      }
+
+      .next-client {
+        min-height: 34px;
+        border-radius: 8px;
+      }
+
+      .next-track {
+        gap: 8px;
+      }
+
+      .chevrons {
+        font-size: 15px;
+        letter-spacing: -3px;
+      }
+
+      .next-red,
+      .next-name {
+        font-size: 12px;
+      }
+
+      .quick-grid {
+        gap: 5px;
+      }
+
+      .quick-card {
+        min-height: 58px;
+        border-radius: 9px;
+        padding: 6px 8px;
+        grid-template-columns: 26px 1fr 14px;
+        gap: 8px;
+      }
+
+      .quick-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .quick-main {
+        font-size: 15px;
+        letter-spacing: 0.3px;
+      }
+
+      .quick-sub {
+        font-size: 10px;
+        margin-top: 2px;
+      }
+
+      .quick-tip {
+        font-size: 18px;
+      }
+
+      .footer-home {
+        min-height: 36px;
+        border-radius: 9px;
+        font-size: 12px;
+        gap: 8px;
+      }
+
+      .home-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
   </style>
 </head>
 
@@ -546,7 +708,7 @@
     ========================================================= -->
     <div class="header">
       <div class="logo-box">
-        
+        <div id="logoMount"></div>
       </div>
     </div>
 
@@ -764,6 +926,16 @@
   </script>
 
   </div>
+
+  <script>
+    fetch('logo.html')
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        var mount = document.getElementById('logoMount');
+        if (mount) mount.innerHTML = html;
+      })
+      .catch(function() {});
+  </script>
 
   <script>
     if ('serviceWorker' in navigator) {
