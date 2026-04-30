@@ -1,7 +1,7 @@
 {
   "name": "Barber App",
   "short_name": "Barber",
-  "start_url": "./index.html",
+  "start_url": "/barber-app/index.html",
   "display": "standalone",
   "background_color": "#020202",
   "theme_color": "#020202",
