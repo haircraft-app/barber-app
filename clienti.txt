@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(218, 170, 85, 0.16), transparent 32%),
+        linear-gradient(160deg, #06111c 0%, #0b1724 45%, #03070d 100%);
+      color: #fff;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 22px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .top {
+      position: relative;
+      text-align: center;
+      padding-top: 4px;
+    }
+
+    .back {
+      position: absolute;
+      left: 10px;
+      top: 120px;
+      font-size: 25px;
+      font-weight: bold;
+      color: #f2c94c;
+      cursor: pointer;
+    
+    }
+
+    .add-top {
+      position: absolute;
+      right: 0;
+      top: -2px;
+      font-size: 44px;
+      color: #f3c363;
+      cursor: pointer;
+      font-weight: 300;
+    }
+
+  .title {
+    font-size: 70px;
+   font-weight: 900;
+   color: #f2c94c;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .search-card,
+    .client-card,
+    .detail-card,
+    .form-card {
+      border: 2px solid rgba(244,195,99,0.70);
+      border-radius: 18px;
+      background: rgba(12, 24, 38, 0.88);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.28);
+    }
+
+    .search-card {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 104px;
+    }
+
+    .search-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #fff;
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .search-input::placeholder {
+      color: rgba(255,255,255,0.55);
+    }
+
+    .client-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .client-card {
+      padding: 20px 18px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 108px;
+      cursor: pointer;
+    }
+
+    .icon-circle {
+      width: 60px;
+      height: 60px;
+      min-width: 60px;
+      border-radius: 50%;
+      background: #050505;
+      border: 3px solid #f4c363;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-circle svg {
+      width: 31px;
+      height: 31px;
+      fill: #f4c363;
+    }
+
+    .icon-circle svg line,
+    .icon-circle svg path {
+      stroke: #f4c363;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .client-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .client-name {
+      font-size: 36px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 9px;
+    }
+
+    .client-phone {
+      font-size: 27px;
+      color: rgba(255,255,255,0.80);
+      font-weight: 900;
+    }
+
+    .arrow {
+      color: #f4c363;
+      font-size: 38px;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .detail-card {
+      padding: 30px 18px;
+      text-align: center;
+    }
+
+    .big-icon {
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      background: #050505;
+      border: 4px solid #f4c363;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .big-icon svg {
+      width: 64px;
+      height: 64px;
+      fill: #f4c363;
+    }
+
+    .big-icon svg path {
+      stroke: #f4c363;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .detail-name {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .detail-info {
+      font-size: 23px;
+      color: rgba(255,255,255,0.78);
+      font-weight: 800;
+      margin-top: 8px;
+      word-break: break-word;
+    }
+
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .action-btn {
+      width: 100%;
+      border: 2px solid rgba(244,195,99,0.55);
+      border-radius: 18px;
+      padding: 22px 18px;
+      background: rgba(12, 24, 38, 0.88);
+      color: #fff;
+      font-size: 26px;
+      font-weight: 900;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .action-btn.gold {
+      border: none;
+      background: linear-gradient(135deg, #ffe38d 0%, #e2a646 58%, #c8892f 100%);
+      color: #06111c;
+    }
+
+    .action-btn.danger {
+      color: #ff4040;
+      border-color: rgba(255,64,64,0.55);
+      background: rgba(255,64,64,0.06);
+    }
+
+    .form-card {
+      padding: 18px;
+    }
+
+    .form-title {
+      color: #f4c363;
+      font-size: 21px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .field-label {
+      color: rgba(255,255,255,0.72);
+      font-size: 20px;
+      font-weight: 900;
+      margin: 16px 0 7px;
+    }
+
+    .field {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 16px;
+      background: rgba(5, 12, 20, 0.82);
+      color: #fff;
+      font-size: 24px;
+      font-weight: 800;
+      padding: 18px 16px;
+      outline: none;
+    }
+
+    textarea.field {
+      min-height: 120px;
+      resize: none;
+    }
+
+    .save-btn {
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 21px 16px;
+      margin-top: 18px;
+      background: linear-gradient(135deg, #ffe38d 0%, #e2a646 58%, #c8892f 100%);
+      color: #06111c;
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 16px 34px rgba(0,0,0,0.34);
+    }
+
+    .delete-btn {
+      width: 100%;
+      border: 1px solid rgba(255,64,64,0.55);
+      border-radius: 18px;
+      padding: 20px 16px;
+      margin-top: 12px;
+      background: rgba(255,64,64,0.06);
+      color: #ff4040;
+      font-size: 23px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .empty {
+      border: 2px solid rgba(244,195,99,0.45);
+      border-radius: 18px;
+      padding: 28px 18px;
+      background: rgba(12, 24, 38, 0.88);
+      color: rgba(255,255,255,0.72);
+      font-size: 24px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    @media (max-width: 390px) {
+      .page {
+        padding: 18px 12px 14px;
+        gap: 10px;
+      }
+
+      .title {
+        font-size: 32px;
+      }
+
+      .client-name {
+        font-size: 31px;
+      }
+
+      .client-phone {
+        font-size: 23px;
+      }
+
+      .search-input {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <div class="top">
+      <div class="back" onclick="window.location.href='<?= scriptUrl ?>'">
+    ← MENIU PRINCIPAL
+    </div>
+      <h1 class="title">Clienți - <span id="totalClienti">0</span></h1>
+      <div class="add-top" onclick="openAdd()">+</div>
+    </div>
+
+    <div id="screenList" class="screen active">
+      <div class="search-card">
+        <div class="icon-circle">
+          <svg viewBox="0 0 24 24">
+            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+            <line x1="15.5" y1="15.5" x2="21" y2="21"></line>
+          </svg>
+        </div>
+
+        <input id="searchInput" class="search-input" placeholder="Caută client..." oninput="renderClients()">
+      </div>
+
+      <div id="clientList" class="client-list"></div>
+    </div>
+
+    <div id="screenDetails" class="screen">
+      <div class="detail-card">
+        <div class="big-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path>
+          </svg>
+        </div>
+
+        <div class="detail-name" id="detailName"></div>
+        <div class="detail-info" id="detailPhone"></div>
+        <div class="detail-info" id="detailEmail"></div>
+        <div class="detail-info" id="detailBirthday"></div>
+      </div>
+
+      <div class="action-list">
+        <button class="action-btn gold" onclick="openEdit()">Editează client</button>
+        <button class="action-btn" onclick="programClient()">Programează</button>
+        <button class="action-btn" onclick="clientHistory()">Istoric programări</button>
+        <button class="action-btn danger" onclick="deleteCurrentClient()">Șterge client</button>
+      </div>
+    </div>
+
+    <div id="screenForm" class="screen">
+      <div class="form-card">
+        <div class="form-title" id="formTitle">Adaugă client</div>
+
+        <div class="field-label">Nume complet</div>
+        <input id="formName" class="field" type="text" placeholder="Nume client">
+
+        <div class="field-label">Telefon</div>
+        <input id="formPhone" class="field" type="tel" placeholder="Telefon">
+
+        <div class="field-label">Email opțional</div>
+        <input id="formEmail" class="field" type="email" placeholder="Email">
+
+        <div class="field-label">Data naștere</div>
+        <input id="formBirthday" class="field" type="date">
+
+        <div class="field-label">Notițe</div>
+        <textarea id="formNotes" class="field" placeholder="Observații client..."></textarea>
+
+        <button class="save-btn" onclick="saveClient()">SALVEAZĂ CLIENT</button>
+        <button id="formDeleteBtn" class="delete-btn" onclick="deleteCurrentClient()">ȘTERGE CLIENT</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://hnvqauxqxtdzgyqumkqa.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker";;
+
+    var clients = [];
+    var currentClientId = null;
+    var formMode = "add";
+
+    function supabaseHeaders(extra) {
+      var headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json"
+      };
+
+      if (extra) {
+        Object.keys(extra).forEach(function(k) {
+          headers[k] = extra[k];
+        });
+      }
+
+      return headers;
+    }
+
+    async function loadClientsFromSupabase() {
+      var box = document.getElementById("clientList");
+      box.innerHTML = '<div class="empty">Se încarcă...</div>';
+
+      try {
+        var response = await fetch(
+          SUPABASE_URL + "/rest/v1/clienti?select=id,nume,telefon&order=nume.asc",
+          {
+            method: "GET",
+            headers: supabaseHeaders()
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Eroare Supabase: " + response.status);
+        }
+
+        var data = await response.json();
+
+        console.log(data);
+
+        clients = data.map(function(c) {
+          return {
+            id: c.id,
+            name: c.nume || "",
+            phone: c.telefon || "",
+            email: "",
+            birthday: "",
+            notes: ""
+          };
+        });
+
+        renderClients();
+
+      } catch (err) {
+        box.innerHTML = '<div class="empty">Nu pot încărca din Supabase. Verifică URL și KEY.</div>';
+        console.log(err);
+      }
+    }
+
+    function showScreen(id) {
+      var screens = document.querySelectorAll(".screen");
+      screens.forEach(function(s) {
+        s.classList.remove("active");
+      });
+
+      document.getElementById(id).classList.add("active");
+    }
+
+    function renderClients() {
+      document.getElementById("totalClienti").innerText = clients.length;
+      var box = document.getElementById("clientList");
+      var q = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      var filtered = clients
+        .filter(function(c) {
+          return c.name.toLowerCase().indexOf(q) !== -1 ||
+                 c.phone.toLowerCase().indexOf(q) !== -1;
+        })
+        .sort(function(a, b) {
+          return a.name.localeCompare(b.name);
+        });
+
+      if (filtered.length === 0) {
+        box.innerHTML = '<div class="empty">Nu există clienți găsiți.</div>';
+        return;
+      }
+
+      box.innerHTML = filtered.map(function(c) {
+        return '' +
+          '<div class="client-card" onclick="openDetails(\'' + c.id + '\')">' +
+            '<div class="icon-circle">' +
+              '<svg viewBox="0 0 24 24">' +
+                '<circle cx="12" cy="8" r="4"></circle>' +
+                '<path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path>' +
+              '</svg>' +
+            '</div>' +
+            '<div class="client-info">' +
+              '<div class="client-name">' + escapeHtml(c.name) + '</div>' +
+              '<div class="client-phone">' + escapeHtml(c.phone) + '</div>' +
+            '</div>' +
+            '<div class="arrow">›</div>' +
+          '</div>';
+      }).join("");
+    }
+
+    function openDetails(id) {
+      currentClientId = id;
+
+      var c = clients.find(function(x) {
+        return String(x.id) === String(id);
+      });
+
+      if (!c) return;
+
+      document.getElementById("detailName").textContent = c.name;
+      document.getElementById("detailPhone").textContent = c.phone || "Fără telefon";
+      document.getElementById("detailEmail").textContent = "Email neactivat în test";
+      document.getElementById("detailBirthday").textContent = "Data naștere neactivată în test";
+
+      showScreen("screenDetails");
+    }
+
+    function openAdd() {
+      formMode = "add";
+      currentClientId = null;
+
+      document.getElementById("formTitle").textContent = "Adaugă client";
+      document.getElementById("formName").value = "";
+      document.getElementById("formPhone").value = "";
+      document.getElementById("formEmail").value = "";
+      document.getElementById("formBirthday").value = "";
+      document.getElementById("formNotes").value = "";
+      document.getElementById("formDeleteBtn").style.display = "none";
+
+      showScreen("screenForm");
+    }
+
+    function openEdit() {
+      var c = clients.find(function(x) {
+        return String(x.id) === String(currentClientId);
+      });
+
+      if (!c) return;
+
+      formMode = "edit";
+
+      document.getElementById("formTitle").textContent = "Editează client";
+      document.getElementById("formName").value = c.name || "";
+      document.getElementById("formPhone").value = c.phone || "";
+      document.getElementById("formEmail").value = "";
+      document.getElementById("formBirthday").value = "";
+      document.getElementById("formNotes").value = "";
+      document.getElementById("formDeleteBtn").style.display = "block";
+
+      showScreen("screenForm");
+    }
+
+    async function saveClient() {
+      var name = document.getElementById("formName").value.trim();
+      var phone = document.getElementById("formPhone").value.trim();
+      var email = document.getElementById("formEmail").value.trim();
+      var birthday = document.getElementById("formBirthday").value;
+      var notes = document.getElementById("formNotes").value.trim();
+
+
+      if (!name) {
+        alert("Completează numele clientului.");
+        return;
+      }
+
+      if (!phone) {
+        alert("Completează telefonul clientului.");
+        return;
+      }
+
+      try {
+        if (formMode === "add") {
+          var responseAdd = await fetch(
+            SUPABASE_URL + "/rest/v1/clienti?select=id,nume,telefon,email,data_nastere,notite",
+            {
+              method: "POST",
+              headers: supabaseHeaders({
+                "Prefer": "return=representation",
+                "Content-Type": "application/json"
+              }),
+              body: JSON.stringify({
+                nume: name,
+                telefon: phone,
+                email: email,
+                data_nastere: birthday || null,
+                notite: notes
+              })
+            }
+          );
+
+          if (!responseAdd.ok) {
+            throw new Error("Eroare la adăugare: " + responseAdd.status);
+          }
+
+          var inserted = await responseAdd.json();
+          currentClientId = inserted[0].id;
+
+        } else {
+          var responseEdit = await fetch(
+            SUPABASE_URL + "/rest/v1/clienti?id=eq." + encodeURIComponent(currentClientId),
+            {
+              method: "PATCH",
+              headers: supabaseHeaders(),
+              body: JSON.stringify({
+                nume: name,
+                telefon: phone,
+                email: email,
+                data_nastere: birthday,
+                notite: notes
+              })
+            }
+          );
+
+          if (!responseEdit.ok) {
+            throw new Error("Eroare la editare: " + responseEdit.status);
+          }
+        }
+
+        await loadClientsFromSupabase();
+        openDetails(currentClientId);
+
+      } catch (err) {
+        alert("Nu s-a putut salva în Supabase. Verifică URL, KEY și RLS.");
+        console.log(err);
+      }
+    }
+
+    async function deleteCurrentClient() {
+      if (!currentClientId) return;
+
+      var c = clients.find(function(x) {
+        return String(x.id) === String(currentClientId);
+      });
+
+      if (!c) return;
+
+      if (!confirm("Ștergi clientul " + c.name + "?")) return;
+
+      try {
+        var response = await fetch(
+          SUPABASE_URL + "/rest/v1/clienti?id=eq." + encodeURIComponent(currentClientId),
+          {
+            method: "DELETE",
+            headers: supabaseHeaders()
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Eroare la ștergere: " + response.status);
+        }
+
+        currentClientId = null;
+        await loadClientsFromSupabase();
+        showScreen("screenList");
+
+      } catch (err) {
+        alert("Nu s-a putut șterge clientul din Supabase.");
+        console.log(err);
+      }
+    }
+
+    function programClient() {
+      alert("Aici se va lega cu pagina Programare.");
+    }
+
+    function clientHistory() {
+      alert("Aici se va afișa istoricul programărilor.");
+    }
+
+    function goBack() {
+      var detailsActive = document.getElementById("screenDetails").classList.contains("active");
+      var formActive = document.getElementById("screenForm").classList.contains("active");
+
+      if (detailsActive) {
+        showScreen("screenList");
+        return;
+      }
+
+      if (formActive) {
+        if (formMode === "edit" && currentClientId) {
+          openDetails(currentClientId);
+        } else {
+          showScreen("screenList");
+        }
+        return;
+      }
+
+      alert("Înapoi la pagina principală.");
+    }
+
+    function escapeHtml(text) {
+      return String(text || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    loadClientsFromSupabase();
+  </script>
+</body>
+</html>
