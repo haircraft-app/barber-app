@@ -445,7 +445,8 @@ MODIFICARI:
    Daca nu poti ajunge, te rog sa ma anunti din timp!
    Multumesc.`;
 
-  var url = "https://wa.me/?text=" + encodeURIComponent(mesaj);
+  var telefon = (client.telefon || "").replace(/\D/g, "");
+  var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
 
   window.open(url, "_blank");
 }
