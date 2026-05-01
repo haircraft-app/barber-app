@@ -261,7 +261,11 @@ Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
   );
 
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+  
+let finalTel = tel;
+if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
 }
 
 renderProgramari();
@@ -339,7 +343,7 @@ renderProgramari();
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
                 
-${filtruActiv === 'azi' ? `<button style="background:#1fae4b" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
+${filtruActiv === 'azi' ? `<button style="background:#1fae4b;font-size:13px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
 <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
 
               </div>
@@ -374,7 +378,11 @@ Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
   );
 
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+  
+let finalTel = tel;
+if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
 }
 
 renderProgramari();
@@ -397,7 +405,11 @@ Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
   );
 
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+  
+let finalTel = tel;
+if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
 }
 
 renderProgramari();
@@ -425,7 +437,11 @@ Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
   );
 
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+  
+let finalTel = tel;
+if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
 }
 
 renderProgramari();
@@ -489,7 +505,11 @@ Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
   );
 
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+  
+let finalTel = tel;
+if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
 }
 
 renderProgramari();
