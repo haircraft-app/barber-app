@@ -113,6 +113,14 @@
       text-align: left;
     }
 
+    .programare-card.trecuta .programare-nume {
+      color: rgba(255,255,255,0.20);
+    }
+
+    .programare-card.trecuta .programare-detalii {
+      color: rgba(242,201,76,0.20);
+    }
+
     .empty-card {
       border-radius: 16px;
       padding: 14px;
@@ -185,17 +193,19 @@
       const azi = getDateIso(0);
       const maine = getDateIso(1);
 
+      programari = programari.filter(p => p.zi && p.zi.dataIso && p.zi.dataIso >= azi);
+
       if (filtruActiv === 'azi') {
-        programari = programari.filter(p => p.zi && p.zi.dataIso === azi);
+        programari = programari.filter(p => p.zi.dataIso === azi);
       }
 
       if (filtruActiv === 'maine') {
-        programari = programari.filter(p => p.zi && p.zi.dataIso === maine);
+        programari = programari.filter(p => p.zi.dataIso === maine);
       }
 
       programari.sort((a, b) => {
-        const dataA = (a.zi && a.zi.dataIso ? a.zi.dataIso : '') + ' ' + getOraStart(a.interval);
-        const dataB = (b.zi && b.zi.dataIso ? b.zi.dataIso : '') + ' ' + getOraStart(b.interval);
+        const dataA = a.zi.dataIso + ' ' + getOraStart(a.interval);
+        const dataB = b.zi.dataIso + ' ' + getOraStart(b.interval);
         return dataA.localeCompare(dataB);
       });
 
@@ -207,7 +217,6 @@
       const grupuri = {};
 
       programari.forEach(p => {
-        if (!p.zi || !p.zi.dataIso) return;
         if (!grupuri[p.zi.dataIso]) grupuri[p.zi.dataIso] = [];
         grupuri[p.zi.dataIso].push(p);
       });
@@ -216,8 +225,10 @@
         const titluZi = getTitluZi(grupuri[dataIso][0]);
 
         const carduri = grupuri[dataIso].map(p => {
+          const clasaTrecuta = esteProgramareTrecuta(p) ? ' trecuta' : '';
+
           return `
-            <div class="programare-card">
+            <div class="programare-card${clasaTrecuta}">
               <div class="programare-nume">${p.client && p.client.nume ? p.client.nume : '-'}</div>
               <div class="programare-detalii">${p.interval || '-'}</div>
             </div>
@@ -231,6 +242,22 @@
           </div>
         `;
       }).join('');
+    }
+
+    function esteProgramareTrecuta(programare) {
+      if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
+
+      const parti = programare.interval.split('-');
+      if (parti.length < 2) return false;
+
+      const oraFinal = parti[1].trim();
+      const bucatiOra = oraFinal.split(':');
+      if (bucatiOra.length < 2) return false;
+
+      const finalProgramare = new Date(programare.zi.dataIso + 'T' + oraFinal + ':00');
+      finalProgramare.setMinutes(finalProgramare.getMinutes() + 15);
+
+      return new Date() >= finalProgramare;
     }
 
     function getOraStart(interval) {
