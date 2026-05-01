@@ -73,6 +73,21 @@
       gap: 5px;
     }
 
+    .zi-bloc {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .zi-titlu {
+      color: #f2c94c;
+      font-size: 15px;
+      font-weight: 900;
+      padding: 4px 2px 2px;
+      text-align: left;
+    }
+
     .programare-card {
       border: 1px solid #f2c94c;
       border-radius: 14px;
@@ -171,26 +186,68 @@
       const maine = getDateIso(1);
 
       if (filtruActiv === 'azi') {
-        programari = programari.filter(p => p.zi?.dataIso === azi);
+        programari = programari.filter(p => p.zi && p.zi.dataIso === azi);
       }
 
       if (filtruActiv === 'maine') {
-        programari = programari.filter(p => p.zi?.dataIso === maine);
+        programari = programari.filter(p => p.zi && p.zi.dataIso === maine);
       }
+
+      programari.sort((a, b) => {
+        const dataA = (a.zi && a.zi.dataIso ? a.zi.dataIso : '') + ' ' + getOraStart(a.interval);
+        const dataB = (b.zi && b.zi.dataIso ? b.zi.dataIso : '') + ' ' + getOraStart(b.interval);
+        return dataA.localeCompare(dataB);
+      });
 
       if (!programari.length) {
         lista.innerHTML = '<div class="empty-card">Nu există programări</div>';
         return;
       }
 
-      lista.innerHTML = programari.map(p => {
+      const grupuri = {};
+
+      programari.forEach(p => {
+        if (!p.zi || !p.zi.dataIso) return;
+        if (!grupuri[p.zi.dataIso]) grupuri[p.zi.dataIso] = [];
+        grupuri[p.zi.dataIso].push(p);
+      });
+
+      lista.innerHTML = Object.keys(grupuri).sort().map(dataIso => {
+        const titluZi = getTitluZi(grupuri[dataIso][0]);
+
+        const carduri = grupuri[dataIso].map(p => {
+          return `
+            <div class="programare-card">
+              <div class="programare-nume">${p.client && p.client.nume ? p.client.nume : '-'}</div>
+              <div class="programare-detalii">${p.interval || '-'}</div>
+            </div>
+          `;
+        }).join('');
+
         return `
-          <div class="programare-card">
-            <div class="programare-nume">${p.client?.nume || '-'}</div>
-            <div class="programare-detalii">${p.interval || '-'}</div>
+          <div class="zi-bloc">
+            <div class="zi-titlu">${titluZi}</div>
+            ${carduri}
           </div>
         `;
       }).join('');
+    }
+
+    function getOraStart(interval) {
+      if (!interval) return '';
+      return interval.split('-')[0].trim();
+    }
+
+    function getTitluZi(programare) {
+      if (programare.zi && programare.zi.titlu) {
+        return programare.zi.titlu;
+      }
+
+      if (programare.zi && programare.zi.dataIso) {
+        return programare.zi.dataIso;
+      }
+
+      return '';
     }
 
     function getDateIso(offset) {
