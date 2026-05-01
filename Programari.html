@@ -246,7 +246,25 @@
       document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       filtruActiv = filtru;
-      renderProgramari();
+      
+function trimiteReminder(indexOriginal) {
+  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+  const p = lista[indexOriginal];
+  if (!p || !p.client || !p.client.telefon) return;
+
+  const tel = p.client.telefon.replace(/[^0-9]/g, '');
+  const mesaj = encodeURIComponent(
+`---HAIR CRAFT---
+Salut,
+Reminder programare azi ${p.interval}
+Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
+Multumesc`
+  );
+
+  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+}
+
+renderProgramari();
     }
 
     function renderProgramari() {
@@ -320,7 +338,10 @@
                   <div class="programare-nume">${p.client && p.client.nume ? p.client.nume : '-'}</div>
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
-                <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
+                
+${filtruActiv === 'azi' ? `<button style="background:#1fae4b" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
+<button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
+
               </div>
               ${confirmare}
             </div>
@@ -338,12 +359,48 @@
 
     function cereStergere(indexOriginal) {
       stergereIndex = indexOriginal;
-      renderProgramari();
+      
+function trimiteReminder(indexOriginal) {
+  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+  const p = lista[indexOriginal];
+  if (!p || !p.client || !p.client.telefon) return;
+
+  const tel = p.client.telefon.replace(/[^0-9]/g, '');
+  const mesaj = encodeURIComponent(
+`---HAIR CRAFT---
+Salut,
+Reminder programare azi ${p.interval}
+Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
+Multumesc`
+  );
+
+  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+}
+
+renderProgramari();
     }
 
     function renuntaStergere() {
       stergereIndex = null;
-      renderProgramari();
+      
+function trimiteReminder(indexOriginal) {
+  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+  const p = lista[indexOriginal];
+  if (!p || !p.client || !p.client.telefon) return;
+
+  const tel = p.client.telefon.replace(/[^0-9]/g, '');
+  const mesaj = encodeURIComponent(
+`---HAIR CRAFT---
+Salut,
+Reminder programare azi ${p.interval}
+Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
+Multumesc`
+  );
+
+  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+}
+
+renderProgramari();
     }
 
     function confirmaStergere(indexOriginal) {
@@ -353,7 +410,25 @@
       localStorage.setItem('programari_lista', JSON.stringify(lista));
 
       stergereIndex = null;
-      renderProgramari();
+      
+function trimiteReminder(indexOriginal) {
+  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+  const p = lista[indexOriginal];
+  if (!p || !p.client || !p.client.telefon) return;
+
+  const tel = p.client.telefon.replace(/[^0-9]/g, '');
+  const mesaj = encodeURIComponent(
+`---HAIR CRAFT---
+Salut,
+Reminder programare azi ${p.interval}
+Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
+Multumesc`
+  );
+
+  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+}
+
+renderProgramari();
     }
 
     function esteProgramareTrecuta(programare) {
@@ -399,7 +474,25 @@
       window.location.href = 'index_premium.html';
     }
 
-    renderProgramari();
+    
+function trimiteReminder(indexOriginal) {
+  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+  const p = lista[indexOriginal];
+  if (!p || !p.client || !p.client.telefon) return;
+
+  const tel = p.client.telefon.replace(/[^0-9]/g, '');
+  const mesaj = encodeURIComponent(
+`---HAIR CRAFT---
+Salut,
+Reminder programare azi ${p.interval}
+Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
+Multumesc`
+  );
+
+  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
+}
+
+renderProgramari();
   </script>
 </body>
 </html>
