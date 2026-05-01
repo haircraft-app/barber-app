@@ -1038,6 +1038,17 @@
     }
 
     function nextStep() {
+      if (!confirmata) {
+        document.getElementById('messageIcon').textContent = '!';
+        document.getElementById('messageIcon').style.borderColor = '#ff4040';
+        document.getElementById('messageIcon').style.color = '#ff4040';
+        document.getElementById('messageText').innerHTML =
+          '<span class="message-red">Confirmă programarea !</span>';
+
+        speakText('Confirmă programarea');
+        return;
+      }
+
       window.location.href = 'Programare_noua_premium_pg4.html';
     }
 
