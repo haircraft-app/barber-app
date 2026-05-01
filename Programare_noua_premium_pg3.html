@@ -1,20 +1,8 @@
 <!DOCTYPE html>
-<!--
-VERSIUNE: PG3_GITHUB_FIX_v3_LISTA_LOCAL
-DATA: 2026-04-30
-MODIFICARI:
-- pagina redimensionata pentru telefon/PWA
-- eliminate orele blocate manual din cod
-- blocare automata doar pentru orele trecute din ziua curenta
-- selectie verde daca intervalul este liber
-- selectie rosie daca intervalul contine ora blocata
-- linkuri GitHub pentru BACK / HOME / NEXT / SCHIMBA
-- salveaza programarea si in localStorage.programari_lista
--->
 <html>
 <head>
   <base target="_top">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     * { box-sizing: border-box; }
@@ -217,9 +205,9 @@ MODIFICARI:
     }
 
     .day-name {
-      font-size: 14px;
-      margin-bottom: 2px;
-      font-weight: 500;
+      font-size: 24px;
+      margin-bottom: 5px;
+      font-weight: 900;
     }
 
     .day-number {
@@ -232,12 +220,6 @@ MODIFICARI:
       margin-top: 5px;
       font-size: 24px;
       font-weight: 900;
-      color: rgba(255,255,255,0.9);
-    }
-
-    .day-date {
-      font-size: 18px;
-      font-weight: 700;
       color: rgba(255,255,255,0.9);
     }
 
@@ -255,7 +237,7 @@ MODIFICARI:
 
     .slots-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 7px;
       flex: 1;
     }
@@ -428,8 +410,7 @@ MODIFICARI:
       }
 
       .day-name {
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 18px;
       }
 
       .day-number {
@@ -473,176 +454,6 @@ MODIFICARI:
         font-size: 34px;
       }
     }
-    /* =========================================================
-       FIX TELEFON / PWA - REDIMENSIONARE PAGINA
-       Aici micsoram pagina ca sa incapa corect pe telefon.
-    ========================================================= */
-    @media (max-width: 520px) {
-      .page {
-        min-height: 100svh;
-        padding: 12px 10px 10px;
-        gap: 7px;
-      }
-
-      .header {
-        margin-bottom: 8px;
-      }
-
-      .title {
-        font-size: 24px !important;
-      }
-
-      .subtitle {
-        margin-top: 6px !important;
-        font-size: 22px !important;
-      }
-
-      .nav-back {
-        top: -4px;
-        gap: 4px;
-      }
-
-      .arrow {
-        font-size: 42px !important;
-      }
-
-      .back-text {
-        font-size: 14px !important;
-        margin-top: 10px;
-      }
-
-      .steps {
-        margin: 6px 0 8px;
-      }
-
-      .step {
-        width: 34px;
-        height: 34px;
-        font-size: 16px;
-        border-width: 2px;
-      }
-
-      .line {
-        width: 22px;
-        height: 2px;
-      }
-
-      .info-card {
-        padding: 10px 12px;
-        border-radius: 14px;
-        gap: 10px;
-      }
-
-      .icon-circle {
-        width: 38px !important;
-        height: 38px !important;
-        font-size: 22px !important;
-      }
-
-      .info-label {
-        font-size: 14px !important;
-        margin-bottom: 3px;
-      }
-
-      .info-value {
-        font-size: 18px !important;
-      }
-
-      .change-btn {
-        font-size: 15px !important;
-        padding: 9px 12px !important;
-        border-radius: 12px;
-      }
-
-      .section-title,
-      .availability-title {
-        font-size: 12px;
-        margin-top: 2px;
-      }
-
-      .days-row {
-        gap: 4px;
-      }
-
-      .day-card {
-        min-height: 42px !important;
-        border-radius: 9px;
-        padding: 3px 2px;
-      }
-
-      .day-name {
-        font-size: 10px !important;
-        line-height: 1;
-        margin-bottom: 3px;
-        font-weight: 700;
-      }
-
-      .day-date {
-        font-size: 9px !important;
-        line-height: 1;
-        font-weight: 500;
-      }
-
-      .day-number,
-      .day-month {
-        display: none;
-      }
-
-      .slots-grid {
-        grid-template-columns: repeat(6, 1fr);
-        gap: 4px;
-      }
-
-      .slot {
-        height: 39px !important;
-        border-radius: 9px;
-        font-size: 14px !important;
-        letter-spacing: -0.4px;
-      }
-
-      .message-box {
-        min-height: 60px !important;
-        padding: 9px 10px;
-        border-radius: 12px;
-        gap: 8px;
-      }
-
-      .message-icon {
-        width: 32px;
-        height: 32px;
-        font-size: 18px;
-      }
-
-      .message-main {
-        font-size: 18px !important;
-        line-height: 1.05;
-      }
-
-      .confirm-btn {
-        padding: 10px 12px;
-        border-radius: 13px;
-        gap: 10px;
-      }
-
-      .confirm-icon {
-        font-size: 20px;
-      }
-
-      .confirm-title {
-        font-size: 15px;
-      }
-
-      .bottom-bar {
-        gap: 10px;
-      }
-
-      .box-btn {
-        height: 48px;
-        border-radius: 13px;
-        font-size: 18px;
-      }
-    }
-
   </style>
 </head>
 
@@ -757,7 +568,6 @@ MODIFICARI:
       renderDays();
       renderSlots();
       updateAvailabilityTitle();
-      selectDurata(durataSelectata);
     }
 
     function buildDynamicDays() {
@@ -793,7 +603,8 @@ MODIFICARI:
 
         div.innerHTML =
           '<div class="day-name">' + zi.nume + '</div>' +
-          '<div class="day-date">' + zi.nr + ' ' + zi.luna + '</div>';
+          '<div class="day-number">' + zi.nr + '</div>' +
+          '<div class="day-month">' + zi.luna + '</div>';
 
         wrap.appendChild(div);
       });
@@ -816,7 +627,7 @@ MODIFICARI:
         if (confirmata && esteInInterval(index)) {
           div.classList.add('confirmed');
         } else if (!confirmata && esteInInterval(index)) {
-          if (intervalAreOcupate()) {
+          if (!intervalEsteLiber()) {
             div.classList.add('conflict');
           } else {
             div.classList.add('selected-range');
@@ -852,6 +663,7 @@ MODIFICARI:
       if (!intervalEsteLiber()) {
         updateMessageOccupied();
         setConfirmEnabled(false);
+        speakText('Interval ocupat');
         return;
       }
 
@@ -867,29 +679,45 @@ MODIFICARI:
     function intervalEsteLiber() {
       if (oraSelectataIndex === null) return false;
 
+      var ocupate = getOcupatePentruZi();
+
       if (oraSelectataIndex + sloturiNecesare > sloturi.length) {
         return false;
       }
 
-      return !intervalAreOcupate();
-    }
-
-    function intervalAreOcupate() {
-      if (oraSelectataIndex === null) return false;
-
-      var ocupate = getOcupatePentruZi();
-
       for (var i = 0; i < sloturiNecesare; i++) {
         if (ocupate.indexOf(oraSelectataIndex + i) !== -1) {
-          return true;
+          return false;
         }
       }
 
-      return false;
+      return true;
     }
 
     function getOcupatePentruZi() {
       var ocupate = ocupatePeZile[ziSelectataIndex].slice();
+      var dataSelectata = zile[ziSelectataIndex] && zile[ziSelectataIndex].dataIso ? zile[ziSelectataIndex].dataIso : '';
+
+      try {
+        var lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+
+        lista.forEach(function(programare) {
+          if (!programare || !programare.zi || programare.zi.dataIso !== dataSelectata) return;
+          if (!programare.interval) return;
+
+          var start = programare.interval.split('-')[0].trim();
+          var startIndex = sloturi.indexOf(start);
+
+          if (startIndex === -1) return;
+
+          var durata = Number(programare.durata || 60);
+          var cateSloturi = durata / 30;
+
+          for (var i = 0; i < cateSloturi; i++) {
+            ocupate.push(startIndex + i);
+          }
+        });
+      } catch(e) {}
 
       if (ziSelectataIndex === 0) {
         var acum = new Date();
@@ -926,6 +754,16 @@ MODIFICARI:
     function getIntervalText() {
       if (oraSelectataIndex === null) return '';
       return sloturi[oraSelectataIndex] + ' - ' + getEndTime(oraSelectataIndex);
+    }
+
+    function speakText(text) {
+      try {
+        var msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'ro-RO';
+        msg.rate = 0.9;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(msg);
+      } catch(e) {}
     }
 
     function updateAvailabilityTitle() {
@@ -981,6 +819,7 @@ MODIFICARI:
       if (oraSelectataIndex === null) return;
 
       if (!intervalEsteLiber()) {
+        speakText('Interval ocupat');
         return;
       }
 
@@ -996,21 +835,18 @@ MODIFICARI:
         client: client,
         durata: durataSelectata,
         zi: zile[ziSelectataIndex],
-        interval: getIntervalText(),
-        salvataLa: new Date().toISOString()
+        interval: getIntervalText()
       };
 
       localStorage.setItem('programare_rezultat', JSON.stringify(programareNoua));
 
-      var listaProgramari = [];
       try {
-        listaProgramari = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+        var lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+        lista.push(programareNoua);
+        localStorage.setItem('programari_lista', JSON.stringify(lista));
       } catch(e) {
-        listaProgramari = [];
+        localStorage.setItem('programari_lista', JSON.stringify([programareNoua]));
       }
-
-      listaProgramari.push(programareNoua);
-      localStorage.setItem('programari_lista', JSON.stringify(listaProgramari));
     }
 
     function resetButton() {
