@@ -342,7 +342,7 @@ renderProgramari();
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
                 
-${filtruActiv === 'azi' ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
+${filtruActiv === 'azi' ? `<button style="background:${JSON.parse(localStorage.getItem('reminder_trimise')||'{}')[item.indexOriginal] ? '#1fae4b4d' : '#1fae4b'};font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
 <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
 
               </div>
@@ -370,12 +370,12 @@ function trimiteReminder(indexOriginal) {
 
   const tel = p.client.telefon.replace(/[^0-9]/g, '');
   const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
+`*---HAIR CRAFT---*
 Salut,
-Reminder programare azi ${p.interval}
+Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-  );
+);
 
   
 let finalTel = tel;
@@ -397,12 +397,12 @@ function trimiteReminder(indexOriginal) {
 
   const tel = p.client.telefon.replace(/[^0-9]/g, '');
   const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
+`*---HAIR CRAFT---*
 Salut,
-Reminder programare azi ${p.interval}
+Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-  );
+);
 
   
 let finalTel = tel;
@@ -429,12 +429,12 @@ function trimiteReminder(indexOriginal) {
 
   const tel = p.client.telefon.replace(/[^0-9]/g, '');
   const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
+`*---HAIR CRAFT---*
 Salut,
-Reminder programare azi ${p.interval}
+Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-  );
+);
 
   
 let finalTel = tel;
@@ -497,12 +497,12 @@ function trimiteReminder(indexOriginal) {
 
   const tel = p.client.telefon.replace(/[^0-9]/g, '');
   const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
+`*---HAIR CRAFT---*
 Salut,
-Reminder programare azi ${p.interval}
+Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-  );
+);
 
   
 let finalTel = tel;
