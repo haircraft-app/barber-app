@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <!--
-VERSIUNE: PROGRAMARI_LAYOUT_v1
+VERSIUNE: PROGRAMARI_LAYOUT_v2_TEST_LOCAL
 DATA: 2026-05-01
 MODIFICARI:
 - pagina Programari
 - fundal premium ca Programare noua
-- titlu Programari
-- buton HOME
+- buton HOME jos
 - butoane Azi / Maine / Toate
-- fara lista programari inca
+- caseta test sub butoane
+- citeste ultima programare salvata din localStorage.programare_rezultat
 -->
 <html>
 <head>
@@ -30,14 +30,17 @@ MODIFICARI:
       color: #fff;
     }
 
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
     .page {
       min-height: 100vh;
       padding: 12px 10px 10px;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      display: flex;
-      flex-direction: column;
     }
 
     .header {
@@ -59,33 +62,115 @@ MODIFICARI:
     }
 
     .menu-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
     .menu-card {
-    height: 70px;
-    border-radius: 16px;
-    background: linear-gradient(145deg, #f6d257, #a96f10);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    font-weight: 900;
-    color: #111;
-    cursor: pointer;
-    }
-
-.menu-card.active {
-  outline: 4px solid #fff;
+      height: 70px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #f6d257, #a96f10);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-weight: 900;
+      color: #111;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
     }
 
     .menu-card.active {
+      outline: 4px solid #fff;
       background: linear-gradient(145deg, #f6d257, #a96f10);
       color: #111;
+    }
+
+    .menu-title {
+      font-size: 16px;
+      line-height: 1.05;
+      text-align: center;
+    }
+
+    .menu-sub {
+      font-size: 12px;
+      line-height: 1.05;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .programari-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .programare-card {
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(12, 24, 38, 0.88);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    }
+
+    .programare-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffe28a, #d99a35);
+      color: #071320;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      font-weight: 900;
+    }
+
+    .programare-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .programare-nume {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .programare-detalii {
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #f2c94c;
+      line-height: 1.15;
+    }
+
+    .programare-status {
+      margin-top: 5px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+      font-weight: 800;
+    }
+
+    .empty-card {
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(12, 24, 38, 0.72);
+      color: rgba(255,255,255,0.75);
+      font-size: 15px;
+      font-weight: 800;
+      text-align: center;
     }
 
     .bottom-bar {
@@ -119,24 +204,29 @@ MODIFICARI:
 
     <div class="menu-grid">
       <div class="menu-card active" onclick="selectTab(this)">
-    <div class="menu-title">Azi</div>
-    <div class="menu-sub">Vin 1 Mai</div>
+        <div class="menu-title">Azi</div>
+        <div class="menu-sub">Vin 1 Mai</div>
+      </div>
+
+      <div class="menu-card" onclick="selectTab(this)">
+        <div class="menu-title">Mâine</div>
+        <div class="menu-sub">Sâm 2 Mai</div>
+      </div>
+
+      <div class="menu-card" onclick="selectTab(this)">
+        <div class="menu-title">Toate</div>
+        <div class="menu-sub">programările</div>
+      </div>
     </div>
 
-    <div class="menu-card" onclick="selectTab(this)">
-    <div class="menu-title">Mâine</div>
-    <div class="menu-sub">Sâm 2 Mai</div>
-    </div>
+    <div class="programari-list" id="programariList"></div>
 
-    <div class="menu-card" onclick="selectTab(this)">
-    <div class="menu-title" style="text-align:center;">Toate</div>
-    <div class="menu-sub" style="text-align:center;">programările</div>
-    </div>
-
-  </div>
     <div class="bottom-bar">
-    <div class="box-btn" onclick="goHome()">⌂ HOME</div>
+      <div class="box-btn" onclick="goHome()">⌂ HOME</div>
+    </div>
+
   </div>
+
   <script>
     function selectTab(el) {
       document.querySelectorAll('.menu-card').forEach(card => {
@@ -146,9 +236,41 @@ MODIFICARI:
       el.classList.add('active');
     }
 
+    function renderUltimaProgramare() {
+      const lista = document.getElementById('programariList');
+      let data = null;
+
+      try {
+        data = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
+      } catch(e) {}
+
+      if (!data) {
+        lista.innerHTML = '<div class="empty-card">Nu există programare salvată pentru test.</div>';
+        return;
+      }
+
+      const nume = data.client && data.client.nume ? data.client.nume : '-';
+      const zi = data.zi && data.zi.titlu ? data.zi.titlu : '-';
+      const interval = data.interval || '-';
+      const durata = data.durata || '-';
+
+      lista.innerHTML = `
+        <div class="programare-card">
+          <div class="programare-icon">👤</div>
+          <div class="programare-info">
+            <div class="programare-nume">${nume}</div>
+            <div class="programare-detalii">${zi}<br>${interval}</div>
+            <div class="programare-status">Durată: ${durata} minute</div>
+          </div>
+        </div>
+      `;
+    }
+
     function goHome() {
       window.location.href = 'index_premium.html';
     }
+
+    renderUltimaProgramare();
   </script>
 </body>
 </html>
