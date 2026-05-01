@@ -418,7 +418,7 @@
         <div class="chevrons">»»»</div>
         <div class="next-text">
           <span class="next-red">Următorul client:</span>
-          <span class="next-name">azi 10:30 - Ionuț Popescu</span>
+          <span class="next-name" id="urmatorulClientText">Nu există programări active</span>
         </div>
         <div class="chevrons">»»»</div>
       </div>
@@ -556,6 +556,75 @@
     }
 
     loadNrProgramariAzi();
+  </script>
+
+  <!-- BLOC 15 - URMĂTORUL CLIENT ACTIV DIN LOCALSTORAGE -->
+  <script>
+    function getTextZiPentruBanda(programare) {
+      if (!programare || !programare.zi || !programare.zi.dataIso) return '';
+
+      const azi = getDateIsoIndex(0);
+      const maine = getDateIsoIndex(1);
+
+      if (programare.zi.dataIso === azi) return 'azi';
+      if (programare.zi.dataIso === maine) return 'mâine';
+
+      if (programare.zi.nume && programare.zi.nr && programare.zi.luna) {
+        return programare.zi.nume + ' ' + programare.zi.nr + ' ' + programare.zi.luna;
+      }
+
+      return programare.zi.dataIso;
+    }
+
+    function getOraStartIndex(interval) {
+      if (!interval) return '';
+      return interval.split('-')[0].trim();
+    }
+
+    function esteProgramareActivaViitoare(programare) {
+      if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
+
+      const parti = programare.interval.split('-');
+      if (parti.length < 2) return false;
+
+      const oraFinal = parti[1].trim();
+      const finalProgramare = new Date(programare.zi.dataIso + 'T' + oraFinal + ':00');
+      finalProgramare.setMinutes(finalProgramare.getMinutes() + 15);
+
+      return new Date() < finalProgramare;
+    }
+
+    function loadUrmatorulClient() {
+      try {
+        const lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+
+        const active = lista
+          .filter(esteProgramareActivaViitoare)
+          .sort((a, b) => {
+            const dataA = a.zi.dataIso + ' ' + getOraStartIndex(a.interval);
+            const dataB = b.zi.dataIso + ' ' + getOraStartIndex(b.interval);
+            return dataA.localeCompare(dataB);
+          });
+
+        const el = document.getElementById('urmatorulClientText');
+
+        if (!active.length) {
+          el.innerText = 'Nu există programări active';
+          return;
+        }
+
+        const p = active[0];
+        const zi = getTextZiPentruBanda(p);
+        const interval = p.interval || '-';
+        const nume = p.client && p.client.nume ? p.client.nume : '-';
+
+        el.innerText = zi + ' ' + interval + ' - ' + nume;
+      } catch(e) {
+        document.getElementById('urmatorulClientText').innerText = 'Nu există programări active';
+      }
+    }
+
+    loadUrmatorulClient();
   </script>
 </body>
 </html>
