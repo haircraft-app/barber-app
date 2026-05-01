@@ -247,6 +247,8 @@
       el.classList.add('active');
       filtruActiv = filtru;
       
+
+
 function trimiteReminder(indexOriginal) {
   let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
   const p = lista[indexOriginal];
@@ -259,12 +261,19 @@ Salut,
 Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-);
-  
-let finalTel = tel;
-if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
-window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+  );
 
+  let finalTel = tel;
+  if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+
+  window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
+  // SALVARE STARE
+  let r = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+  r[indexOriginal] = true;
+  localStorage.setItem('reminder_trimise', JSON.stringify(r));
+
+  renderProgramari();
 }
 
 renderProgramari();
@@ -342,7 +351,7 @@ renderProgramari();
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
                 
-${filtruActiv === 'azi' ? `<button style="background:${JSON.parse(localStorage.getItem('reminder_trimise')||'{}')[item.indexOriginal] ? '#1fae4b4d' : '#1fae4b'};font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
+${filtruActiv === 'azi' ? `<button style="background:${(JSON.parse(localStorage.getItem('reminder_trimise')||'{}')[item.indexOriginal]) ? '#1fae4b4d' : '#1fae4b'};font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
 <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
 
               </div>
@@ -363,6 +372,8 @@ ${filtruActiv === 'azi' ? `<button style="background:${JSON.parse(localStorage.g
     function cereStergere(indexOriginal) {
       stergereIndex = indexOriginal;
       
+
+
 function trimiteReminder(indexOriginal) {
   let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
   const p = lista[indexOriginal];
@@ -375,13 +386,19 @@ Salut,
 Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-);
+  );
 
-  
-let finalTel = tel;
-if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
-window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+  let finalTel = tel;
+  if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
 
+  window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
+  // SALVARE STARE
+  let r = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+  r[indexOriginal] = true;
+  localStorage.setItem('reminder_trimise', JSON.stringify(r));
+
+  renderProgramari();
 }
 
 renderProgramari();
@@ -390,6 +407,8 @@ renderProgramari();
     function renuntaStergere() {
       stergereIndex = null;
       
+
+
 function trimiteReminder(indexOriginal) {
   let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
   const p = lista[indexOriginal];
@@ -402,13 +421,19 @@ Salut,
 Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-);
+  );
 
-  
-let finalTel = tel;
-if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
-window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+  let finalTel = tel;
+  if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
 
+  window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
+  // SALVARE STARE
+  let r = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+  r[indexOriginal] = true;
+  localStorage.setItem('reminder_trimise', JSON.stringify(r));
+
+  renderProgramari();
 }
 
 renderProgramari();
@@ -422,6 +447,8 @@ renderProgramari();
 
       stergereIndex = null;
       
+
+
 function trimiteReminder(indexOriginal) {
   let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
   const p = lista[indexOriginal];
@@ -434,13 +461,19 @@ Salut,
 Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-);
+  );
 
-  
-let finalTel = tel;
-if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
-window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+  let finalTel = tel;
+  if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
 
+  window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
+  // SALVARE STARE
+  let r = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+  r[indexOriginal] = true;
+  localStorage.setItem('reminder_trimise', JSON.stringify(r));
+
+  renderProgramari();
 }
 
 renderProgramari();
@@ -490,6 +523,8 @@ renderProgramari();
     }
 
     
+
+
 function trimiteReminder(indexOriginal) {
   let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
   const p = lista[indexOriginal];
@@ -502,13 +537,19 @@ Salut,
 Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-);
+  );
 
-  
-let finalTel = tel;
-if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
-window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+  let finalTel = tel;
+  if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
 
+  window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
+  // SALVARE STARE
+  let r = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+  r[indexOriginal] = true;
+  localStorage.setItem('reminder_trimise', JSON.stringify(r));
+
+  renderProgramari();
 }
 
 renderProgramari();
