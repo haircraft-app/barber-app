@@ -577,14 +577,14 @@
     </div>
 
     <div class="duration-grid">
-      <div class="duration-card selected" onclick="selectDuration(30, this)">
+      <div class="duration-card" onclick="selectDuration(30, this)">
         <div class="check">✓</div>
         <div class="duration-icon">⏱</div>
         <div class="duration-main">30 MIN</div>
         <div class="duration-sub">Rapid</div>
       </div>
 
-      <div class="duration-card" onclick="selectDuration(60, this)">
+      <div class="duration-card selected" onclick="selectDuration(60, this)">
         <div class="check">✓</div>
         <div class="duration-icon">⏱</div>
         <div class="duration-main">60 MIN</div>
@@ -610,7 +610,7 @@
       <div class="calendar-icon">⏱</div>
       <div>
         <div class="selected-label">Durata selectată</div>
-        <div class="selected-value" id="selectedDuration">30 minute</div>
+        <div class="selected-value" id="selectedDuration">60 minute</div>
       </div>
     </div>
 
@@ -622,7 +622,7 @@
   </div>
 
   <script>
-    let durataSelectata = 30;
+    let durataSelectata = 60;
     let client = null;
 
     function selectDuration(minutes, element) {
@@ -636,7 +636,6 @@
       document.getElementById('selectedDuration').textContent = minutes + ' minute';
       localStorage.setItem('programare_durata', String(minutes));
 
-      speakDuration(minutes);
     }
 
     function speakDuration(minutes) {
