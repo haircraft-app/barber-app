@@ -357,7 +357,7 @@
               <line x1="16" y1="17" x2="16" y2="17"></line>
             </svg>
             <div class="summary-info">
-              <div class="summary-number">12</div>
+              <div class="summary-number" id="nrProgramariAzi">0</div>
               <div class="summary-name">Programări<br>azi</div>
             </div>
           </div>
@@ -519,6 +519,43 @@
     }
 
     loadNrClienti();
+  </script>
+
+  <!-- BLOC 14 - NUMĂR PROGRAMĂRI ACTIVE AZI DIN LOCALSTORAGE -->
+  <script>
+    function getDateIsoIndex(offset) {
+      const d = new Date();
+      d.setDate(d.getDate() + offset);
+      return d.toISOString().split('T')[0];
+    }
+
+    function esteProgramareActivaAzi(programare) {
+      if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
+
+      const azi = getDateIsoIndex(0);
+      if (programare.zi.dataIso !== azi) return false;
+
+      const parti = programare.interval.split('-');
+      if (parti.length < 2) return false;
+
+      const oraFinal = parti[1].trim();
+      const finalProgramare = new Date(programare.zi.dataIso + 'T' + oraFinal + ':00');
+      finalProgramare.setMinutes(finalProgramare.getMinutes() + 15);
+
+      return new Date() < finalProgramare;
+    }
+
+    function loadNrProgramariAzi() {
+      try {
+        const lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+        const activeAzi = lista.filter(esteProgramareActivaAzi).length;
+        document.getElementById('nrProgramariAzi').innerText = activeAzi;
+      } catch(e) {
+        document.getElementById('nrProgramariAzi').innerText = '0';
+      }
+    }
+
+    loadNrProgramariAzi();
   </script>
 </body>
 </html>
