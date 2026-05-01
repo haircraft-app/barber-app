@@ -437,13 +437,13 @@ MODIFICARI:
     return;
     }
 
-    var mesaj =
-  `Confirmare programare Hair Craft
-
-   Salut, iti confirm programarea.
+  var mesaj =
+  `💈 *Hair Craft*
+  Salut,
+  Iti confirm programarea:
   *${data.zi.titlu}, ${data.interval}*
-   Daca nu poti ajunge, te rog sa ma anunti din timp!
-   Multumesc.`;
+  Daca nu poti ajunge, te rog sa ma anunti din timp.
+  Multumesc!`;
 
   var telefon = (client.telefon || "").replace(/\D/g, "");
   var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
