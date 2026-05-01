@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <!--
-VERSIUNE: PG4_CONFIRM_COMUNICARE_v1
+VERSIUNE: PG4_CONFIRM_COMUNICARE_v2
 DATA: 2026-05-01
 MODIFICARI:
-- pagina 4 creata din pg3
-- pastreaza cardurile identice cu pg3
+- pagina 4 identica vizual cu pg3 pentru header, pasi, card client si card durata
 - cercul 4 activ
 - BACK catre pg3
 - HOME catre index
-- fara NEXT
+- doua optiuni confirmare: verde WhatsApp / rosu nu trimite
 -->
 <html>
 <head>
@@ -158,6 +157,11 @@ MODIFICARI:
       line-height: 1.05;
     }
 
+    .choice-space {
+      height: 34px;
+      flex-shrink: 0;
+    }
+
     .message-box {
       border: 1px solid rgba(255,255,255,0.16);
       border-radius: 16px;
@@ -165,16 +169,24 @@ MODIFICARI:
       display: flex;
       align-items: center;
       gap: 13px;
-      background: rgba(10, 22, 36, 0.9);
-      min-height: 150px;
+      min-height: 120px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    }
+
+    .message-box.green {
+      background: #1fae4b;
+    }
+
+    .message-box.red {
+      background: #ff2020;
     }
 
     .message-icon {
       width: 54px;
       height: 54px;
       border-radius: 50%;
-      border: 2px solid #f4c363;
-      color: #f4c363;
+      border: 2px solid #000;
+      color: #000;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -183,10 +195,17 @@ MODIFICARI:
       font-weight: 900;
     }
 
+    .whatsapp-icon {
+      width: 34px;
+      height: 34px;
+      display: block;
+      filter: brightness(0);
+    }
+
     .message-main {
-      font-size: 35px;
+      font-size: 32px;
       line-height: 1.08;
-      color: #fff;
+      color: #000;
       font-weight: 900;
     }
 
@@ -282,22 +301,31 @@ MODIFICARI:
         font-size: 18px !important;
       }
 
+      .choice-space {
+        height: 28px;
+      }
+
       .message-box {
-        min-height: 60px !important;
-        padding: 9px 10px;
+        min-height: 66px !important;
+        padding: 10px 12px;
         border-radius: 12px;
-        gap: 8px;
+        gap: 9px;
       }
 
       .message-icon {
-        width: 32px;
-        height: 32px;
-        font-size: 18px;
+        width: 38px;
+        height: 38px;
+        font-size: 22px;
+      }
+
+      .whatsapp-icon {
+        width: 25px;
+        height: 25px;
       }
 
       .message-main {
         font-size: 18px !important;
-        line-height: 1.05;
+        line-height: 1.08;
       }
 
       .bottom-bar {
@@ -353,22 +381,20 @@ MODIFICARI:
         </div>
       </div>
     </div>
-<br><br>
-    
-<div class="message-box" style="background:#1fae4b;">
-  <div class="message-icon" style="border-color:#000;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:28px; filter:brightness(0);">
-  <div class="message-main" style="color:#000;">
-    Trimite confirmarea clientului pe Whatsapp
-  </div>
-</div>
 
-<div class="message-box" style="background:#ff2020;">
-  <div class="message-icon" style="border-color:#000; color:#000;">✖</div>
-  <div class="message-main" style="color:#000;">
-    Nu trimite confirmarea clientului pe Whatsapp
-  </div>
-</div>
+    <div class="choice-space"></div>
+
+    <div class="message-box green">
+      <div class="message-icon">
+        <img class="whatsapp-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
+      </div>
+      <div class="message-main">Trimite confirmarea clientului</div>
+    </div>
+
+    <div class="message-box red">
+      <div class="message-icon">✖</div>
+      <div class="message-main">Nu trimite confirmarea clientului</div>
+    </div>
 
     <div class="bottom-bar">
       <div class="box-btn" onclick="goHome()">⌂ HOME</div>
