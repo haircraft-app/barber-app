@@ -567,8 +567,8 @@
       const maine = getDateIsoIndex(1);
 
       if (programare.zi.dataIso === azi) return 'azi';
-      if (programare.zi.dataIso === maine) return 'mâine';
 
+      // pentru orice altă zi (inclusiv mâine) arătăm zi + data
       if (programare.zi.nume && programare.zi.nr && programare.zi.luna) {
         return programare.zi.nume + ' ' + programare.zi.nr + ' ' + programare.zi.luna;
       }
@@ -585,13 +585,13 @@
       if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
 
       const parti = programare.interval.split('-');
-      if (parti.length < 2) return false;
+      if (parti.length < 1) return false;
 
-      const oraFinal = parti[1].trim();
-      const finalProgramare = new Date(programare.zi.dataIso + 'T' + oraFinal + ':00');
-      finalProgramare.setMinutes(finalProgramare.getMinutes() + 15);
+      const oraStart = parti[0].trim();
+      const inceputProgramare = new Date(programare.zi.dataIso + 'T' + oraStart + ':00');
+      inceputProgramare.setMinutes(inceputProgramare.getMinutes() + 10);
 
-      return new Date() < finalProgramare;
+      return new Date() < inceputProgramare;
     }
 
     function loadUrmatorulClient() {
