@@ -1,291 +1,142 @@
 <!DOCTYPE html>
+<!--
+VERSIUNE: PROGRAMARI_LAYOUT_v1
+DATA: 2026-05-01
+MODIFICARI:
+- pagina Programari
+- fundal premium ca Programare noua
+- titlu Programari
+- buton HOME
+- butoane Azi / Maine / Toate
+- fara lista programari inca
+-->
 <html>
 <head>
   <base target="_top">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
   <style>
     * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
       font-family: Arial, sans-serif;
       background:
         radial-gradient(circle at top center, rgba(170,120,20,0.75) 0%, rgba(40,28,8,0.95) 30%, #030303 72%),
         linear-gradient(180deg, #080808 0%, #000 100%);
-      color: #f5d37a;
+      color: #fff;
     }
 
     .page {
       min-height: 100vh;
-      padding: 30px;
+      padding: 12px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 30px;
-      position: relative;
-    }
-
-    .back {
-      position: absolute;
-      left: 10px;
-      top: 70px;
-      font-size: 25px;
-      font-weight: bold;
-      color: #f2c94c;
-      cursor: pointer;
+      margin-bottom: 8px;
     }
 
     .title {
-      font-size: 70px;
+      font-size: 28px;
       font-weight: 900;
       color: #f2c94c;
     }
 
     .subtitle {
-      margin-top: 10px;
-      font-size: 26px;
-      color: #e0d8c6;
-      letter-spacing: 3px;
-    }
-
-    .input {
-      width: 100%;
-      height: 90px;
-      border-radius: 20px;
-      border: 1px solid rgba(212,175,55,0.6);
-      background: #080808;
+      margin-top: 6px;
+      font-size: 20px;
       color: white;
-      font-size: 32px;
-      padding: 0 20px;
-      margin: 25px 0;
+      font-weight: normal;
     }
 
-    .filters {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 25px;
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 20px;
     }
 
-    .filter {
-      flex: 1;
-      height: 80px;
-      border-radius: 20px;
-      border: 2px solid #d4af37;
+    .menu-card {
+      min-height: 82px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(12, 24, 38, 0.88);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #f2c94c;
       font-size: 26px;
+      font-weight: 900;
       cursor: pointer;
     }
 
-    .active {
-      background: #f2c94c;
-      color: #000;
+    .menu-card.active {
+      background: linear-gradient(145deg, #f6d257, #a96f10);
+      color: #111;
     }
 
-    .card {
-      border: 2px solid rgba(212,175,55,0.9);
-      border-radius: 26px;
-      background: linear-gradient(145deg, #202020, #060606);
-      padding: 25px;
-      margin-bottom: 20px;
+    .bottom-bar {
+      margin-top: auto;
       display: flex;
-      justify-content: space-between;
-    }
-
-    .left { width: 45%; }
-    .middle { width: 30%; }
-
-    .right {
-      width: 25%;
-      display: flex;
-      flex-direction: column;
       gap: 10px;
     }
 
-    .name {
-      font-size: 34px;
-      font-weight: 900;
-      color: white;
-    }
-
-    .phone {
-      font-size: 26px;
-      color: #f2c94c;
-      margin-top: 5px;
-    }
-
-    .info {
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
-
-    .status {
-      margin-top: 10px;
-      padding: 8px 14px;
+    .box-btn {
+      flex: 1;
+      height: 56px;
       border-radius: 14px;
+      background: linear-gradient(145deg, #f6d257, #a96f10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 20px;
-      display: inline-block;
-    }
-
-    .prog { background: #b08b1c; color: black; }
-    .conf { background: green; color: white; }
-    .rem { background: blue; color: white; }
-
-    .btn {
-      height: 50px;
-      border-radius: 12px;
-      border: none;
-      font-size: 18px;
-      font-weight: bold;
+      font-weight: 900;
+      color: #111;
       cursor: pointer;
     }
-
-    .edit { background: #f2c94c; color: black; }
-    .remind { background: green; color: white; }
-    .cancel { background: red; color: white; }
   </style>
 </head>
 
 <body>
+  <div class="page">
 
-<div class="page">
+    <div class="header">
+      <div class="title">Programări</div>
+      <div class="subtitle">Alege lista</div>
+    </div>
 
-  <div class="header">
-    <div class="back" onclick="window.location.href='<?= scriptUrl ?>'">← MENIU PRINCIPAL</div>
-    <div class="title">Programari</div>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="selectTab(this)">AZI</div>
+      <div class="menu-card" onclick="selectTab(this)">MÂINE</div>
+      <div class="menu-card active" onclick="selectTab(this)">TOATE</div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="box-btn" onclick="goHome()">⌂ HOME</div>
+    </div>
+
   </div>
 
-  <input class="input" id="searchBox" placeholder="Cauta client / telefon" oninput="renderProgramari()">
+  <script>
+    function selectTab(el) {
+      document.querySelectorAll('.menu-card').forEach(card => {
+        card.classList.remove('active');
+      });
 
-  <div class="filters">
-    <div class="filter active" onclick="setFilter(this)">Azi</div>
-    <div class="filter" onclick="setFilter(this)">Maine</div>
-    <div class="filter" onclick="setFilter(this)">Toate</div>
-  </div>
-
-</div>
-
-<script>
-const SUPABASE_URL = "https://hnvqauxqxtdzgyqumkqa.supabase.co";
-const SUPABASE_KEY = "sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker";
-
-let Programari = [];
-
-async function loadProgramari() {
-  const res = await fetch(
-    SUPABASE_URL + "/rest/v1/programari?select=*&anulat=eq.false&order=data.asc,ora_start.asc",
-    {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: "Bearer " + SUPABASE_KEY
-      }
-    }
-  );
-
-  Programari = await res.json();
-  renderProgramari();
-}
-
-function setFilter(el) {
-  document.querySelectorAll(".filter").forEach(f => f.classList.remove("active"));
-  el.classList.add("active");
-  renderProgramari();
-}
-
-function renderProgramari() {
-  document.querySelectorAll(".card").forEach(el => el.remove());
-
-  const page = document.querySelector(".page");
-  const filtru = document.querySelector(".filter.active").innerText;
-  const cautare = document.getElementById("searchBox").value.toLowerCase().trim();
-
-  let lista = Programari.filter(p => esteVizibila(p, filtru));
-
-  if (cautare.length > 0) {
-    lista = lista.filter(p =>
-      String(p.nume || "").toLowerCase().includes(cautare) ||
-      String(p.telefon || "").toLowerCase().includes(cautare)
-    );
-  }
-
-  lista.forEach(p => {
-    let status = "PROGRAMATA";
-    let statusClass = "prog";
-
-    if (p.confirmare_trimisa) {
-      status = "CONFIRMATA";
-      statusClass = "conf";
+      el.classList.add('active');
     }
 
-    if (p.reminder_trimis) {
-      status = "REMINDER OK";
-      statusClass = "rem";
+    function goHome() {
+      window.location.href = 'index_premium.html';
     }
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <div class="left">
-        <div class="name">${p.nume || ""}</div>
-        <div class="phone">${p.telefon || ""}</div>
-      </div>
-
-      <div class="middle">
-        <div class="info">${formatData(p.data)}</div>
-        <div class="info">${p.ora_start || ""}</div>
-        <div class="info">${p.durata || ""} min</div>
-        <div class="status ${statusClass}">${status}</div>
-      </div>
-
-      <div class="right">
-        <button class="btn edit">MODIFICA</button>
-        <button class="btn remind">TRIMITE REMINDER</button>
-        <button class="btn cancel">ANULEAZA</button>
-      </div>
-    `;
-
-    page.appendChild(card);
-  });
-}
-
-function esteVizibila(p, filtru) {
-  const azi = new Date();
-  azi.setHours(0,0,0,0);
-
-  const dataP = new Date(p.data);
-  dataP.setHours(0,0,0,0);
-
-  if (filtru.includes("Azi")) {
-    return dataP.getTime() === azi.getTime();
-  }
-
-  if (filtru.includes("Maine")) {
-    const maine = new Date(azi);
-    maine.setDate(maine.getDate() + 1);
-    return dataP.getTime() === maine.getTime();
-  }
-
-  return true;
-}
-
-function formatData(dataIso) {
-  const zile = ["Du", "Lu", "Ma", "Mi", "Joi", "Vi", "Sa"];
-  const luni = ["Ian", "Feb", "Mar", "Apr", "Mai", "Iun", "Iul", "Aug", "Sep", "Oct", "Noi", "Dec"];
-
-  const d = new Date(dataIso);
-  return zile[d.getDay()] + " - " + d.getDate() + " " + luni[d.getMonth()];
-}
-
-function goBack() {
-  window.top.location.href = "<?= scriptUrl ?>?page=index";
-}
-
-loadProgramari();
-</script>
-
+  </script>
 </body>
 </html>
