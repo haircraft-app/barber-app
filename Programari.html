@@ -317,6 +317,7 @@
               <div class="programare-card${clasaTrecuta}">
                 <div class="programare-text">
                   <div class="programare-nume">${p.client && p.client.nume ? p.client.nume : '-'}</div>
+                  console.log(p.client);
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
                 <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
