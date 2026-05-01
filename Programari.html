@@ -112,31 +112,17 @@ MODIFICARI:
     .programare-card {
       border: 1px solid rgba(255,255,255,0.14);
       border-radius: 16px;
-      padding: 12px;
+      padding: 9px 12px;
       display: flex;
       align-items: center;
-      gap: 12px;
       background: rgba(12, 24, 38, 0.88);
       box-shadow: 0 12px 28px rgba(0,0,0,0.22);
-    }
-
-    .programare-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ffe28a, #d99a35);
-      color: #071320;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      font-weight: 900;
     }
 
     .programare-info {
       flex: 1;
       min-width: 0;
+      text-align: left;
     }
 
     .programare-nume {
@@ -150,18 +136,12 @@ MODIFICARI:
     }
 
     .programare-detalii {
-      margin-top: 5px;
+      margin-top: 4px;
       font-size: 14px;
       font-weight: 800;
       color: #f2c94c;
       line-height: 1.15;
-    }
-
-    .programare-status {
-      margin-top: 5px;
-      font-size: 12px;
-      color: rgba(255,255,255,0.72);
-      font-weight: 800;
+      text-align: left;
     }
 
     .empty-card {
@@ -277,17 +257,13 @@ MODIFICARI:
 
       lista.innerHTML = programari.map(data => {
         const nume = data.client && data.client.nume ? data.client.nume : '-';
-        const zi = data.zi && data.zi.titlu ? data.zi.titlu : '-';
         const interval = data.interval || '-';
-        const durata = data.durata || '-';
 
         return `
           <div class="programare-card">
-            <div class="programare-icon">👤</div>
             <div class="programare-info">
               <div class="programare-nume">${nume}</div>
-              <div class="programare-detalii">${zi}<br>${interval}</div>
-              <div class="programare-status">Durată: ${durata} minute</div>
+              <div class="programare-detalii">${interval}</div>
             </div>
           </div>
         `;
