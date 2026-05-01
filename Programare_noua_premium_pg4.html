@@ -438,12 +438,13 @@ MODIFICARI:
     }
 
   var mesaj =
-  `       *Hair Craft*
-  Salut,
-  Iti confirm programarea:
-  *${data.zi.titlu}, ${data.interval}*
-  Daca nu poti ajunge, te rog sa ma anunti din timp.
-  Multumesc!`;
+var mesaj =
+`⠀⠀⠀⠀*Hair Craft*
+Salut,
+Iti confirm programarea:
+*${data.zi.titlu}, ${data.interval}*
+Daca nu poti ajunge, te rog sa ma anunti din timp.
+Multumesc!`;
 
   var telefon = (client.telefon || "").replace(/\D/g, "");
   var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
