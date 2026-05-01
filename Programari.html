@@ -250,6 +250,7 @@
     }
 
     function renderProgramari() {
+      console.log(JSON.parse(localStorage.getItem('programari_lista')));
       const lista = document.getElementById('programariList');
       let programariOriginale = JSON.parse(localStorage.getItem('programari_lista') || '[]');
 
