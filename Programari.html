@@ -1,17 +1,4 @@
 <!DOCTYPE html>
-<!--
-VERSIUNE: PROGRAMARI_LAYOUT_v3_LISTA_LOCAL
-DATA: 2026-05-01
-MODIFICARI:
-- pagina Programari
-- fundal premium ca Programare noua
-- buton HOME jos
-- butoane Azi / Maine / Toate
-- caseta test sub butoane
-- citeste lista completa din localStorage.programari_lista
-- pastreaza fallback pentru ultima programare din localStorage.programare_rezultat
-- filtre Azi / Maine / Toate
--->
 <html>
 <head>
   <base target="_top">
@@ -30,11 +17,6 @@ MODIFICARI:
         radial-gradient(circle at top center, rgba(170,120,20,0.75) 0%, rgba(40,28,8,0.95) 30%, #030303 72%),
         linear-gradient(180deg, #080808 0%, #000 100%);
       color: #fff;
-    }
-
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
     }
 
     .page {
@@ -60,7 +42,6 @@ MODIFICARI:
       margin-top: 6px;
       font-size: 20px;
       color: white;
-      font-weight: normal;
     }
 
     .menu-grid {
@@ -77,81 +58,46 @@ MODIFICARI:
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
       font-weight: 900;
       color: #111;
       cursor: pointer;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
     }
 
     .menu-card.active {
       outline: 4px solid #fff;
-      background: linear-gradient(145deg, #f6d257, #a96f10);
-      color: #111;
-    }
-
-    .menu-title {
-      font-size: 16px;
-      line-height: 1.05;
-      text-align: center;
-    }
-
-    .menu-sub {
-      font-size: 12px;
-      line-height: 1.05;
-      text-align: center;
-      font-weight: 800;
     }
 
     .programari-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .programare-card {
       border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 16px;
-      padding: 9px 12px;
-      display: flex;
-      align-items: center;
+      border-radius: 14px;
+      padding: 8px 10px;
       background: rgba(12, 24, 38, 0.88);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
-    }
-
-    .programare-info {
-      flex: 1;
-      min-width: 0;
-      text-align: left;
     }
 
     .programare-nume {
-      font-size: 18px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 14px;
+      font-weight: normal;
+      text-align: left;
     }
 
     .programare-detalii {
-      margin-top: 4px;
-      font-size: 14px;
-      font-weight: 800;
+      margin-top: 3px;
+      font-size: 11px;
+      font-weight: normal;
       color: #f2c94c;
-      line-height: 1.15;
       text-align: left;
     }
 
     .empty-card {
-      border: 1px solid rgba(255,255,255,0.14);
       border-radius: 16px;
       padding: 14px;
       background: rgba(12, 24, 38, 0.72);
-      color: rgba(255,255,255,0.75);
-      font-size: 15px;
-      font-weight: 800;
       text-align: center;
     }
 
@@ -185,20 +131,9 @@ MODIFICARI:
     </div>
 
     <div class="menu-grid">
-      <div class="menu-card active" onclick="selectTab(this, 'azi')">
-        <div class="menu-title">Azi</div>
-        <div class="menu-sub">Vin 1 Mai</div>
-      </div>
-
-      <div class="menu-card" onclick="selectTab(this, 'maine')">
-        <div class="menu-title">Mâine</div>
-        <div class="menu-sub">Sâm 2 Mai</div>
-      </div>
-
-      <div class="menu-card" onclick="selectTab(this, 'toate')">
-        <div class="menu-title">Toate</div>
-        <div class="menu-sub">programările</div>
-      </div>
+      <div class="menu-card active" onclick="selectTab(this, 'azi')">Azi</div>
+      <div class="menu-card" onclick="selectTab(this, 'maine')">Mâine</div>
+      <div class="menu-card" onclick="selectTab(this, 'toate')">Toate</div>
     </div>
 
     <div class="programari-list" id="programariList"></div>
@@ -213,10 +148,7 @@ MODIFICARI:
     var filtruActiv = 'azi';
 
     function selectTab(el, filtru) {
-      document.querySelectorAll('.menu-card').forEach(card => {
-        card.classList.remove('active');
-      });
-
+      document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       filtruActiv = filtru;
       renderProgramari();
@@ -224,47 +156,34 @@ MODIFICARI:
 
     function renderProgramari() {
       const lista = document.getElementById('programariList');
-      let programari = [];
-
-      try {
-        programari = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-      } catch(e) {
-        programari = [];
-      }
+      let programari = JSON.parse(localStorage.getItem('programari_lista') || '[]');
 
       if (!programari.length) {
-        try {
-          const ultima = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
-          if (ultima) programari = [ultima];
-        } catch(e) {}
+        const ultima = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
+        if (ultima) programari = [ultima];
       }
 
-      const aziIso = getDateIso(0);
-      const maineIso = getDateIso(1);
+      const azi = getDateIso(0);
+      const maine = getDateIso(1);
 
       if (filtruActiv === 'azi') {
-        programari = programari.filter(item => item.zi && item.zi.dataIso === aziIso);
+        programari = programari.filter(p => p.zi?.dataIso === azi);
       }
 
       if (filtruActiv === 'maine') {
-        programari = programari.filter(item => item.zi && item.zi.dataIso === maineIso);
+        programari = programari.filter(p => p.zi?.dataIso === maine);
       }
 
       if (!programari.length) {
-        lista.innerHTML = '<div class="empty-card">Nu există programări pentru această listă.</div>';
+        lista.innerHTML = '<div class="empty-card">Nu există programări</div>';
         return;
       }
 
-      lista.innerHTML = programari.map(data => {
-        const nume = data.client && data.client.nume ? data.client.nume : '-';
-        const interval = data.interval || '-';
-
+      lista.innerHTML = programari.map(p => {
         return `
           <div class="programare-card">
-            <div class="programare-info">
-              <div class="programare-nume">${nume}</div>
-              <div class="programare-detalii">${interval}</div>
-            </div>
+            <div class="programare-nume">${p.client?.nume || '-'}</div>
+            <div class="programare-detalii">${p.interval || '-'}</div>
           </div>
         `;
       }).join('');
@@ -273,12 +192,7 @@ MODIFICARI:
     function getDateIso(offset) {
       const d = new Date();
       d.setDate(d.getDate() + offset);
-
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const zi = String(d.getDate()).padStart(2, '0');
-
-      return y + '-' + m + '-' + zi;
+      return d.toISOString().split('T')[0];
     }
 
     function goHome() {
