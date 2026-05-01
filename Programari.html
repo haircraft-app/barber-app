@@ -91,18 +91,27 @@
     .programare-card {
       border: 1px solid #f2c94c;
       border-radius: 14px;
-      padding: 5px 10px;
+      padding: 5px 7px 5px 10px;
       background: rgba(12, 24, 38, 0.88);
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .programare-text {
+      flex: 1;
+      min-width: 0;
     }
 
     .programare-nume {
       font-size: 14px;
       font-weight: normal;
       text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .programare-detalii {
@@ -111,6 +120,64 @@
       font-weight: normal;
       color: #f2c94c;
       text-align: left;
+    }
+
+    .delete-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      border: none;
+      background: #d71920;
+      color: #fff;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .confirm-delete-box {
+      margin-top: 5px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      padding: 7px 8px;
+      background: rgba(10, 22, 36, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .confirm-delete-text {
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .confirm-delete-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .confirm-small-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 5px 9px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .confirm-small-btn.ok {
+      background: #1fae4b;
+    }
+
+    .confirm-small-btn.cancel {
+      background: #d71920;
     }
 
     .programare-card.trecuta .programare-nume {
@@ -173,6 +240,7 @@
 
   <script>
     var filtruActiv = 'azi';
+    var stergereIndex = null;
 
     function selectTab(el, filtru) {
       document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
@@ -183,29 +251,36 @@
 
     function renderProgramari() {
       const lista = document.getElementById('programariList');
-      let programari = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+      let programariOriginale = JSON.parse(localStorage.getItem('programari_lista') || '[]');
 
-      if (!programari.length) {
+      if (!programariOriginale.length) {
         const ultima = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
-        if (ultima) programari = [ultima];
+        if (ultima) programariOriginale = [ultima];
       }
 
       const azi = getDateIso(0);
       const maine = getDateIso(1);
 
-      programari = programari.filter(p => p.zi && p.zi.dataIso && p.zi.dataIso >= azi);
+      let programari = programariOriginale.map((p, indexOriginal) => {
+        return {
+          date: p,
+          indexOriginal: indexOriginal
+        };
+      });
+
+      programari = programari.filter(item => item.date.zi && item.date.zi.dataIso && item.date.zi.dataIso >= azi);
 
       if (filtruActiv === 'azi') {
-        programari = programari.filter(p => p.zi.dataIso === azi);
+        programari = programari.filter(item => item.date.zi.dataIso === azi);
       }
 
       if (filtruActiv === 'maine') {
-        programari = programari.filter(p => p.zi.dataIso === maine);
+        programari = programari.filter(item => item.date.zi.dataIso === maine);
       }
 
       programari.sort((a, b) => {
-        const dataA = a.zi.dataIso + ' ' + getOraStart(a.interval);
-        const dataB = b.zi.dataIso + ' ' + getOraStart(b.interval);
+        const dataA = a.date.zi.dataIso + ' ' + getOraStart(a.date.interval);
+        const dataB = b.date.zi.dataIso + ' ' + getOraStart(b.date.interval);
         return dataA.localeCompare(dataB);
       });
 
@@ -216,21 +291,37 @@
 
       const grupuri = {};
 
-      programari.forEach(p => {
-        if (!grupuri[p.zi.dataIso]) grupuri[p.zi.dataIso] = [];
-        grupuri[p.zi.dataIso].push(p);
+      programari.forEach(item => {
+        if (!grupuri[item.date.zi.dataIso]) grupuri[item.date.zi.dataIso] = [];
+        grupuri[item.date.zi.dataIso].push(item);
       });
 
       lista.innerHTML = Object.keys(grupuri).sort().map(dataIso => {
-        const titluZi = getTitluZi(grupuri[dataIso][0]);
+        const titluZi = getTitluZi(grupuri[dataIso][0].date);
 
-        const carduri = grupuri[dataIso].map(p => {
+        const carduri = grupuri[dataIso].map(item => {
+          const p = item.date;
           const clasaTrecuta = esteProgramareTrecuta(p) ? ' trecuta' : '';
+          const confirmare = stergereIndex === item.indexOriginal ? `
+            <div class="confirm-delete-box">
+              <div class="confirm-delete-text">Confirmă ștergerea</div>
+              <div class="confirm-delete-actions">
+                <button class="confirm-small-btn ok" onclick="confirmaStergere(${item.indexOriginal})">Confirm</button>
+                <button class="confirm-small-btn cancel" onclick="renuntaStergere()">Renunț</button>
+              </div>
+            </div>
+          ` : '';
 
           return `
-            <div class="programare-card${clasaTrecuta}">
-              <div class="programare-nume">${p.client && p.client.nume ? p.client.nume : '-'}</div>
-              <div class="programare-detalii">${p.interval || '-'}</div>
+            <div>
+              <div class="programare-card${clasaTrecuta}">
+                <div class="programare-text">
+                  <div class="programare-nume">${p.client && p.client.nume ? p.client.nume : '-'}</div>
+                  <div class="programare-detalii">${p.interval || '-'}</div>
+                </div>
+                <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
+              </div>
+              ${confirmare}
             </div>
           `;
         }).join('');
@@ -242,6 +333,26 @@
           </div>
         `;
       }).join('');
+    }
+
+    function cereStergere(indexOriginal) {
+      stergereIndex = indexOriginal;
+      renderProgramari();
+    }
+
+    function renuntaStergere() {
+      stergereIndex = null;
+      renderProgramari();
+    }
+
+    function confirmaStergere(indexOriginal) {
+      let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+
+      lista.splice(indexOriginal, 1);
+      localStorage.setItem('programari_lista', JSON.stringify(lista));
+
+      stergereIndex = null;
+      renderProgramari();
     }
 
     function esteProgramareTrecuta(programare) {
