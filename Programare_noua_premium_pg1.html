@@ -437,14 +437,6 @@
     document.querySelector(".selected-phone").innerText = client.telefon || "";
     clientSelectat = client;
     localStorage.setItem("programare_client", JSON.stringify(client));
-
-    speak(client.nume || "");
-  }
-
-  function speak(text) {
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = "ro-RO";
-    speechSynthesis.speak(msg);
   }
 
 function goBack() {
