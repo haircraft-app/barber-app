@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-VERSIUNE: PG3_GITHUB_FIX_v2
+VERSIUNE: PG3_GITHUB_FIX_v3_LISTA_LOCAL
 DATA: 2026-04-30
 MODIFICARI:
 - pagina redimensionata pentru telefon/PWA
@@ -9,6 +9,7 @@ MODIFICARI:
 - selectie verde daca intervalul este liber
 - selectie rosie daca intervalul contine ora blocata
 - linkuri GitHub pentru BACK / HOME / NEXT / SCHIMBA
+- salveaza programarea si in localStorage.programari_lista
 -->
 <html>
 <head>
@@ -991,12 +992,25 @@ MODIFICARI:
       btn.classList.add('disabled');
       btn.querySelector('.confirm-title').textContent = 'PROGRAMARE CONFIRMATĂ';
 
-      localStorage.setItem('programare_rezultat', JSON.stringify({
+      var programareNoua = {
         client: client,
         durata: durataSelectata,
         zi: zile[ziSelectataIndex],
-        interval: getIntervalText()
-      }));
+        interval: getIntervalText(),
+        salvataLa: new Date().toISOString()
+      };
+
+      localStorage.setItem('programare_rezultat', JSON.stringify(programareNoua));
+
+      var listaProgramari = [];
+      try {
+        listaProgramari = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+      } catch(e) {
+        listaProgramari = [];
+      }
+
+      listaProgramari.push(programareNoua);
+      localStorage.setItem('programari_lista', JSON.stringify(listaProgramari));
     }
 
     function resetButton() {
