@@ -391,7 +391,7 @@
     function getDateIso(offset) {
       const d = new Date();
       d.setDate(d.getDate() + offset);
-      return d.toISOString().split('T')[0];
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate()).toLocaleDateString('en-CA');
     }
 
     function goHome() {
