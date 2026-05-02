@@ -371,7 +371,7 @@
               <path d="M13.7 21a2 2 0 0 1-3.4 0"></path>
             </svg>
             <div class="summary-info">
-              <div class="summary-number">5</div>
+              <div class="summary-number" id="nrReminderTrimis">0</div>
               <div class="summary-name">Reminder<br>de trimis</div>
             </div>
           </div>
@@ -625,6 +625,32 @@
     }
 
     loadUrmatorulClient();
+  </script>
+
+  <!-- BLOC 16 - NUMĂR REMINDER DE TRIMIS AZI DIN LOCALSTORAGE -->
+  <script>
+    function loadNrReminderTrimis() {
+      try {
+        const lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+        const reminderTrimise = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+        const azi = getDateIsoIndex(0);
+
+        const nr = lista.filter((programare, index) => {
+          if (!programare || !programare.zi || !programare.zi.dataIso) return false;
+          if (programare.zi.dataIso !== azi) return false;
+          if (reminderTrimise[index]) return false;
+          return true;
+        }).length;
+
+        const el = document.getElementById('nrReminderTrimis');
+        el.innerText = nr;
+        el.style.color = nr > 0 ? '#ff0000' : '#000000';
+      } catch(e) {
+        document.getElementById('nrReminderTrimis').innerText = '0';
+      }
+    }
+
+    loadNrReminderTrimis();
   </script>
 </body>
 </html>
