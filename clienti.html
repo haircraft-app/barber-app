@@ -423,17 +423,933 @@
 
   <script>
     /* ===== BAZA LOCALA CLIENTI ===== */
+    const CLIENTI_IMPORTATI = [
+      {
+            "id": "050400c0-f739-4344-99b1-35d4e5dd3927",
+            "nume": "Tudor",
+            "telefon": "+40753369124",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "08e9d5d8-bfa7-46af-9cd0-4accf4280e32",
+            "nume": "Wacky",
+            "telefon": "+40766443932",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "09151fa7-322b-48d8-ad66-333e63871d62",
+            "nume": "Mady",
+            "telefon": "+40757790894",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "0f5668e6-264c-4763-a376-daa8fff10966",
+            "nume": "Grigore",
+            "telefon": "+40757887938",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "10de0351-4a8b-4976-aad3-6fae587107e2",
+            "nume": "Rares Varu",
+            "telefon": "+40745575958",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "1301d527-d875-4254-839a-7a368b245dd7",
+            "nume": "Biro Gaby",
+            "telefon": "+40732079799",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "163dad03-0228-4b0f-b035-4fe3272528d2",
+            "nume": "Madalin Penciu",
+            "telefon": "+40729122821",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "16796cf8-9188-4664-aaff-fef791756304",
+            "nume": "Sorin Dumitrescu",
+            "telefon": "+40728109100",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "1a7bc084-99e8-4e27-8b99-17438f933a0a",
+            "nume": "Danciu Tudor",
+            "telefon": "+40759154759",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "1c22b2ec-e2f1-4a40-b455-e318bef5b5b1",
+            "nume": "Andrei Lucas",
+            "telefon": "+40734209082",
+            "email": "",
+            "data_nastere": "2000-03-04",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "1c335aee-c860-4aaf-af1f-76a3e5e7aaeb",
+            "nume": "Vlad Sese",
+            "telefon": "+40724539954",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "1c6463c5-bcd7-4303-8ccf-a1866cbaecc1",
+            "nume": "Cristi Lucica",
+            "telefon": "+40723773973",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "2038413e-e0d9-470a-bf1f-59a42833f45d",
+            "nume": "Client Batlan",
+            "telefon": "+40722702757",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "205db6db-e051-4458-a20f-72e12aee7133",
+            "nume": "Vlad Florescu",
+            "telefon": "+40722837724",
+            "email": "",
+            "data_nastere": "2003-07-06",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "24317ebe-028e-4d08-8b91-fd25825e238a",
+            "nume": "Pascu",
+            "telefon": "+40735378262",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "24ae6b86-8fab-46ff-ba08-5fa5bae8d4fe",
+            "nume": "Cristi Mady",
+            "telefon": "+40769025121",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "254ebd3d-76ce-457f-95d9-fc800430eb86",
+            "nume": "Ionut TEST",
+            "telefon": "+40724153784",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "26d778e2-3ecc-415a-8128-262fae4b054f",
+            "nume": "Sorin Paula",
+            "telefon": "+40760525560",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "28a7b80b-a604-4291-ac81-0dbbf5958bb6",
+            "nume": "Biro Ionut",
+            "telefon": "+40785924192",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "292529cd-cbce-4e31-9090-b8c4a8c828f7",
+            "nume": "Lupi",
+            "telefon": "+40724811840",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "294c1bd6-2bc4-4111-bd7e-fc81e5fa92aa",
+            "nume": "Cumnat Andrei Dum",
+            "telefon": "+40750844517",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "2aa4532b-e4ef-4cb3-9f63-71d6d069494c",
+            "nume": "Barbu Cristi",
+            "telefon": "+40763750426",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "2d030941-e343-4f82-a8cb-72477b13f0a3",
+            "nume": "Florinel",
+            "telefon": "+40720127772",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "317c4e60-384d-4d28-b9ea-2f6433eebc81",
+            "nume": "Mihnea",
+            "telefon": "+40736493254",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "323acacd-f48c-4ae8-b38b-75fc048ca3e1",
+            "nume": "Victor Cristina",
+            "telefon": "+40767026866",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "3384a904-a7c9-446f-a193-e131ebe6d6d2",
+            "nume": "Adi Tuns",
+            "telefon": "+40736637558",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "34608f90-d0ec-4e7a-a0f0-0806f3ec167b",
+            "nume": "Razvan",
+            "telefon": "+40737778883",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "3a20657a-d84a-440e-ba18-59818ab4cd1b",
+            "nume": "Alin Dansuri",
+            "telefon": "+40726286363",
+            "email": "",
+            "data_nastere": "2000-05-06",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "3d84ce66-58e0-4389-aeb7-02eb7ea67708",
+            "nume": "Claudiu Giurgi",
+            "telefon": "+40768434324",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "3ec1d2e0-789f-4121-8855-e09b11763329",
+            "nume": "Mihai Emil",
+            "telefon": "+40722331011",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "3f3a13df-9723-4bcb-8e06-3a482bdafd6c",
+            "nume": "Alin Lucas",
+            "telefon": "+40744669669",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "40010360-efc9-47a6-a531-eade2a942659",
+            "nume": "George",
+            "telefon": "+40753034926",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "40af0a04-a965-440e-a1d5-2fc6dd4e75c9",
+            "nume": "Catalin Cristina",
+            "telefon": "+40768083191",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "40c848ee-4e0f-4985-8ac8-64e4930eec6e",
+            "nume": "Ciprian Dorin",
+            "telefon": "+40768463066",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "43ea1125-4ff6-4ec8-80d4-293f475e5fd3",
+            "nume": "Razvan Mic",
+            "telefon": "+40790569303",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "44dae907-5074-4e52-9437-25db041befd8",
+            "nume": "Vali Vecinu",
+            "telefon": "+40751264312",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "458d5529-2204-4299-bf9c-ec331134455c",
+            "nume": "Crsti Doggy",
+            "telefon": "+40724026163",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "4676ae0f-c70c-491f-9872-fdc7202f0d0b",
+            "nume": "Ionut Bobby",
+            "telefon": "+40722664637",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "4d73dca1-8009-4ebb-8bde-f4cdcfde0050",
+            "nume": "Sorin Avocat",
+            "telefon": "+40726609894",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "4dbdcd62-72de-4ca5-bf55-a69286398207",
+            "nume": "Stavar",
+            "telefon": "+40729962616",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "4dc6091b-1536-44fc-8025-59c0f68fb6f4",
+            "nume": "Dragos Darius",
+            "telefon": "+40729414068",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "54f1aa86-e7f1-4167-a876-29478987a5b4",
+            "nume": "Ben",
+            "telefon": "+40763778673",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "5a9d4aa0-2b18-4bb2-8f91-a9eda8413133",
+            "nume": "Alex Eboda",
+            "telefon": "+40722385391",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "5d261ca9-563d-410f-8087-d0ca6c2d9e26",
+            "nume": "Andrei Duminica",
+            "telefon": "+40769412316",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "60408465-ca4e-42e4-af3d-a5f9703d52bc",
+            "nume": "Florin Bro",
+            "telefon": "+40759327467",
+            "email": "",
+            "data_nastere": "2000-12-16",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "643e9a58-7b88-42ba-af77-e39769e92c1b",
+            "nume": "Frate Mihnea",
+            "telefon": "+40799873119",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "64b17e07-7609-416d-9085-8d92fa8fcec5",
+            "nume": "Yanis Madi",
+            "telefon": "+40787464121",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "67abca4d-6390-4bc9-86b4-6258ba15d43e",
+            "nume": "Cristi Titel",
+            "telefon": "+40729426640",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "6ad21607-87df-4401-b12c-8914ba2db3ec",
+            "nume": "Alberto Rares",
+            "telefon": "+40775328467",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "6bb5fe96-62e6-4b29-ad77-77be80b1dcfa",
+            "nume": "Dorin",
+            "telefon": "+40723210687",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "6c9ca6b5-d2b1-4938-9475-433217e3b8c8",
+            "nume": "Irinel",
+            "telefon": "+40740157759",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "6d3275ef-997f-43a8-b473-767c90f16dc8",
+            "nume": "Damian",
+            "telefon": "+40766329931",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "74513a82-c553-47bb-93a9-f6f6671d61d0",
+            "nume": "Claudiu",
+            "telefon": "+40724662662",
+            "email": "",
+            "data_nastere": "2000-03-31",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "74fcc4ce-86ec-4fb5-b535-aaed16fbd693",
+            "nume": "Lucas",
+            "telefon": "+40749499499",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "753eacdb-8cf1-4b9c-98f9-4675cdf3eb54",
+            "nume": "Ion Fane",
+            "telefon": "+40730429537",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "7ef67462-b243-409c-bde7-51121f455e26",
+            "nume": "Marian Tuns",
+            "telefon": "+40763090642",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "7f034ceb-cee5-44a4-aa4a-d3bdf4c04313",
+            "nume": "Andrei",
+            "telefon": "+40723789516",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "8ba199f6-78d6-46c2-92e7-c309f80ef12a",
+            "nume": "Gaby Anton Atelier",
+            "telefon": "+40766646646",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "8d207a48-f4f0-411c-8076-c513f83c80ca",
+            "nume": "Seby Oana",
+            "telefon": "+40733161668",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "8da35f65-7f7a-49af-acc7-0ecb4755bc45",
+            "nume": "Bogdan Irinel",
+            "telefon": "+40724858211",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "8ee9c6ca-2d58-4193-9e9a-0db1ddb3ae27",
+            "nume": "Costi MyPlace",
+            "telefon": "+40724591498",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "934a3e49-36ee-4ea5-a1be-3c3119d8fdac",
+            "nume": "Marian Vapor",
+            "telefon": "+40731994345",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "94134b33-7359-4760-adbc-665ecdd9b1a2",
+            "nume": "Fratimiu",
+            "telefon": "+40767337257",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "978d654d-c442-4b71-988f-39f1078db151",
+            "nume": "Seby",
+            "telefon": "+40728186768",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "9bfb57d3-c013-4afa-a9f2-37b59e858928",
+            "nume": "Mihai Florescu",
+            "telefon": "+40722367594",
+            "email": "mihai.florescu2017@gmail.com",
+            "data_nastere": "1969-10-22",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "9ceb79a1-3cc9-4cdb-b2c1-fbb37465ae3f",
+            "nume": "Mohamad",
+            "telefon": "+40790725599",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "a4e314df-8e99-4ad8-82a9-1c2f14c806b5",
+            "nume": "Trascu",
+            "telefon": "+40745750858",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "a6b33a43-f18a-4a2d-ac95-f4a41b709bc2",
+            "nume": "Adi Cristi",
+            "telefon": "+40730170301",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "aa42f4fd-ae8e-4df7-b080-b57eec611df0",
+            "nume": "Edy Dorin",
+            "telefon": "+40721635981",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "b735d099-29f8-4840-9950-5215ab473d01",
+            "nume": "Fane Duminica",
+            "telefon": "+40724061642",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "b871137e-195b-42c8-b2f1-fda7a4833284",
+            "nume": "Vladi Fane",
+            "telefon": "+40723635577",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "bbcac0ea-cc85-4117-a7ae-ad52d7110d5d",
+            "nume": "Ion Teo",
+            "telefon": "+40755640007",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "bcc8ece8-4509-481f-884a-4b663bde319d",
+            "nume": "Octavian",
+            "telefon": "+40759990011",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "c04963d6-e510-437a-8f30-0ee30006c623",
+            "nume": "Parus",
+            "telefon": "+40764837658",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "c5a38d8e-5c54-452a-8855-555b5a19815e",
+            "nume": "Client Imobiliare",
+            "telefon": "+40720317615",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "c69d56b3-d621-4ea2-8231-0f9ac3fa6e7b",
+            "nume": "Stefan Octavian",
+            "telefon": "+40740489565",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "c9e8cd03-58ae-4f4f-b4a6-753328134e70",
+            "nume": "Toganel",
+            "telefon": "+40756457320",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "cbb951aa-6880-45a0-8b5e-8ed694d42706",
+            "nume": "Stanila Andrei",
+            "telefon": "+40747583476",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "ccc258db-71d6-4d67-a3af-edd0ef05c4e1",
+            "nume": "Alex Marketing",
+            "telefon": "+40729513319",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "d0dbbd53-387a-42ad-83fe-d9cc16e5fe16",
+            "nume": "Alex Mady",
+            "telefon": "+40737967813",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "d1654867-11b7-4b9f-8e3e-bcae86ad33ae",
+            "nume": "Par Alb",
+            "telefon": "+4255758300626",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "d3cf0d7f-de12-43e2-bfe1-1b32d3379205",
+            "nume": "Calin Cristi",
+            "telefon": "+40724581304",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "d4309955-0c82-468e-8b71-8d28dbe68bee",
+            "nume": "Vali Dorin",
+            "telefon": "+40724969651",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "d54a3e7f-e149-4f06-a510-68d6050d7297",
+            "nume": "Vlad Francu",
+            "telefon": "+40744473808",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "d8292907-a6a2-4a53-8b3b-9caca6e7e709",
+            "nume": "Ionut Stroe",
+            "telefon": "+40726200089",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "dc297b98-4856-44d8-aaad-92af1d3b8881",
+            "nume": "Thadeus",
+            "telefon": "+40740885402",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "dcadfe1f-f295-462f-96fd-feff0afb6546",
+            "nume": "Rares Dragos",
+            "telefon": "+40760624530",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "de03351e-ef05-40d2-bb71-1547c706d63f",
+            "nume": "Andrei Rares",
+            "telefon": "+40721399556",
+            "email": "",
+            "data_nastere": "2000-02-11",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "e0f9661d-1bba-4864-a179-c06949888618",
+            "nume": "Cristi Mihai Grasu",
+            "telefon": "+40768278496",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "e131f83c-8ffb-41fe-a725-68032f5bb8c3",
+            "nume": "Batlan",
+            "telefon": "+40757708795",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "e6dff8be-e488-495e-9319-059f91b1a109",
+            "nume": "Petre Vali",
+            "telefon": "+40785920082",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "e7636543-3f20-4b2c-b81a-3509ab08941b",
+            "nume": "Nego",
+            "telefon": "+40740083645",
+            "email": "",
+            "data_nastere": "2000-02-07",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "f0d237c1-5c5e-4eb0-a708-24a146fc7d8d",
+            "nume": "Mihai Grasu",
+            "telefon": "+40741062954",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "f1585f33-bab9-4efe-a834-0d70951121ee",
+            "nume": "Gaby Darius",
+            "telefon": "+40769680411",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "f168c729-b1b4-4aac-acbc-82d74a90b3ea",
+            "nume": "Robert Seby",
+            "telefon": "+40727996620",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "fcb7cce0-5d5e-4f35-9c91-77205a8bf7e8",
+            "nume": "Gaby Dansuri",
+            "telefon": "+40765683539",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "fd023bc3-2ca0-4170-a434-7d370dd5615c",
+            "nume": "Piticu",
+            "telefon": "+40760607467",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      },
+      {
+            "id": "fd025a68-51d6-4b12-9d23-75a7390c6ece",
+            "nume": "Rares Seby",
+            "telefon": "+40722805382",
+            "email": "",
+            "data_nastere": "",
+            "notite": "",
+            "nr_programari": 0
+      }
+];
+
     var clients = [];
     var currentClientId = null;
     var formMode = "add";
 
     function loadClients() {
       clients = JSON.parse(localStorage.getItem('clienti_lista') || '[]');
+
+      if (!clients.length) {
+        clients = CLIENTI_IMPORTATI;
+        saveClientsToStorage();
+      }
+
+      actualizeazaNumarProgramari();
       renderClients();
     }
 
     function saveClientsToStorage() {
       localStorage.setItem('clienti_lista', JSON.stringify(clients));
+    }
+
+    /* ===== ACTUALIZARE NUMAR PROGRAMARI DIN PROGRAMARI_LISTA ===== */
+    function curataTelefon(telefon) {
+      return String(telefon || '').replace(/[^0-9]/g, '');
+    }
+
+    function actualizeazaNumarProgramari() {
+      var programari = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+
+      clients.forEach(function(client) {
+        var telClient = curataTelefon(client.telefon);
+        var numeClient = String(client.nume || '').toLowerCase().trim();
+
+        client.nr_programari = programari.filter(function(p) {
+          var telProgramare = curataTelefon(p.client && p.client.telefon);
+          var numeProgramare = String(p.client && p.client.nume || '').toLowerCase().trim();
+
+          return (telClient && telProgramare && telClient === telProgramare) ||
+                 (numeClient && numeProgramare && numeClient === numeProgramare);
+        }).length;
+      });
+
+      saveClientsToStorage();
     }
 
     /* ===== AFISARE ECRANE ===== */
