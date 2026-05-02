@@ -246,29 +246,10 @@
       document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       filtruActiv = filtru;
-      
-function trimiteReminder(indexOriginal) {
-  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-  const p = lista[indexOriginal];
-  if (!p || !p.client || !p.client.telefon) return;
-
-  const tel = p.client.telefon.replace(/[^0-9]/g, '');
-  const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
-Salut,
-Reminder programare azi ${p.interval}
-Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
-Multumesc`
-  );
-
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
-}
-
-renderProgramari();
+      renderProgramari();
     }
 
     function renderProgramari() {
-      console.log(JSON.parse(localStorage.getItem('programari_lista')));
       const lista = document.getElementById('programariList');
       let programariOriginale = JSON.parse(localStorage.getItem('programari_lista') || '[]');
 
@@ -339,7 +320,7 @@ renderProgramari();
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
                 
-${filtruActiv === 'azi' ? `<button style="background:#1fae4b" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
+${filtruActiv === 'azi' && !JSON.parse(localStorage.getItem('reminder_trimise') || '{}')[item.indexOriginal] ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
 <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
 
               </div>
@@ -359,48 +340,12 @@ ${filtruActiv === 'azi' ? `<button style="background:#1fae4b" class="delete-btn"
 
     function cereStergere(indexOriginal) {
       stergereIndex = indexOriginal;
-      
-function trimiteReminder(indexOriginal) {
-  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-  const p = lista[indexOriginal];
-  if (!p || !p.client || !p.client.telefon) return;
-
-  const tel = p.client.telefon.replace(/[^0-9]/g, '');
-  const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
-Salut,
-Reminder programare azi ${p.interval}
-Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
-Multumesc`
-  );
-
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
-}
-
-renderProgramari();
+      renderProgramari();
     }
 
     function renuntaStergere() {
       stergereIndex = null;
-      
-function trimiteReminder(indexOriginal) {
-  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-  const p = lista[indexOriginal];
-  if (!p || !p.client || !p.client.telefon) return;
-
-  const tel = p.client.telefon.replace(/[^0-9]/g, '');
-  const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
-Salut,
-Reminder programare azi ${p.interval}
-Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
-Multumesc`
-  );
-
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
-}
-
-renderProgramari();
+      renderProgramari();
     }
 
     function confirmaStergere(indexOriginal) {
@@ -409,26 +354,12 @@ renderProgramari();
       lista.splice(indexOriginal, 1);
       localStorage.setItem('programari_lista', JSON.stringify(lista));
 
+      let reminderTrimise = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+      delete reminderTrimise[indexOriginal];
+      localStorage.setItem('reminder_trimise', JSON.stringify(reminderTrimise));
+
       stergereIndex = null;
-      
-function trimiteReminder(indexOriginal) {
-  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-  const p = lista[indexOriginal];
-  if (!p || !p.client || !p.client.telefon) return;
-
-  const tel = p.client.telefon.replace(/[^0-9]/g, '');
-  const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
-Salut,
-Reminder programare azi ${p.interval}
-Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
-Multumesc`
-  );
-
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
-}
-
-renderProgramari();
+      renderProgramari();
     }
 
     function esteProgramareTrecuta(programare) {
@@ -475,22 +406,33 @@ renderProgramari();
     }
 
     
-function trimiteReminder(indexOriginal) {
-  let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-  const p = lista[indexOriginal];
-  if (!p || !p.client || !p.client.telefon) return;
 
-  const tel = p.client.telefon.replace(/[^0-9]/g, '');
-  const mesaj = encodeURIComponent(
-`---HAIR CRAFT---
+
+    function trimiteReminder(indexOriginal) {
+      let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+      const p = lista[indexOriginal];
+      if (!p || !p.client || !p.client.telefon) return;
+
+      const tel = p.client.telefon.replace(/[^0-9]/g, '');
+      const mesaj = encodeURIComponent(
+`*---HAIR CRAFT---*
 Salut,
-Reminder programare azi ${p.interval}
+Reminder programare azi *${p.interval}*
 Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
 Multumesc`
-  );
+      );
 
-  window.open(`https://wa.me/4${tel}?text=${mesaj}`, '_blank');
-}
+      let finalTel = tel;
+      if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+
+      window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
+      let reminderTrimise = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
+      reminderTrimise[indexOriginal] = true;
+      localStorage.setItem('reminder_trimise', JSON.stringify(reminderTrimise));
+
+      renderProgramari();
+    }
 
 renderProgramari();
   </script>
