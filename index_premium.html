@@ -497,29 +497,20 @@
   
   </div>
 
-  <!-- BLOC 13 - NUMĂR CLIENȚI DIN SUPABASE -->
-  <script>
-    const SUPABASE_URL = "https://hnvqauxqxtdzgyqumkqa.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker";
+  
+<!-- BLOC 13 - NUMĂR CLIENȚI DIN LOCALSTORAGE -->
+<script>
+function loadNrClientiLocal() {
+  try {
+    const lista = JSON.parse(localStorage.getItem('clienti_lista') || '[]');
+    document.getElementById("nrClienti").innerText = lista.length;
+  } catch(e) {
+    document.getElementById("nrClienti").innerText = '0';
+  }
+}
+loadNrClientiLocal();
+</script>
 
-    async function loadNrClienti() {
-      try {
-        let res = await fetch(SUPABASE_URL + "/rest/v1/clienti?select=id", {
-          headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: "Bearer " + SUPABASE_KEY
-          }
-        });
-
-        let data = await res.json();
-        document.getElementById("nrClienti").innerText = data.length;
-      } catch(e) {
-        console.log("Eroare clienti", e);
-      }
-    }
-
-    loadNrClienti();
-  </script>
 
   <!-- BLOC 14 - NUMĂR PROGRAMĂRI ACTIVE AZI DIN LOCALSTORAGE -->
   <script>
