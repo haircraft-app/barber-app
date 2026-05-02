@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
   <style>
-    /* ===== RESET GENERAL ===== */
+    /* ===== SETARI GENERALE PAGINA ===== */
     * { box-sizing: border-box; }
 
     html, body {
@@ -25,7 +25,6 @@
       overflow-x: hidden;
     }
 
-    /* ===== PAGINA ===== */
     .page {
       min-height: 100vh;
       padding: 12px 10px 10px;
@@ -34,56 +33,47 @@
       gap: 12px;
     }
 
-    /* ===== HEADER ===== */
+    /* ===== HEADER PAGINA ===== */
     .header {
       position: relative;
       text-align: center;
       margin-bottom: 4px;
-      min-height: 58px;
       padding-top: 2px;
     }
 
     .back-btn {
       position: absolute;
       left: 0;
-      top: 0;
-      height: 34px;
-      padding: 0 9px;
-      border: 1px solid rgba(242,201,76,0.75);
-      border-radius: 11px;
-      background: rgba(12, 24, 38, 0.78);
+      top: 2px;
       color: #f2c94c;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 900;
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 4px;
+    }
+
+    .back-arrow {
+      font-size: 20px;
+      line-height: 1;
     }
 
     .add-btn {
       position: absolute;
       right: 0;
-      top: 0;
-      width: 34px;
-      height: 34px;
-      border-radius: 11px;
-      border: none;
-      background: linear-gradient(145deg, #f6d257, #a96f10);
-      color: #111;
-      font-size: 25px;
-      font-weight: 900;
-      line-height: 1;
+      top: -4px;
+      color: #f2c94c;
+      font-size: 34px;
+      font-weight: 300;
       cursor: pointer;
+      line-height: 1;
     }
 
     .title {
       font-size: 28px;
       font-weight: 900;
       color: #f2c94c;
-      line-height: 1.1;
-      padding: 0 44px;
     }
 
     .subtitle {
@@ -92,18 +82,18 @@
       color: white;
     }
 
-    /* ===== ECRANE ===== */
+    /* ===== ECRANE INTERNE ===== */
     .screen {
       display: none;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .screen.active {
       display: flex;
     }
 
-    /* ===== CAUTARE ===== */
+    /* ===== CAUTARE CLIENT ===== */
     .search-card {
       border: 1px solid #f2c94c;
       border-radius: 14px;
@@ -118,15 +108,13 @@
       width: 28px;
       height: 28px;
       min-width: 28px;
-      border-radius: 9px;
-      background: #050505;
+      border-radius: 50%;
       border: 1px solid #f2c94c;
-      color: #f2c94c;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #f2c94c;
       font-size: 15px;
-      font-weight: 900;
     }
 
     .search-input {
@@ -135,7 +123,7 @@
       outline: none;
       background: transparent;
       color: #fff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
     }
 
@@ -153,29 +141,13 @@
     .client-card {
       border: 1px solid #f2c94c;
       border-radius: 14px;
-      padding: 7px 8px 7px 10px;
+      padding: 6px 7px 6px 10px;
       background: rgba(12, 24, 38, 0.88);
       display: flex;
-      flex-direction: row;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
       cursor: pointer;
-    }
-
-    .client-icon {
-      width: 30px;
-      height: 30px;
-      min-width: 30px;
-      border-radius: 10px;
-      background: #050505;
-      border: 1px solid #f2c94c;
-      color: #f2c94c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      font-weight: 900;
     }
 
     .client-text {
@@ -186,72 +158,67 @@
     .client-name {
       font-size: 14px;
       font-weight: normal;
-      color: #fff;
       text-align: left;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .client-phone {
+    .client-details {
       margin-top: 2px;
       font-size: 11px;
       font-weight: normal;
       color: #f2c94c;
       text-align: left;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .arrow {
       color: #f2c94c;
-      font-size: 24px;
+      font-size: 22px;
+      font-weight: 300;
       line-height: 1;
-      flex-shrink: 0;
+    }
+
+    .empty-card {
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(12, 24, 38, 0.72);
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
     }
 
     /* ===== DETALII CLIENT ===== */
     .detail-card {
       border: 1px solid #f2c94c;
       border-radius: 14px;
-      padding: 14px 10px;
+      padding: 12px;
       background: rgba(12, 24, 38, 0.88);
       text-align: center;
-    }
-
-    .detail-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
-      background: #050505;
-      border: 1px solid #f2c94c;
-      color: #f2c94c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 9px;
-      font-size: 28px;
-      font-weight: 900;
     }
 
     .detail-name {
       font-size: 22px;
       font-weight: 900;
       color: #fff;
-      line-height: 1.15;
+      margin-bottom: 8px;
       word-break: break-word;
     }
 
     .detail-info {
-      margin-top: 6px;
       font-size: 14px;
-      font-weight: 800;
       color: #f2c94c;
+      margin-top: 5px;
       word-break: break-word;
     }
 
-    /* ===== BUTOANE ACTIUNI ===== */
+    .detail-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.78);
+      word-break: break-word;
+    }
+
     .action-list {
       display: flex;
       flex-direction: column;
@@ -262,10 +229,10 @@
       width: 100%;
       border: 1px solid #f2c94c;
       border-radius: 14px;
-      padding: 12px 12px;
+      padding: 11px 12px;
       background: rgba(12, 24, 38, 0.88);
       color: #fff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
       text-align: left;
       cursor: pointer;
@@ -280,12 +247,12 @@
 
     .action-btn.danger {
       color: #ff4040;
-      border-color: rgba(255,64,64,0.70);
+      border-color: rgba(255,64,64,0.75);
       background: rgba(255,64,64,0.06);
       text-align: center;
     }
 
-    /* ===== FORMULAR ===== */
+    /* ===== FORMULAR CLIENT ===== */
     .form-card {
       border: 1px solid #f2c94c;
       border-radius: 14px;
@@ -295,7 +262,7 @@
 
     .form-title {
       color: #f2c94c;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 900;
       text-transform: uppercase;
       margin-bottom: 8px;
@@ -306,7 +273,7 @@
       color: rgba(255,255,255,0.78);
       font-size: 13px;
       font-weight: 900;
-      margin: 10px 0 5px;
+      margin: 10px 0 4px;
     }
 
     .field {
@@ -317,12 +284,12 @@
       color: #fff;
       font-size: 15px;
       font-weight: 800;
-      padding: 11px 10px;
+      padding: 10px 9px;
       outline: none;
     }
 
     textarea.field {
-      min-height: 78px;
+      min-height: 80px;
       resize: none;
     }
 
@@ -330,20 +297,20 @@
       width: 100%;
       border: none;
       border-radius: 14px;
-      padding: 13px 12px;
+      padding: 12px 10px;
       margin-top: 12px;
       background: linear-gradient(145deg, #f6d257, #a96f10);
       color: #111;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
       cursor: pointer;
     }
 
     .delete-btn {
       width: 100%;
-      border: 1px solid rgba(255,64,64,0.70);
+      border: 1px solid rgba(255,64,64,0.75);
       border-radius: 14px;
-      padding: 12px 12px;
+      padding: 11px 10px;
       margin-top: 8px;
       background: rgba(255,64,64,0.06);
       color: #ff4040;
@@ -352,18 +319,7 @@
       cursor: pointer;
     }
 
-    /* ===== MESAJ GOL ===== */
-    .empty-card {
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(12, 24, 38, 0.72);
-      text-align: center;
-      color: rgba(255,255,255,0.78);
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    /* ===== BARA JOS ===== */
+    /* ===== BARA JOS HOME ===== */
     .bottom-bar {
       margin-top: auto;
       display: flex;
@@ -390,13 +346,18 @@
 
     <!-- ===== HEADER ===== -->
     <div class="header">
-      <button class="back-btn" onclick="goBack()">← BACK</button>
-      <button class="add-btn" onclick="openAdd()">+</button>
+      <div class="back-btn" onclick="goBack()">
+        <span class="back-arrow">←</span>
+        <span>ÎNAPOI</span>
+      </div>
+
+      <div class="add-btn" onclick="openAdd()">+</div>
+
       <div class="title">Clienți - <span id="totalClienti">0</span></div>
       <div class="subtitle">Lista clienți</div>
     </div>
 
-    <!-- ===== LISTA CLIENTI ===== -->
+    <!-- ===== ECRAN LISTA CLIENTI ===== -->
     <div id="screenList" class="screen active">
       <div class="search-card">
         <div class="search-icon">⌕</div>
@@ -406,15 +367,15 @@
       <div id="clientList" class="client-list"></div>
     </div>
 
-    <!-- ===== DETALII CLIENT ===== -->
+    <!-- ===== ECRAN DETALII CLIENT ===== -->
     <div id="screenDetails" class="screen">
       <div class="detail-card">
-        <div class="detail-icon">👤</div>
         <div class="detail-name" id="detailName"></div>
         <div class="detail-info" id="detailPhone"></div>
         <div class="detail-info" id="detailEmail"></div>
         <div class="detail-info" id="detailBirthday"></div>
-        <div class="detail-info" id="detailNotes"></div>
+        <div class="detail-info" id="detailNrProgramari"></div>
+        <div class="detail-note" id="detailNotes"></div>
       </div>
 
       <div class="action-list">
@@ -425,7 +386,7 @@
       </div>
     </div>
 
-    <!-- ===== FORMULAR CLIENT ===== -->
+    <!-- ===== ECRAN FORMULAR CLIENT ===== -->
     <div id="screenForm" class="screen">
       <div class="form-card">
         <div class="form-title" id="formTitle">Adaugă client</div>
@@ -436,7 +397,7 @@
         <div class="field-label">Telefon</div>
         <input id="formPhone" class="field" type="tel" placeholder="Telefon">
 
-        <div class="field-label">Email opțional</div>
+        <div class="field-label">Email</div>
         <input id="formEmail" class="field" type="email" placeholder="Email">
 
         <div class="field-label">Data naștere</div>
@@ -445,12 +406,15 @@
         <div class="field-label">Notițe</div>
         <textarea id="formNotes" class="field" placeholder="Observații client..."></textarea>
 
+        <div class="field-label">Număr programări</div>
+        <input id="formNrProgramari" class="field" type="number" min="0" value="0">
+
         <button class="save-btn" onclick="saveClient()">SALVEAZĂ CLIENT</button>
         <button id="formDeleteBtn" class="delete-btn" onclick="deleteCurrentClient()">ȘTERGE CLIENT</button>
       </div>
     </div>
 
-    <!-- ===== HOME JOS ===== -->
+    <!-- ===== BUTON HOME JOS ===== -->
     <div class="bottom-bar">
       <div class="box-btn" onclick="goHome()">⌂ HOME</div>
     </div>
@@ -458,30 +422,24 @@
   </div>
 
   <script>
-    /* ===== DATE LOCALSTORAGE ===== */
-    const CLIENTI_KEY = 'clienti_lista';
+    /* ===== BAZA LOCALA CLIENTI ===== */
     var clients = [];
     var currentClientId = null;
-    var formMode = 'add';
+    var formMode = "add";
 
     function loadClients() {
-      clients = JSON.parse(localStorage.getItem(CLIENTI_KEY) || '[]');
-
-      if (!Array.isArray(clients)) {
-        clients = [];
-      }
-
+      clients = JSON.parse(localStorage.getItem('clienti_lista') || '[]');
       renderClients();
     }
 
     function saveClientsToStorage() {
-      localStorage.setItem(CLIENTI_KEY, JSON.stringify(clients));
+      localStorage.setItem('clienti_lista', JSON.stringify(clients));
     }
 
     /* ===== AFISARE ECRANE ===== */
     function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(function(s) {
-        s.classList.remove('active');
+      document.querySelectorAll('.screen').forEach(function(screen) {
+        screen.classList.remove('active');
       });
 
       document.getElementById(id).classList.add('active');
@@ -490,6 +448,7 @@
     /* ===== AFISARE LISTA CLIENTI ===== */
     function renderClients() {
       document.getElementById('totalClienti').innerText = clients.length;
+
       var box = document.getElementById('clientList');
       var q = document.getElementById('searchInput').value.toLowerCase().trim();
 
@@ -503,17 +462,16 @@
         });
 
       if (!filtered.length) {
-        box.innerHTML = '<div class="empty-card">Nu există clienți găsiți.</div>';
+        box.innerHTML = '<div class="empty-card">Nu există clienți.</div>';
         return;
       }
 
       box.innerHTML = filtered.map(function(c) {
         return `
           <div class="client-card" onclick="openDetails('${c.id}')">
-            <div class="client-icon">👤</div>
             <div class="client-text">
               <div class="client-name">${escapeHtml(c.nume)}</div>
-              <div class="client-phone">${escapeHtml(c.telefon)}</div>
+              <div class="client-details">${escapeHtml(c.telefon)} · Programări: ${Number(c.nr_programari || 0)}</div>
             </div>
             <div class="arrow">›</div>
           </div>
@@ -532,9 +490,10 @@
       if (!c) return;
 
       document.getElementById('detailName').textContent = c.nume || '-';
-      document.getElementById('detailPhone').textContent = c.telefon || 'Fără telefon';
-      document.getElementById('detailEmail').textContent = c.email ? c.email : 'Fără email';
-      document.getElementById('detailBirthday').textContent = c.data_nastere ? c.data_nastere : 'Fără data nașterii';
+      document.getElementById('detailPhone').textContent = c.telefon ? 'Telefon: ' + c.telefon : 'Telefon: -';
+      document.getElementById('detailEmail').textContent = c.email ? 'Email: ' + c.email : 'Email: -';
+      document.getElementById('detailBirthday').textContent = c.data_nastere ? 'Data naștere: ' + c.data_nastere : 'Data naștere: -';
+      document.getElementById('detailNrProgramari').textContent = 'Programări: ' + Number(c.nr_programari || 0);
       document.getElementById('detailNotes').textContent = c.notite ? c.notite : '';
 
       showScreen('screenDetails');
@@ -551,6 +510,7 @@
       document.getElementById('formEmail').value = '';
       document.getElementById('formBirthday').value = '';
       document.getElementById('formNotes').value = '';
+      document.getElementById('formNrProgramari').value = 0;
       document.getElementById('formDeleteBtn').style.display = 'none';
 
       showScreen('screenForm');
@@ -572,6 +532,7 @@
       document.getElementById('formEmail').value = c.email || '';
       document.getElementById('formBirthday').value = c.data_nastere || '';
       document.getElementById('formNotes').value = c.notite || '';
+      document.getElementById('formNrProgramari').value = Number(c.nr_programari || 0);
       document.getElementById('formDeleteBtn').style.display = 'block';
 
       showScreen('screenForm');
@@ -579,46 +540,49 @@
 
     /* ===== SALVARE CLIENT ===== */
     function saveClient() {
-      var name = document.getElementById('formName').value.trim();
-      var phone = document.getElementById('formPhone').value.trim();
+      var nume = document.getElementById('formName').value.trim();
+      var telefon = document.getElementById('formPhone').value.trim();
       var email = document.getElementById('formEmail').value.trim();
-      var birthday = document.getElementById('formBirthday').value;
-      var notes = document.getElementById('formNotes').value.trim();
+      var dataNastere = document.getElementById('formBirthday').value;
+      var notite = document.getElementById('formNotes').value.trim();
+      var nrProgramari = Number(document.getElementById('formNrProgramari').value || 0);
 
-      if (!name) {
+      if (!nume) {
         alert('Completează numele clientului.');
         return;
       }
 
-      if (!phone) {
+      if (!telefon) {
         alert('Completează telefonul clientului.');
         return;
       }
 
       if (formMode === 'add') {
-        currentClientId = 'client_' + Date.now();
-
-        clients.push({
-          id: currentClientId,
-          nume: name,
-          telefon: phone,
+        var newClient = {
+          id: String(Date.now()),
+          nume: nume,
+          telefon: telefon,
           email: email,
-          data_nastere: birthday,
-          notite: notes
-        });
-      } else {
-        clients = clients.map(function(c) {
-          if (String(c.id) !== String(currentClientId)) return c;
+          data_nastere: dataNastere,
+          notite: notite,
+          nr_programari: nrProgramari
+        };
 
-          return {
-            id: c.id,
-            nume: name,
-            telefon: phone,
-            email: email,
-            data_nastere: birthday,
-            notite: notes
-          };
+        clients.push(newClient);
+        currentClientId = newClient.id;
+      } else {
+        var index = clients.findIndex(function(x) {
+          return String(x.id) === String(currentClientId);
         });
+
+        if (index === -1) return;
+
+        clients[index].nume = nume;
+        clients[index].telefon = telefon;
+        clients[index].email = email;
+        clients[index].data_nastere = dataNastere;
+        clients[index].notite = notite;
+        clients[index].nr_programari = nrProgramari;
       }
 
       saveClientsToStorage();
@@ -650,11 +614,11 @@
 
     /* ===== ACTIUNI VIITOARE ===== */
     function programClient() {
-      alert('Aici se va lega cu pagina Programare.');
+      alert('Aici se va lega cu pagina Programare nouă.');
     }
 
     function clientHistory() {
-      alert('Aici se va afișa istoricul programărilor.');
+      alert('Istoricul va fi legat separat de programări.');
     }
 
     /* ===== NAVIGARE ===== */
@@ -676,14 +640,14 @@
         return;
       }
 
-      window.location.href = 'index_premium.html';
+      goHome();
     }
 
     function goHome() {
       window.location.href = 'index_premium.html';
     }
 
-    /* ===== TEXT SIGUR IN HTML ===== */
+    /* ===== PROTECTIE TEXT ===== */
     function escapeHtml(text) {
       return String(text || '')
         .replaceAll('&', '&amp;')
@@ -693,6 +657,7 @@
         .replaceAll("'", '&#039;');
     }
 
+    /* ===== PORNIRE PAGINA ===== */
     loadClients();
   </script>
 </body>
