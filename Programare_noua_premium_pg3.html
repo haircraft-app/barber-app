@@ -626,6 +626,17 @@
     }
 
   </style>
+
+  <!-- BLOC SUPABASE - CONECTARE BAZĂ DE DATE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+      'https://hnvqauxqxtdzgyqumkqa.supabase.co',
+      'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker'
+    );
+  </script>
+
 </head>
 
 <body>
@@ -986,7 +997,7 @@
       }
     }
 
-    function confirmAppointment() {
+    async function confirmAppointment() {
       if (oraSelectataIndex === null) return;
 
       if (!intervalEsteLiber()) {
@@ -1010,18 +1021,29 @@
       };
 
       localStorage.setItem('programare_rezultat', JSON.stringify(programareNoua));
-      client
-  .from('programari')
-  .insert([
-    {
-      nume_client: client.nume,
-      telefon: client.telefon,
-      data: zile[ziSelectataIndex].dataIso,
-      ora_start: sloturi[oraSelectataIndex],
-      ora_final: getEndTime(oraSelectataIndex),
-      status: 'noua'
-    }
-  ]);
+
+      /* BLOC SUPABASE - SALVARE PROGRAMARE */
+      try {
+        const { error } = await supabaseClient
+          .from('programari')
+          .insert([
+            {
+              nume_client: client.nume || '',
+              telefon: client.telefon || '',
+              data: zile[ziSelectataIndex].dataIso,
+              ora_start: sloturi[oraSelectataIndex],
+              ora_final: getEndTime(oraSelectataIndex),
+              status: 'noua'
+            }
+          ]);
+
+        if (error) {
+          console.log('EROARE SUPABASE PROGRAMARE:', error);
+        }
+      } catch(e) {
+        console.log('EROARE SUPABASE PROGRAMARE:', e);
+      }
+
 
       try {
         var lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
