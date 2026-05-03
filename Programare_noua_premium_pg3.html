@@ -1049,7 +1049,7 @@
 
       /* BLOC SUPABASE - SALVARE PROGRAMARE */
       try {
-        const { error } = await supabaseClient
+        const { data, error } = await supabaseClient
           .from('programari')
           .insert([
             {
@@ -1058,12 +1058,18 @@
               data: zile[ziSelectataIndex].dataIso,
               ora_start: sloturi[oraSelectataIndex],
               ora_final: getEndTime(oraSelectataIndex),
-              status: 'noua'
+              status: 'noua',
+              confirmare_trimisa: false
             }
-          ]);
+          ])
+          .select('id')
+          .single();
 
         if (error) {
           console.log('EROARE SUPABASE PROGRAMARE:', error);
+        } else if (data && data.id) {
+          programareNoua.id = data.id;
+          localStorage.setItem('programare_rezultat', JSON.stringify(programareNoua));
         }
       } catch(e) {
         console.log('EROARE SUPABASE PROGRAMARE:', e);
