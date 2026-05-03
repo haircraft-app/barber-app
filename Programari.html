@@ -477,15 +477,16 @@ const supabaseClient = window.supabase.createClient(
 
     /* BLOC 10 - TITLU ZI */
     function getTitluZi(programare) {
-      if (programare.zi && programare.zi.titlu) {
-        return programare.zi.titlu;
-      }
+      if (!programare || !programare.zi || !programare.zi.dataIso) return '';
 
-      if (programare.zi && programare.zi.dataIso) {
-        return programare.zi.dataIso;
-      }
+      const d = new Date(programare.zi.dataIso);
+      const zile = ['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'];
 
-      return '';
+      const zi = zile[d.getDay()];
+      const ziNr = String(d.getDate()).padStart(2,'0');
+      const luna = String(d.getMonth()+1).padStart(2,'0');
+
+      return zi + ' ' + ziNr + '-' + luna;
     }
 
     /* BLOC 11 - DATĂ AZI / MÂINE */
