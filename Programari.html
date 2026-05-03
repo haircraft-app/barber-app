@@ -139,6 +139,26 @@
       padding: 0;
     }
 
+
+    .conf-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      border: none;
+      background: #1f6fff;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      flex-shrink: 0;
+      line-height: 1;
+      padding: 0;
+      text-transform: uppercase;
+    }
+
     .confirm-delete-box {
       margin-top: 5px;
       border: 1px solid rgba(255,255,255,0.18);
@@ -287,6 +307,7 @@ const supabaseClient = window.supabase.createClient(
             telefon: p.telefon || ''
           },
           interval: (p.ora_start || '') + ' - ' + (p.ora_final || ''),
+          confirmare_trimisa: p.confirmare_trimisa === true,
           zi: {
             dataIso: p.data || '',
             titlu: p.data || ''
@@ -361,6 +382,10 @@ const supabaseClient = window.supabase.createClient(
             </div>
           ` : '';
 
+          const arataConfirmare =
+            p.confirmare_trimisa !== true &&
+            !aInceputProgramarea(p);
+
           const arataReminder =
             filtruActiv === 'azi' &&
             p.status !== 'reminder_trimis' &&
@@ -374,6 +399,7 @@ const supabaseClient = window.supabase.createClient(
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
 
+                ${arataConfirmare ? `<button class="conf-btn">CONF</button>` : ``}
                 ${arataReminder ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder('${item.id}')">Rem</button>` : ``}
                 <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
               </div>
