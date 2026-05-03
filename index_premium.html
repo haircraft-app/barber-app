@@ -653,5 +653,18 @@ loadNrClientiLocal();
 
     loadNrReminderTrimis();
   </script>
+</body><script>
+async function testSupabase() {
+  const { data, error } = await supabase
+    .from('clienti')
+    .select('*');
+
+  console.log('DATA:', data);
+  console.log('ERROR:', error);
+}
+
+testSupabase();
+</script>
+
 </body>
 </html>
