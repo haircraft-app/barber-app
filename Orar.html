@@ -202,6 +202,17 @@
     }
 
   </style>
+
+  <!-- BLOC SUPABASE - CONECTARE BAZĂ DE DATE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+      'https://hnvqauxqxtdzgyqumkqa.supabase.co',
+      'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker'
+    );
+  </script>
+
 </head>
 
 <body>
@@ -289,11 +300,28 @@
       return slots;
     }
 
-    /* BLOC 10 - CITIRE PROGRAMĂRI */
-    function getProgramari() {
+    /* BLOC 10 - CITIRE PROGRAMĂRI DIN SUPABASE */
+    async function getProgramari() {
       try {
-        return JSON.parse(localStorage.getItem('programari_lista') || '[]');
+        const { data, error } = await supabaseClient
+          .from('programari')
+          .select('*');
+
+        if (error) {
+          console.log('EROARE SUPABASE ORAR:', error);
+          return [];
+        }
+
+        return data.map(function(p) {
+          return {
+            zi: {
+              dataIso: p.data
+            },
+            interval: p.ora_start + '-' + p.ora_final
+          };
+        });
       } catch(e) {
+        console.log('EROARE SUPABASE ORAR:', e);
         return [];
       }
     }
@@ -327,11 +355,11 @@
     }
 
     /* BLOC 12 - AFIȘARE TABEL */
-    function renderOrar() {
+    async function renderOrar() {
       const grid = document.getElementById('orarGrid');
       const zile = getDays();
       const slots = getSlots();
-      const programari = getProgramari();
+      const programari = await getProgramari();
 
       let html = '';
 
