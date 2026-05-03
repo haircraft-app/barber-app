@@ -660,14 +660,46 @@ const client = window.supabase.createClient(
   </script>
 
 
-  <!-- BLOC 17A - NUMĂR CONFIRMĂRI DE TRIMIS (PREGĂTIT) -->
+  <!-- BLOC 17A - NUMĂR CONFIRMĂRI DE TRIMIS DIN SUPABASE -->
   <script>
-    function loadNrConfirmariTrimis() {
-      const el = document.getElementById('nrConfirmariTrimis');
-      if (!el) return;
+    async function loadNrConfirmariTrimis() {
+      try {
+        const azi = getDateIsoIndex(0);
 
-      const nr = Number(el.innerText || 0);
-      el.style.color = nr > 0 ? '#0066ff' : '#000000';
+        const { data: lista, error } = await client
+          .from('programari')
+          .select('*')
+          .gte('data', azi);
+
+        const el = document.getElementById('nrConfirmariTrimis');
+        if (!el) return;
+
+        if (error) {
+          console.log('EROARE CONFIRMARI SUPABASE:', error);
+          el.innerText = '0';
+          el.style.color = '#000000';
+          return;
+        }
+
+        const nr = (lista || []).filter(programare => {
+          if (!programare) return false;
+          if (programare.status === 'stearsa') return false;
+          if (programare.confirmare_trimisa === true) return false;
+          if (esteProgramareTerminataSupabase(programare)) return false;
+          if (aInceputProgramareaSupabase(programare)) return false;
+          return true;
+        }).length;
+
+        el.innerText = nr;
+        el.style.color = nr > 0 ? '#0066ff' : '#000000';
+      } catch(e) {
+        console.log('EROARE CONFIRMARI:', e);
+        const el = document.getElementById('nrConfirmariTrimis');
+        if (el) {
+          el.innerText = '0';
+          el.style.color = '#000000';
+        }
+      }
     }
   </script>
 
