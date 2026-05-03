@@ -1010,6 +1010,18 @@
       };
 
       localStorage.setItem('programare_rezultat', JSON.stringify(programareNoua));
+      client
+  .from('programari')
+  .insert([
+    {
+      nume_client: client.nume,
+      telefon: client.telefon,
+      data: zile[ziSelectataIndex].dataIso,
+      ora_start: sloturi[oraSelectataIndex],
+      ora_final: getEndTime(oraSelectataIndex),
+      status: 'noua'
+    }
+  ]);
 
       try {
         var lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
