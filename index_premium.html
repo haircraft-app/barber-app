@@ -391,6 +391,20 @@ const client = window.supabase.createClient(
         <div class="summary-card">
           <div class="summary-top">
             <svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <div class="summary-info">
+              <div class="summary-number" id="nrConfirmariTrimis">0</div>
+              <div class="summary-name">Confirmări<br>de trimis</div>
+            </div>
+          </div>
+          <div class="summary-link" style="display:none;">Vezi detalii <span class="arrow-tip">›</span></div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-top">
+            <svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
               <circle cx="9.5" cy="7" r="4"></circle>
               <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -402,21 +416,6 @@ const client = window.supabase.createClient(
             </div>
           </div>
           <div class="summary-link" style="display:none;">Vezi detalii <span class="arrow-tip">›</span></div>
-        </div>
-
-        <div class="summary-card">
-          <div class="summary-top">
-            <svg class="summary-icon" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="4" y="12" width="4" height="8" rx="1"></rect>
-              <rect x="10" y="8" width="4" height="12" rx="1"></rect>
-              <rect x="16" y="4" width="4" height="16" rx="1"></rect>
-            </svg>
-            <div class="summary-info">
-              <div class="summary-number">24</div>
-              <div class="summary-name">Statistici</div>
-            </div>
-          </div>
-          <div class="summary-link">Vezi detalii <span class="arrow-tip">›</span></div>
         </div>
 
       </div>
@@ -660,12 +659,25 @@ const client = window.supabase.createClient(
     }
   </script>
 
+
+  <!-- BLOC 17A - NUMĂR CONFIRMĂRI DE TRIMIS (PREGĂTIT) -->
+  <script>
+    function loadNrConfirmariTrimis() {
+      const el = document.getElementById('nrConfirmariTrimis');
+      if (!el) return;
+
+      const nr = Number(el.innerText || 0);
+      el.style.color = nr > 0 ? '#0066ff' : '#000000';
+    }
+  </script>
+
   <!-- BLOC 18 - PORNIRE DATE DIN SUPABASE -->
   <script>
     loadNrClientiSupabase();
     loadNrProgramariAziSupabase();
     loadUrmatorulClientSupabase();
     loadNrReminderTrimisSupabase();
+    loadNrConfirmariTrimis();
   </script>
 
 </body>
