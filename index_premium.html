@@ -506,23 +506,7 @@ const client = window.supabase.createClient(
     <!-- BLOC HTML 6 - HOME -->
   
   </div>
-
-  
-<!-- BLOC 13 - NUMĂR CLIENȚI DIN LOCALSTORAGE -->
-<script>
-function loadNrClientiLocal() {
-  try {
-    const lista = JSON.parse(localStorage.getItem('clienti_lista') || '[]');
-    document.getElementById("nrClienti").innerText = lista.length;
-  } catch(e) {
-    document.getElementById("nrClienti").innerText = '0';
-  }
-}
-loadNrClientiLocal();
-</script>
-
-
-  <!-- BLOC 14 - NUMĂR PROGRAMĂRI ACTIVE AZI DIN LOCALSTORAGE -->
+  <!-- BLOC 13 - FUNCȚII DATĂ ȘI ORĂ -->
   <script>
     function getDateIsoIndex(offset) {
       const d = new Date();
@@ -530,84 +514,100 @@ loadNrClientiLocal();
       return new Date(d.getFullYear(), d.getMonth(), d.getDate()).toLocaleDateString('en-CA');
     }
 
-    function esteProgramareActivaAzi(programare) {
-      if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
-
-      const azi = getDateIsoIndex(0);
-      if (programare.zi.dataIso !== azi) return false;
-
-      const parti = programare.interval.split('-');
-      if (parti.length < 2) return false;
-
-      const oraFinal = parti[1].trim();
-      const finalProgramare = new Date(programare.zi.dataIso + 'T' + oraFinal + ':00');
-      finalProgramare.setMinutes(finalProgramare.getMinutes() + 15);
-
-      return new Date() < finalProgramare;
+    function esteProgramareTerminataSupabase(programare) {
+      if (!programare || !programare.data || !programare.ora_final) return false;
+      const finalProgramare = new Date(programare.data + 'T' + programare.ora_final + ':00');
+      return new Date() >= finalProgramare;
     }
 
-    function loadNrProgramariAzi() {
+    function aInceputProgramareaSupabase(programare) {
+      if (!programare || !programare.data || !programare.ora_start) return false;
+      const startProgramare = new Date(programare.data + 'T' + programare.ora_start + ':00');
+      return new Date() >= startProgramare;
+    }
+  </script>
+
+  <!-- BLOC 14 - NUMĂR CLIENȚI DIN SUPABASE -->
+  <script>
+    async function loadNrClientiSupabase() {
       try {
-        const lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-        const activeAzi = lista.filter(esteProgramareActivaAzi).length;
-        document.getElementById('nrProgramariAzi').innerText = activeAzi;
+        const { count, error } = await client
+          .from('clienti')
+          .select('*', { count: 'exact', head: true });
+
+        if (error) {
+          console.log('EROARE CLIENTI SUPABASE:', error);
+          document.getElementById('nrClienti').innerText = '0';
+          return;
+        }
+
+        document.getElementById('nrClienti').innerText = count || 0;
       } catch(e) {
+        console.log('EROARE CLIENTI:', e);
+        document.getElementById('nrClienti').innerText = '0';
+      }
+    }
+  </script>
+
+  <!-- BLOC 15 - NUMĂR PROGRAMĂRI ACTIVE AZI DIN SUPABASE -->
+  <script>
+    async function loadNrProgramariAziSupabase() {
+      try {
+        const azi = getDateIsoIndex(0);
+
+        const { data: lista, error } = await client
+          .from('programari')
+          .select('*')
+          .eq('data', azi);
+
+        if (error) {
+          console.log('EROARE PROGRAMARI AZI SUPABASE:', error);
+          document.getElementById('nrProgramariAzi').innerText = '0';
+          return;
+        }
+
+        const nr = (lista || []).filter(programare => {
+          if (!programare) return false;
+          if (programare.status === 'stearsa') return false;
+          if (esteProgramareTerminataSupabase(programare)) return false;
+          return true;
+        }).length;
+
+        document.getElementById('nrProgramariAzi').innerText = nr;
+      } catch(e) {
+        console.log('EROARE PROGRAMARI AZI:', e);
         document.getElementById('nrProgramariAzi').innerText = '0';
       }
     }
-
-    loadNrProgramariAzi();
   </script>
 
-  <!-- BLOC 15 - URMĂTORUL CLIENT ACTIV DIN LOCALSTORAGE -->
+  <!-- BLOC 16 - URMĂTORUL CLIENT ACTIV DIN SUPABASE -->
   <script>
-    function getTextZiPentruBanda(programare) {
-      if (!programare || !programare.zi || !programare.zi.dataIso) return '';
-
-      const azi = getDateIsoIndex(0);
-      const maine = getDateIsoIndex(1);
-
-      if (programare.zi.dataIso === azi) return 'azi';
-
-      // pentru orice altă zi (inclusiv mâine) arătăm zi + data
-      if (programare.zi.nume && programare.zi.nr && programare.zi.luna) {
-        return programare.zi.nume + ' ' + programare.zi.nr + ' ' + programare.zi.luna;
-      }
-
-      return programare.zi.dataIso;
-    }
-
-    function getOraStartIndex(interval) {
-      if (!interval) return '';
-      return interval.split('-')[0].trim();
-    }
-
-    function esteProgramareActivaViitoare(programare) {
-      if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
-
-      const parti = programare.interval.split('-');
-      if (parti.length < 1) return false;
-
-      const oraStart = parti[0].trim();
-      const inceputProgramare = new Date(programare.zi.dataIso + 'T' + oraStart + ':00');
-      inceputProgramare.setMinutes(inceputProgramare.getMinutes() + 10);
-
-      return new Date() < inceputProgramare;
-    }
-
-    function loadUrmatorulClient() {
+    async function loadUrmatorulClientSupabase() {
       try {
-        const lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+        const azi = getDateIsoIndex(0);
 
-        const active = lista
-          .filter(esteProgramareActivaViitoare)
-          .sort((a, b) => {
-            const dataA = a.zi.dataIso + ' ' + getOraStartIndex(a.interval);
-            const dataB = b.zi.dataIso + ' ' + getOraStartIndex(b.interval);
-            return dataA.localeCompare(dataB);
-          });
+        const { data: lista, error } = await client
+          .from('programari')
+          .select('*')
+          .gte('data', azi)
+          .order('data', { ascending: true })
+          .order('ora_start', { ascending: true });
 
         const el = document.getElementById('urmatorulClientText');
+
+        if (error) {
+          console.log('EROARE URMATORUL CLIENT SUPABASE:', error);
+          el.innerText = 'Nu există programări active';
+          return;
+        }
+
+        const active = (lista || []).filter(programare => {
+          if (!programare) return false;
+          if (programare.status === 'stearsa') return false;
+          if (esteProgramareTerminataSupabase(programare)) return false;
+          return true;
+        });
 
         if (!active.length) {
           el.innerText = 'Nu există programări active';
@@ -615,31 +615,38 @@ loadNrClientiLocal();
         }
 
         const p = active[0];
-        const zi = getTextZiPentruBanda(p);
-        const interval = p.interval || '-';
-        const nume = p.client && p.client.nume ? p.client.nume : '-';
-
-        el.innerText = zi + ' ' + interval + ' - ' + nume;
+        const ziText = p.data === azi ? 'azi' : p.data;
+        el.innerText = ziText + ' ' + p.ora_start + ' - ' + p.ora_final + ' - ' + (p.nume_client || '-');
       } catch(e) {
+        console.log('EROARE URMATORUL CLIENT:', e);
         document.getElementById('urmatorulClientText').innerText = 'Nu există programări active';
       }
     }
-
-    loadUrmatorulClient();
   </script>
 
-  <!-- BLOC 16 - NUMĂR REMINDER DE TRIMIS AZI DIN LOCALSTORAGE -->
+  <!-- BLOC 17 - NUMĂR REMINDER DE TRIMIS AZI DIN SUPABASE -->
   <script>
-    function loadNrReminderTrimis() {
+    async function loadNrReminderTrimisSupabase() {
       try {
-        const lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-        const reminderTrimise = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
         const azi = getDateIsoIndex(0);
 
-        const nr = lista.filter((programare, index) => {
-          if (!programare || !programare.zi || !programare.zi.dataIso) return false;
-          if (programare.zi.dataIso !== azi) return false;
-          if (reminderTrimise[index]) return false;
+        const { data: lista, error } = await client
+          .from('programari')
+          .select('*')
+          .eq('data', azi);
+
+        if (error) {
+          console.log('EROARE REMINDER SUPABASE:', error);
+          document.getElementById('nrReminderTrimis').innerText = '0';
+          return;
+        }
+
+        const nr = (lista || []).filter(programare => {
+          if (!programare) return false;
+          if (programare.status === 'stearsa') return false;
+          if (programare.status === 'reminder_trimis') return false;
+          if (esteProgramareTerminataSupabase(programare)) return false;
+          if (aInceputProgramareaSupabase(programare)) return false;
           return true;
         }).length;
 
@@ -647,24 +654,19 @@ loadNrClientiLocal();
         el.innerText = nr;
         el.style.color = nr > 0 ? '#ff0000' : '#000000';
       } catch(e) {
+        console.log('EROARE REMINDER:', e);
         document.getElementById('nrReminderTrimis').innerText = '0';
       }
     }
-
-    loadNrReminderTrimis();
   </script>
-</body><script>
-async function testSupabase() {
-  const { data, error } = await client
-    .from('clienti')
-    .select('*');
 
-  console.log('DATA:', data);
-  console.log('ERROR:', error);
-}
-
-testSupabase();
-</script>
+  <!-- BLOC 18 - PORNIRE DATE DIN SUPABASE -->
+  <script>
+    loadNrClientiSupabase();
+    loadNrProgramariAziSupabase();
+    loadUrmatorulClientSupabase();
+    loadNrReminderTrimisSupabase();
+  </script>
 
 </body>
 </html>
