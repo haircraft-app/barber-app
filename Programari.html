@@ -269,6 +269,7 @@
       });
 
       programari = programari.filter(item => item.date.zi && item.date.zi.dataIso && item.date.zi.dataIso >= azi);
+      programari = programari.filter(item => !esteProgramareTrecuta(item.date));
 
       if (filtruActiv === 'azi') {
         programari = programari.filter(item => item.date.zi.dataIso === azi);
@@ -320,7 +321,7 @@
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
                 
-${filtruActiv === 'azi' && !JSON.parse(localStorage.getItem('reminder_trimise') || '{}')[item.indexOriginal] ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
+${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localStorage.getItem('reminder_trimise') || '{}')[item.indexOriginal] ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
 <button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
 
               </div>
@@ -362,6 +363,17 @@ ${filtruActiv === 'azi' && !JSON.parse(localStorage.getItem('reminder_trimise') 
       renderProgramari();
     }
 
+    function aInceputProgramarea(programare) {
+      if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
+
+      const oraStart = getOraStart(programare.interval);
+      if (!oraStart) return false;
+
+      const startProgramare = new Date(programare.zi.dataIso + 'T' + oraStart + ':00');
+
+      return new Date() >= startProgramare;
+    }
+
     function esteProgramareTrecuta(programare) {
       if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
 
@@ -373,7 +385,6 @@ ${filtruActiv === 'azi' && !JSON.parse(localStorage.getItem('reminder_trimise') 
       if (bucatiOra.length < 2) return false;
 
       const finalProgramare = new Date(programare.zi.dataIso + 'T' + oraFinal + ':00');
-      finalProgramare.setMinutes(finalProgramare.getMinutes() + 15);
 
       return new Date() >= finalProgramare;
     }
