@@ -448,7 +448,22 @@ MODIFICARI:
   var telefon = (client.telefon || "").replace(/\D/g, "");
   var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
 
-  window.open(url, "_blank");
+  window.open(url, "_blank"); marc
+/* UPDATE CONFIRMARE IN SUPABASE */
+async function marcheazaConfirmare() {
+  var data = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
+  if (!data || !data.id) return;
+
+  await fetch('https://hnvqauxqxtdzgyqumkqa.supabase.co/rest/v1/programari?id=eq.' + data.id, {
+    method: 'PATCH',
+    headers: {
+      'apikey': 'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ confirmare_trimisa: true })
+  });
+}
+heazaConfirmare();
 }
   </script>
 </body>
