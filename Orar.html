@@ -305,7 +305,8 @@
       try {
         const { data, error } = await supabaseClient
           .from('programari')
-          .select('*');
+          .select('*')
+          .neq('status', 'stearsa');
 
         if (error) {
           console.log('EROARE SUPABASE ORAR:', error);
