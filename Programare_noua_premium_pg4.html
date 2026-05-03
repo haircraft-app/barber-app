@@ -338,6 +338,17 @@ MODIFICARI:
       }
     }
   </style>
+
+  <!-- BLOC SUPABASE - CONECTARE BAZĂ DE DATE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+      'https://hnvqauxqxtdzgyqumkqa.supabase.co',
+      'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker'
+    );
+  </script>
+
 </head>
 
 <body>
@@ -428,7 +439,7 @@ MODIFICARI:
     }
 
     init();
-    function trimiteWhatsApp() {
+    async function trimiteWhatsApp() {
 
     var data = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
 
@@ -448,22 +459,18 @@ MODIFICARI:
   var telefon = (client.telefon || "").replace(/\D/g, "");
   var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
 
-  window.open(url, "_blank"); marc
-/* UPDATE CONFIRMARE IN SUPABASE */
-async function marcheazaConfirmare() {
-  var data = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
-  if (!data || !data.id) return;
+  window.open(url, "_blank");
 
-  await fetch('https://hnvqauxqxtdzgyqumkqa.supabase.co/rest/v1/programari?id=eq.' + data.id, {
-    method: 'PATCH',
-    headers: {
-      'apikey': 'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ confirmare_trimisa: true })
-  });
-}
-heazaConfirmare();
+  if (data.id) {
+    const { error } = await supabaseClient
+      .from('programari')
+      .update({ confirmare_trimisa: true })
+      .eq('id', data.id);
+
+    if (error) {
+      console.log('EROARE CONFIRMARE SUPABASE:', error);
+    }
+  }
 }
   </script>
 </body>
