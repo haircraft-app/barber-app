@@ -399,7 +399,7 @@ const supabaseClient = window.supabase.createClient(
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
 
-                ${arataConfirmare ? `<button class="conf-btn">CONF</button>` : ``}
+                ${arataConfirmare ? `<button class="conf-btn" onclick="trimiteConfirmare(\'${item.id}\')">CONF</button>` : ``}
                 ${arataReminder ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder('${item.id}')">Rem</button>` : ``}
                 <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
               </div>
@@ -537,6 +537,34 @@ Multumesc`
 
     /* BLOC 14 - PORNIRE PAGINĂ */
     incarcaProgramari();
-  </script>
+  
+/* BLOC 15 - TRIMITERE CONFIRMARE WHATSAPP */
+async function trimiteConfirmare(id) {
+  const p = programariOriginale.find(item => item.id === id);
+  if (!p || !p.client || !p.client.telefon) return;
+
+  const tel = p.client.telefon.replace(/[^0-9]/g, '');
+  const mesaj = encodeURIComponent(
+`--- *HAIR CRAFT* ---
+Salut,
+Iti confirm programarea:
+*${p.zi.titlu}, ${p.interval}*
+Daca nu poti ajunge, te rog sa ma anunti din timp.
+Multumesc!`
+  );
+
+  let finalTel = tel;
+  if (finalTel.startsWith('0')) finalTel = '40' + finalTel.substring(1);
+
+  window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
+
+  const { error } = await supabaseClient
+    .from('programari')
+    .update({ confirmare_trimisa: true })
+    .eq('id', id);
+
+  if (!error) incarcaProgramari();
+}
+</script>
 </body>
 </html>
