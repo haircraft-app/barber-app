@@ -248,58 +248,76 @@ const supabaseClient = window.supabase.createClient(
   </div>
 
   <script>
+    /* BLOC 1 - SETĂRI PROGRAMĂRI */
     var filtruActiv = 'azi';
-    var stergereIndex = null;
+    var stergereId = null;
+    var programariOriginale = [];
 
+    /* BLOC 2 - SCHIMBARE FILTRU AZI / MÂINE / TOATE */
     function selectTab(el, filtru) {
       document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       filtruActiv = filtru;
-      incarcaProgramari();
+      renderProgramari();
     }
 
+    /* BLOC 3 - CITIRE PROGRAMĂRI DIN SUPABASE */
+    async function incarcaProgramari() {
+      const lista = document.getElementById('programariList');
+      lista.innerHTML = '<div class="empty-card">Se încarcă...</div>';
+
+      const { data, error } = await supabaseClient
+        .from('programari')
+        .select('*')
+        .order('data', { ascending: true })
+        .order('ora_start', { ascending: true });
+
+      if (error) {
+        console.log('EROARE PROGRAMARI SUPABASE:', error);
+        lista.innerHTML = '<div class="empty-card">Eroare la citirea programărilor</div>';
+        return;
+      }
+
+      programariOriginale = (data || []).map(function(p) {
+        return {
+          id: p.id,
+          status: p.status || 'noua',
+          client: {
+            nume: p.nume_client || '-',
+            telefon: p.telefon || ''
+          },
+          interval: (p.ora_start || '') + ' - ' + (p.ora_final || ''),
+          zi: {
+            dataIso: p.data || '',
+            titlu: p.data || ''
+          }
+        };
+      });
+
+      renderProgramari();
+    }
+
+    /* BLOC 4 - AFIȘARE PROGRAMĂRI */
     function renderProgramari() {
       const lista = document.getElementById('programariList');
-      
-let programariOriginale = [];
-
-async function incarcaProgramari() {
-  const { data, error } = await supabaseClient.from('programari').select('*');
-
-  if (error) {
-    console.log('EROARE:', error);
-    return;
-  }
-
-  programariOriginale = data.map(p => {
-    return {
-      client: { nume: p.nume_client, telefon: p.telefon },
-      interval: p.ora_start + ' - ' + p.ora_final,
-      zi: { dataIso: p.data, titlu: p.data }
-    };
-  });
-
-  incarcaProgramari();
-}
-
-
-      if (!programariOriginale.length) {
-        const ultima = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
-        if (ultima) programariOriginale = [ultima];
-      }
 
       const azi = getDateIso(0);
       const maine = getDateIso(1);
 
-      let programari = programariOriginale.map((p, indexOriginal) => {
-        return {
-          date: p,
-          indexOriginal: indexOriginal
-        };
-      });
-
-      programari = programari.filter(item => item.date.zi && item.date.zi.dataIso && item.date.zi.dataIso >= azi);
-      programari = programari.filter(item => !esteProgramareTrecuta(item.date));
+      let programari = programariOriginale
+        .filter(function(p) {
+          if (!p || !p.zi || !p.zi.dataIso) return false;
+          if (p.status === 'stearsa') return false;
+          if (p.zi.dataIso < azi) return false;
+          if (esteProgramareTrecuta(p)) return false;
+          return true;
+        })
+        .map(function(p) {
+          return {
+            date: p,
+            id: p.id
+          };
+        });
 
       if (filtruActiv === 'azi') {
         programari = programari.filter(item => item.date.zi.dataIso === azi);
@@ -332,28 +350,32 @@ async function incarcaProgramari() {
 
         const carduri = grupuri[dataIso].map(item => {
           const p = item.date;
-          const clasaTrecuta = esteProgramareTrecuta(p) ? ' trecuta' : '';
-          const confirmare = stergereIndex === item.indexOriginal ? `
+
+          const confirmare = stergereId === item.id ? `
             <div class="confirm-delete-box">
               <div class="confirm-delete-text">Confirmă ștergerea</div>
               <div class="confirm-delete-actions">
-                <button class="confirm-small-btn ok" onclick="confirmaStergere(${item.indexOriginal})">Confirm</button>
+                <button class="confirm-small-btn ok" onclick="confirmaStergere('${item.id}')">Confirm</button>
                 <button class="confirm-small-btn cancel" onclick="renuntaStergere()">Renunț</button>
               </div>
             </div>
           ` : '';
 
+          const arataReminder =
+            filtruActiv === 'azi' &&
+            p.status !== 'reminder_trimis' &&
+            !aInceputProgramarea(p);
+
           return `
             <div>
-              <div class="programare-card${clasaTrecuta}">
+              <div class="programare-card">
                 <div class="programare-text">
                   <div class="programare-nume">${p.client && p.client.nume ? p.client.nume : '-'}</div>
                   <div class="programare-detalii">${p.interval || '-'}</div>
                 </div>
-                
-${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localStorage.getItem('reminder_trimise') || '{}')[item.indexOriginal] ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder(${item.indexOriginal})">Rem</button>` : ``}
-<button class="delete-btn" onclick="cereStergere(${item.indexOriginal})">🗑</button>
 
+                ${arataReminder ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder('${item.id}')">Rem</button>` : ``}
+                <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
               </div>
               ${confirmare}
             </div>
@@ -369,30 +391,34 @@ ${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localS
       }).join('');
     }
 
-    function cereStergere(indexOriginal) {
-      stergereIndex = indexOriginal;
-      incarcaProgramari();
+    /* BLOC 5 - CERERE ȘTERGERE PROGRAMARE */
+    function cereStergere(id) {
+      stergereId = id;
+      renderProgramari();
     }
 
     function renuntaStergere() {
-      stergereIndex = null;
+      stergereId = null;
+      renderProgramari();
+    }
+
+    /* BLOC 6 - ȘTERGERE LOGICĂ ÎN SUPABASE */
+    async function confirmaStergere(id) {
+      const { error } = await supabaseClient
+        .from('programari')
+        .update({ status: 'stearsa' })
+        .eq('id', id);
+
+      if (error) {
+        console.log('EROARE STERGERE SUPABASE:', error);
+        return;
+      }
+
+      stergereId = null;
       incarcaProgramari();
     }
 
-    function confirmaStergere(indexOriginal) {
-      let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-
-      lista.splice(indexOriginal, 1);
-      localStorage.setItem('programari_lista', JSON.stringify(lista));
-
-      let reminderTrimise = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
-      delete reminderTrimise[indexOriginal];
-      localStorage.setItem('reminder_trimise', JSON.stringify(reminderTrimise));
-
-      stergereIndex = null;
-      incarcaProgramari();
-    }
-
+    /* BLOC 7 - VERIFICARE PROGRAMARE ÎNCEPUTĂ */
     function aInceputProgramarea(programare) {
       if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
 
@@ -404,6 +430,7 @@ ${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localS
       return new Date() >= startProgramare;
     }
 
+    /* BLOC 8 - VERIFICARE PROGRAMARE TERMINATĂ */
     function esteProgramareTrecuta(programare) {
       if (!programare || !programare.zi || !programare.zi.dataIso || !programare.interval) return false;
 
@@ -411,19 +438,18 @@ ${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localS
       if (parti.length < 2) return false;
 
       const oraFinal = parti[1].trim();
-      const bucatiOra = oraFinal.split(':');
-      if (bucatiOra.length < 2) return false;
-
       const finalProgramare = new Date(programare.zi.dataIso + 'T' + oraFinal + ':00');
 
       return new Date() >= finalProgramare;
     }
 
+    /* BLOC 9 - ORĂ START */
     function getOraStart(interval) {
       if (!interval) return '';
       return interval.split('-')[0].trim();
     }
 
+    /* BLOC 10 - TITLU ZI */
     function getTitluZi(programare) {
       if (programare.zi && programare.zi.titlu) {
         return programare.zi.titlu;
@@ -436,22 +462,24 @@ ${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localS
       return '';
     }
 
+    /* BLOC 11 - DATĂ AZI / MÂINE */
     function getDateIso(offset) {
       const d = new Date();
       d.setDate(d.getDate() + offset);
       return new Date(d.getFullYear(), d.getMonth(), d.getDate()).toLocaleDateString('en-CA');
     }
 
+    /* BLOC 12 - HOME */
     function goHome() {
       window.location.href = 'index_premium.html';
     }
 
-    
+    /* BLOC 13 - TRIMITERE REMINDER WHATSAPP */
+    async function trimiteReminder(id) {
+      const p = programariOriginale.find(function(item) {
+        return item.id === id;
+      });
 
-
-    function trimiteReminder(indexOriginal) {
-      let lista = JSON.parse(localStorage.getItem('programari_lista') || '[]');
-      const p = lista[indexOriginal];
       if (!p || !p.client || !p.client.telefon) return;
 
       const tel = p.client.telefon.replace(/[^0-9]/g, '');
@@ -468,14 +496,21 @@ Multumesc`
 
       window.open(`https://wa.me/${finalTel}?text=${mesaj}`, '_blank');
 
-      let reminderTrimise = JSON.parse(localStorage.getItem('reminder_trimise') || '{}');
-      reminderTrimise[indexOriginal] = true;
-      localStorage.setItem('reminder_trimise', JSON.stringify(reminderTrimise));
+      const { error } = await supabaseClient
+        .from('programari')
+        .update({ status: 'reminder_trimis' })
+        .eq('id', id);
+
+      if (error) {
+        console.log('EROARE REMINDER SUPABASE:', error);
+        return;
+      }
 
       incarcaProgramari();
     }
 
-incarcaProgramari();
+    /* BLOC 14 - PORNIRE PAGINĂ */
+    incarcaProgramari();
   </script>
 </body>
 </html>
