@@ -478,6 +478,7 @@
           email: c.email || '',
           data_nastere: c.data_nastere || '',
           notite: c.notite || '',
+          v2_trimisa: c.v2_trimisa === true,
           nr_programari: calculeazaTotalProgramariClient(c.telefon)
         };
       });
@@ -539,7 +540,7 @@
               <div class="client-name">${escapeHtml(c.nume)}</div>
               <div class="client-details">${escapeHtml(c.telefon)} · Programări: ${Number(c.nr_programari || 0)}</div>
             </div>
-            <button style="background:#d71920;color:#fff;font-size:10px;border:none;border-radius:8px;padding:4px 6px;margin-right:4px;">V2</button>
+            ${c.v2_trimisa !== true ? `<button onclick="trimiteV2(event, '${c.id}')" style="background:#d71920;color:#fff;font-size:10px;border:none;border-radius:8px;padding:4px 6px;margin-right:4px;cursor:pointer;">V2</button>` : ``}
             <div class="arrow">›</div>
           </div>
         `;
@@ -694,6 +695,41 @@
       currentClientId = null;
       await loadClients();
       showScreen('screenList');
+    }
+
+    /* ===== TRIMITERE MESAJ V2 WHATSAPP ===== */
+    async function trimiteV2(event, id) {
+      event.stopPropagation();
+
+      var c = clients.find(function(x) {
+        return String(x.id) === String(id);
+      });
+
+      if (!c || !c.telefon) return;
+
+      var telefon = curataTelefon(c.telefon);
+      if (telefon.startsWith('0')) {
+        telefon = '40' + telefon.substring(1);
+      }
+
+      var mesaj = `Salut,
+In dorinta de a fi cat mai profesionist, am dezvoltat o aplicatie pentru programari, Te rog sa accesezi linkul de mai jos ( click pe el ), cand se deschide sa apesi pe cele 3 puncte de sus si sa descarci aplicatia. In aplicatie vei vedea dispobibilitatile pe 7 zile si in curand vei putea sa imi trimiti o pre-programare direct din aplicatie, eu o vad, o validez si iti trimit confirmarea pe whatsapp.
+https://mihaiflorescu2017-droid.github.io/barber-app/haircraft-clienti/
+Multumesc`;
+
+      window.open('https://wa.me/' + telefon + '?text=' + encodeURIComponent(mesaj), '_blank');
+
+      const { error } = await supabaseClient
+        .from('clienti')
+        .update({ v2_trimisa: true })
+        .eq('id', id);
+
+      if (error) {
+        console.log('EROARE V2 SUPABASE:', error);
+        return;
+      }
+
+      await loadClients();
     }
 
     /* ===== ACTIUNI VIITOARE ===== */
