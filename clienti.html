@@ -720,8 +720,6 @@ In curand vei putea sa imi trimiti o pre-programare direct din aplicatie, eu o v
 https://mihaiflorescu2017-droid.github.io/barber-app/haircraft-clienti/
 Multumesc`;
 
-      window.open('https://wa.me/' + telefon + '?text=' + encodeURIComponent(mesaj), '_blank');
-
       const { error } = await supabaseClient
         .from('clienti')
         .update({ v2_trimisa: true })
@@ -733,6 +731,8 @@ Multumesc`;
       }
 
       await loadClients();
+
+      window.open('https://wa.me/' + telefon + '?text=' + encodeURIComponent(mesaj), '_blank');
     }
 
     /* ===== ACTIUNI VIITOARE ===== */
