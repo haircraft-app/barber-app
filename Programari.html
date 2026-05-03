@@ -214,6 +214,15 @@
       cursor: pointer;
     }
   </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseClient = window.supabase.createClient(
+  'https://hnvqauxqxtdzgyqumkqa.supabase.co',
+  'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker'
+);
+</script>
+
 </head>
 
 <body>
@@ -246,12 +255,33 @@
       document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       filtruActiv = filtru;
-      renderProgramari();
+      incarcaProgramari();
     }
 
     function renderProgramari() {
       const lista = document.getElementById('programariList');
-      let programariOriginale = JSON.parse(localStorage.getItem('programari_lista') || '[]');
+      
+let programariOriginale = [];
+
+async function incarcaProgramari() {
+  const { data, error } = await supabaseClient.from('programari').select('*');
+
+  if (error) {
+    console.log('EROARE:', error);
+    return;
+  }
+
+  programariOriginale = data.map(p => {
+    return {
+      client: { nume: p.nume_client, telefon: p.telefon },
+      interval: p.ora_start + ' - ' + p.ora_final,
+      zi: { dataIso: p.data, titlu: p.data }
+    };
+  });
+
+  incarcaProgramari();
+}
+
 
       if (!programariOriginale.length) {
         const ultima = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
@@ -341,12 +371,12 @@ ${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localS
 
     function cereStergere(indexOriginal) {
       stergereIndex = indexOriginal;
-      renderProgramari();
+      incarcaProgramari();
     }
 
     function renuntaStergere() {
       stergereIndex = null;
-      renderProgramari();
+      incarcaProgramari();
     }
 
     function confirmaStergere(indexOriginal) {
@@ -360,7 +390,7 @@ ${filtruActiv === 'azi' && !aInceputProgramarea(item.date) && !JSON.parse(localS
       localStorage.setItem('reminder_trimise', JSON.stringify(reminderTrimise));
 
       stergereIndex = null;
-      renderProgramari();
+      incarcaProgramari();
     }
 
     function aInceputProgramarea(programare) {
@@ -442,10 +472,10 @@ Multumesc`
       reminderTrimise[indexOriginal] = true;
       localStorage.setItem('reminder_trimise', JSON.stringify(reminderTrimise));
 
-      renderProgramari();
+      incarcaProgramari();
     }
 
-renderProgramari();
+incarcaProgramari();
   </script>
 </body>
 </html>
