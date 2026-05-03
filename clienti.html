@@ -485,14 +485,20 @@
       renderClients();
     }
 
-    /* ===== CALCUL TOTAL PROGRAMARI ISTORIC CLIENT ===== */
+    /* ===== CALCUL PROGRAMARI REALIZATE CLIENT ===== */
     function calculeazaTotalProgramariClient(telefonClient) {
       var telClient = curataTelefon(telefonClient);
 
       if (!telClient) return 0;
 
       return programariIstoric.filter(function(p) {
-        return curataTelefon(p.telefon) === telClient;
+        if (curataTelefon(p.telefon) !== telClient) return false;
+        if (p.status === 'stearsa') return false;
+        if (!p.data || !p.ora_final) return false;
+
+        var finalProgramare = new Date(p.data + 'T' + p.ora_final + ':00');
+
+        return new Date() >= finalProgramare;
       }).length;
     }
 
@@ -553,7 +559,7 @@
       document.getElementById('detailPhone').textContent = c.telefon ? 'Telefon: ' + c.telefon : 'Telefon: -';
       document.getElementById('detailEmail').textContent = c.email ? 'Email: ' + c.email : 'Email: -';
       document.getElementById('detailBirthday').textContent = c.data_nastere ? 'Data naștere: ' + c.data_nastere : 'Data naștere: -';
-      document.getElementById('detailNrProgramari').textContent = 'Programări total istoric: ' + Number(c.nr_programari || 0);
+      document.getElementById('detailNrProgramari').textContent = 'Programări realizate: ' + Number(c.nr_programari || 0);
       document.getElementById('detailNotes').textContent = c.notite ? c.notite : '';
 
       showScreen('screenDetails');
