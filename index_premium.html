@@ -630,8 +630,10 @@ const client = window.supabase.createClient(
         }
 
         const p = active[0];
-        const ziText = p.data === azi ? 'azi' : p.data;
-        el.innerText = ziText + ' ' + p.ora_start + ' - ' + p.ora_final + ' - ' + (p.nume_client || '-');
+        const dataParts = p.data.split('-');
+        const ziFormatata = dataParts[2] + '-' + dataParts[1];
+
+        el.innerText = ziFormatata + ' ' + p.ora_start + ' - ' + p.ora_final + ' - ' + (p.nume_client || '-');
       } catch(e) {
         console.log('EROARE URMATORUL CLIENT:', e);
         document.getElementById('urmatorulClientText').innerText = 'Nu există programări active';
