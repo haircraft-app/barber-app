@@ -100,6 +100,18 @@
       gap: 8px;
     }
 
+    .programare-card.blocare-card {
+      border-color: #ff4040;
+      background: rgba(255, 64, 64, 0.10);
+    }
+
+    .blocare-label {
+      color: #ff4040;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
     .programare-text {
       flex: 1;
       min-width: 0;
@@ -272,6 +284,7 @@ const supabaseClient = window.supabase.createClient(
     var filtruActiv = 'azi';
     var stergereId = null;
     var programariOriginale = [];
+    var blocariOriginale = [];
 
     /* BLOC 2 - SCHIMBARE FILTRU AZI / MÂINE / TOATE */
     function selectTab(el, filtru) {
@@ -281,7 +294,7 @@ const supabaseClient = window.supabase.createClient(
       renderProgramari();
     }
 
-    /* BLOC 3 - CITIRE PROGRAMĂRI DIN SUPABASE */
+    /* BLOC 3 - CITIRE PROGRAMĂRI ȘI BLOCĂRI DIN SUPABASE */
     async function incarcaProgramari() {
       const lista = document.getElementById('programariList');
       lista.innerHTML = '<div class="empty-card">Se încarcă...</div>';
@@ -300,6 +313,7 @@ const supabaseClient = window.supabase.createClient(
 
       programariOriginale = (data || []).map(function(p) {
         return {
+          tipCard: 'programare',
           id: p.id,
           status: p.status || 'noua',
           client: {
@@ -315,6 +329,32 @@ const supabaseClient = window.supabase.createClient(
         };
       });
 
+      const { data: blocari, error: errorBlocari } = await supabaseClient
+        .from('indisponibilitati')
+        .select('*')
+        .eq('activa', true)
+        .order('data_start', { ascending: true })
+        .order('ora_start', { ascending: true });
+
+      if (errorBlocari) {
+        console.log('EROARE INDISPONIBILITATI SUPABASE:', errorBlocari);
+        blocariOriginale = [];
+      } else {
+        blocariOriginale = (blocari || []).map(function(b) {
+          return {
+            tipCard: 'blocare',
+            id: b.id,
+            status: 'blocare',
+            mesaj: b.mesaj || 'Închis',
+            interval: ((b.ora_start || '08:00').slice(0,5)) + ' - ' + ((b.ora_final || '22:00').slice(0,5)),
+            zi: {
+              dataIso: b.data_start || '',
+              titlu: b.data_start || ''
+            }
+          };
+        });
+      }
+
       renderProgramari();
     }
 
@@ -325,12 +365,12 @@ const supabaseClient = window.supabase.createClient(
       const azi = getDateIso(0);
       const maine = getDateIso(1);
 
-      let programari = programariOriginale
+      let programari = programariOriginale.concat(blocariOriginale)
         .filter(function(p) {
           if (!p || !p.zi || !p.zi.dataIso) return false;
           if (p.status === 'stearsa') return false;
           if (p.zi.dataIso < azi) return false;
-          if (esteProgramareTrecuta(p)) return false;
+          if (p.tipCard !== 'blocare' && esteProgramareTrecuta(p)) return false;
           return true;
         })
         .map(function(p) {
@@ -382,6 +422,22 @@ const supabaseClient = window.supabase.createClient(
             </div>
           ` : '';
 
+          if (p.tipCard === 'blocare') {
+            return `
+              <div>
+                <div class="programare-card blocare-card">
+                  <div class="programare-text">
+                    <div class="blocare-label">ÎNCHIS</div>
+                    <div class="programare-detalii">${p.interval || '-'} · ${p.mesaj || 'Închis'}</div>
+                  </div>
+
+                  <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
+                </div>
+                ${confirmare}
+              </div>
+            `;
+          }
+
           const arataConfirmare =
             p.confirmare_trimisa !== true &&
             !aInceputProgramarea(p);
@@ -430,6 +486,26 @@ const supabaseClient = window.supabase.createClient(
 
     /* BLOC 6 - ȘTERGERE LOGICĂ ÎN SUPABASE */
     async function confirmaStergere(id) {
+      const esteBlocare = blocariOriginale.some(function(item) {
+        return String(item.id) === String(id);
+      });
+
+      if (esteBlocare) {
+        const { error } = await supabaseClient
+          .from('indisponibilitati')
+          .update({ activa: false })
+          .eq('id', id);
+
+        if (error) {
+          console.log('EROARE STERGERE BLOCARE SUPABASE:', error);
+          return;
+        }
+
+        stergereId = null;
+        incarcaProgramari();
+        return;
+      }
+
       const { error } = await supabaseClient
         .from('programari')
         .update({ status: 'stearsa' })
