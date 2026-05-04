@@ -456,7 +456,7 @@
         }
 
         const concediu = data[0];
-        text.innerText = 'În perioada ' + formatDataConcediu(concediu.data_start).replace('-', '.') + ' - ' + formatDataConcediu(concediu.data_final).replace('-', '.') + ', voi fi în concediu!';
+        text.innerText = 'În perioada ' + formatDataConcediu(concediu.data_start).replace('-', '.') + ' - ' + formatDataConcediu(concediu.data_final).replace('-', '.') + '  voi fi în concediu!';
         box.style.display = 'flex';
       } catch(e) {
         console.log('EROARE MESAJ CONCEDIU CLIENT:', e);
