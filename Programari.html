@@ -372,7 +372,8 @@ const supabaseClient = window.supabase.createClient(
               const iso = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toLocaleDateString('en-CA');
               rezultate.push({
                 tipCard: 'blocare',
-                id: b.id + '_' + iso, // id unic per zi
+                id: b.id + '_' + iso,
+                originalId: b.id,
                 status: 'blocare',
                 mesaj: b.mesaj || 'Concediu',
                 tipIndisponibilitate: 'concediu',
@@ -457,7 +458,7 @@ const supabaseClient = window.supabase.createClient(
             <div class="confirm-delete-box">
               <div class="confirm-delete-text">Confirmă ștergerea</div>
               <div class="confirm-delete-actions">
-                <button class="confirm-small-btn ok" onclick="confirmaStergere('${item.id}', '${p.tipCard}')">Confirm</button>
+                <button class="confirm-small-btn ok" onclick="confirmaStergere('${p.tipCard === 'blocare' ? p.originalId : item.id}', '${p.tipCard}')">Confirm</button>
                 <button class="confirm-small-btn cancel" onclick="renuntaStergere()">Renunț</button>
               </div>
             </div>
@@ -535,7 +536,7 @@ ${p.tipIndisponibilitate === 'concediu'
         const { error } = await supabaseClient
           .from('indisponibilitati')
           .update({ activa: false })
-          .eq('id', Number(id));
+          .eq('id', id);
 
         if (error) {
           console.log('EROARE STERGERE BLOCARE SUPABASE:', error);
@@ -550,7 +551,7 @@ ${p.tipIndisponibilitate === 'concediu'
       const { error } = await supabaseClient
         .from('programari')
         .update({ status: 'stearsa' })
-        .eq('id', Number(id));
+        .eq('id', id);
 
       if (error) {
         console.log('EROARE STERGERE SUPABASE:', error);
