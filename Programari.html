@@ -371,7 +371,11 @@ const supabaseClient = window.supabase.createClient(
         .filter(function(p) {
           if (!p || !p.zi || !p.zi.dataIso) return false;
           if (p.status === 'stearsa') return false;
-          if (p.zi.dataIso < azi) return false;
+          if (p.tipIndisponibilitate === 'concediu') {
+            if ((p.data_final || p.zi.dataIso) < azi) return false;
+          } else {
+            if (p.zi.dataIso < azi) return false;
+          }
           if (p.tipCard !== 'blocare' && esteProgramareTrecuta(p)) return false;
           return true;
         })
