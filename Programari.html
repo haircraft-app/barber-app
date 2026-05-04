@@ -580,7 +580,7 @@ const supabaseClient = window.supabase.createClient(
     /* BLOC 13 - TRIMITERE REMINDER WHATSAPP */
     async function trimiteReminder(id) {
       const p = programariOriginale.find(function(item) {
-        return item.id === id;
+        return String(item.id) === String(id);
       });
 
       if (!p || !p.client || !p.client.telefon) return;
