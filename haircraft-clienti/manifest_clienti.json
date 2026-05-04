@@ -1,7 +1,7 @@
 {
   "name": "HairCraft Clienti",
   "short_name": "HC Clienti",
-  "start_url": "./index.html",
+  "start_url": "/barber-app/haircraft-clienti/index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
