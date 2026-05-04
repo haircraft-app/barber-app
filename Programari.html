@@ -350,6 +350,7 @@ const supabaseClient = window.supabase.createClient(
             return [{
               tipCard: 'blocare',
               id: b.id,
+              originalId: b.id,
               status: 'blocare',
               mesaj: b.mesaj || 'Închis',
               tipIndisponibilitate: tip,
@@ -536,7 +537,7 @@ ${p.tipIndisponibilitate === 'concediu'
         const { error } = await supabaseClient
           .from('indisponibilitati')
           .update({ activa: false })
-          .eq('id', id);
+          .eq('id', Number(id));
 
         if (error) {
           console.log('EROARE STERGERE BLOCARE SUPABASE:', error);
@@ -551,7 +552,7 @@ ${p.tipIndisponibilitate === 'concediu'
       const { error } = await supabaseClient
         .from('programari')
         .update({ status: 'stearsa' })
-        .eq('id', id);
+        .eq('id', Number(id));
 
       if (error) {
         console.log('EROARE STERGERE SUPABASE:', error);
