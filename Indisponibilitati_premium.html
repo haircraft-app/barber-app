@@ -184,11 +184,33 @@ function setActiveType(type) {
     btn.classList.remove('active');
   });
 
-  document.getElementById('btnInterval').classList.add('active');
+  if (type === 'interval') {
+    document.getElementById('btnInterval').classList.add('active');
+    document.getElementById('intervalArea').style.display = 'block';
+    document.getElementById('dayArea').style.display = 'none';
+    document.getElementById('concediuArea').style.display = 'none';
+  }
 
-  document.getElementById('intervalArea').style.display = 'block';
-  document.getElementById('dayArea').style.display = 'none';
-  document.getElementById('concediuArea').style.display = 'none';
+  if (type === 'zi') {
+    document.getElementById('btnZi').classList.add('active');
+    document.getElementById('intervalArea').style.display = 'block';
+    document.getElementById('dayArea').style.display = 'none';
+    document.getElementById('concediuArea').style.display = 'none';
+
+    selectedStart = '08:00';
+    selectedEnd = '22:00';
+
+    document.querySelectorAll('.time-btn').forEach(function(btn) {
+      btn.classList.add('active');
+    });
+  }
+
+  if (type === 'concediu') {
+    document.getElementById('btnConcediu').classList.add('active');
+    document.getElementById('intervalArea').style.display = 'none';
+    document.getElementById('dayArea').style.display = 'none';
+    document.getElementById('concediuArea').style.display = 'block';
+  }
 
   updateSummary();
 }
@@ -287,8 +309,12 @@ function selectTime(el, timeValue) {
 }
 
 function updateSummary() {
+  let tipText = 'Interval';
+  if (selectedType === 'zi') tipText = 'Zi întreagă';
+  if (selectedType === 'concediu') tipText = 'Concediu';
+
   document.getElementById('summaryBox').innerHTML =
-    'Tip: Interval<br>Zi: ' + (selectedDate || '-') + '<br>Interval: ' + (selectedStart || '-') + ' - ' + (selectedEnd || '-');
+    'Tip: ' + tipText + '<br>Zi: ' + (selectedDate || '-') + '<br>Interval: ' + (selectedStart || '-') + ' - ' + (selectedEnd || '-');
 }
 
 async function saveData() {
@@ -307,11 +333,11 @@ async function saveData() {
   const { error } = await supabaseClient
     .from('indisponibilitati')
     .insert([{
-      tip: 'interval',
+      tip: selectedType === 'zi' ? 'zi' : 'interval',
       data_start: selectedDate,
       data_final: selectedDate,
-      ora_start: selectedStart,
-      ora_final: selectedEnd,
+      ora_start: selectedType === 'zi' ? '08:00' : selectedStart,
+      ora_final: selectedType === 'zi' ? '22:00' : selectedEnd,
       mesaj: mesaj,
       activa: true
     }]);
@@ -335,7 +361,7 @@ window.addEventListener('load', function() {
   });
 
   document.getElementById('btnZi').addEventListener('click', function() {
-    alert('Pasul acesta este doar pentru Interval.');
+    setActiveType('zi');
   });
 
   document.getElementById('btnConcediu').addEventListener('click', function() {
