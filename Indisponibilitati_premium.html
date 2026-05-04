@@ -32,71 +32,77 @@ body {
 }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabase = window.supabase.createClient(
+  'https://hnvqauxqxtdzgyqumkqa.supabase.co',
+  'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker'
+);
+
+let selectedType = null;
+
+function selectType(el,type){
+  document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  selectedType = type;
+
+  document.getElementById('oreSection').style.display = (type==='interval') ? 'block':'none';
+  document.getElementById('concediuSection').style.display = (type==='concediu') ? 'block':'none';
+}
+
+async function saveData(){
+  if(!selectedType){
+    alert('Selecteaza tipul');
+    return;
+  }
+
+  const data = {
+    tip: selectedType,
+    activa: true
+  };
+
+  const { error } = await supabase.from('indisponibilitati').insert([data]);
+
+  if(error){
+    alert('Eroare salvare');
+    return;
+  }
+
+  alert('Salvat');
+  window.location.href='index_premium.html';
+}
+</script>
+
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div style="display:flex; align-items:center; padding:15px;">
   <div onclick="window.location.href='index_premium.html'" style="margin-right:15px; font-size:20px; cursor:pointer;">←</div>
   <div style="font-size:22px; font-weight:700;">Indisponibilități</div>
 </div>
 
-<!-- TIP SELECTARE -->
 <div style="display:flex; gap:10px; padding:15px;">
   <div class="btn" onclick="selectType(this,'interval')">Interval</div>
   <div class="btn" onclick="selectType(this,'zi')">Zi întreagă</div>
   <div class="btn" onclick="selectType(this,'concediu')">Concediu</div>
 </div>
 
-<!-- ZILE -->
-<div class="section">
-  Selectează ziua
-</div>
+<div class="section">Zile aici</div>
 
-<!-- ORE -->
-<div id="oreSection" class="section">
-  Selectează intervalul orar
-</div>
+<div id="oreSection" class="section">Ore aici</div>
 
-<!-- PERIOADA CONCEDIU -->
 <div id="concediuSection" class="section" style="display:none;">
-  Data început - Data final
+Data început - Data final
 </div>
 
-<!-- MESAJ -->
-<div class="section">
-  Mesaj (opțional)
-</div>
+<div class="section">Mesaj</div>
 
-<!-- BUTON -->
 <div class="section">
-  <div style="background:#f2c94c; color:#000; text-align:center; padding:15px; border-radius:8px; cursor:pointer;">
-    BLOCAZĂ
+  <div onclick="saveData()" style="background:#f2c94c; color:#000; text-align:center; padding:15px; border-radius:8px; cursor:pointer;">
+    BLOCHEAZĂ
   </div>
 </div>
-
-<script>
-function selectType(el,type){
-  document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-
-  if(type==='interval'){
-    document.getElementById('oreSection').style.display='block';
-    document.getElementById('concediuSection').style.display='none';
-  }
-
-  if(type==='zi'){
-    document.getElementById('oreSection').style.display='none';
-    document.getElementById('concediuSection').style.display='none';
-  }
-
-  if(type==='concediu'){
-    document.getElementById('oreSection').style.display='none';
-    document.getElementById('concediuSection').style.display='block';
-  }
-}
-</script>
 
 </body>
 </html>
