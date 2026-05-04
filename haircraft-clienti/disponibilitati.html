@@ -81,6 +81,36 @@
       margin-top: -6px;
     }
 
+    /* BLOC 5A - MESAJ CONCEDIU CLIENT */
+    .concediu-client-box {
+      min-height: 28px;
+      border: 1px solid #f2c94c;
+      border-radius: 12px;
+      background: rgba(12, 24, 38, 0.88);
+      overflow: hidden;
+      display: none;
+      align-items: center;
+    }
+
+    .concediu-client-track {
+      white-space: nowrap;
+      display: inline-flex;
+      padding-left: 100%;
+      animation: concediuText 13s linear infinite;
+    }
+
+    .concediu-client-text {
+      color: #ff3333;
+      font-size: 13px;
+      font-weight: 900;
+      font-style: italic;
+    }
+
+    @keyframes concediuText {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
     /* BLOC 5 - TABEL ORAR */
     .orar-wrapper {
       width: 100%;
@@ -226,6 +256,13 @@
     </div>
 
     <div class="subtitle">Trage tabelul dreapta - stânga pentru toate cele 7 zile</div>
+
+    <!-- BLOC HTML 3A - MESAJ CONCEDIU CLIENT -->
+    <div id="concediuClientBox" class="concediu-client-box">
+      <div class="concediu-client-track">
+        <span id="concediuClientText" class="concediu-client-text"></span>
+      </div>
+    </div>
 
     <!-- BLOC HTML 3 - TABEL -->
     <div class="orar-wrapper">
@@ -387,7 +424,44 @@
       grid.innerHTML = html;
     }
 
+    /* BLOC 13 - MESAJ CONCEDIU CLIENT */
+    function formatDataConcediu(dataIso) {
+      if (!dataIso || dataIso.indexOf('-') === -1) return '';
+      const p = dataIso.split('-');
+      return p[2] + '-' + p[1];
+    }
+
+    async function loadMesajConcediuClient() {
+      try {
+        const azi = getDateIso(0);
+
+        const { data, error } = await supabaseClient
+          .from('indisponibilitati')
+          .select('tip, data_start, data_final, activa')
+          .eq('activa', true)
+          .eq('tip', 'concediu')
+          .gte('data_final', azi)
+          .order('data_start', { ascending: true });
+
+        const box = document.getElementById('concediuClientBox');
+        const text = document.getElementById('concediuClientText');
+
+        if (error || !data || !data.length) {
+          box.style.display = 'none';
+          text.innerText = '';
+          return;
+        }
+
+        const concediu = data[0];
+        text.innerText = 'În perioada ' + formatDataConcediu(concediu.data_start) + ' - ' + formatDataConcediu(concediu.data_final) + ', voi fi în concediu!';
+        box.style.display = 'flex';
+      } catch(e) {
+        console.log('EROARE MESAJ CONCEDIU CLIENT:', e);
+      }
+    }
+
     renderOrar();
+    loadMesajConcediuClient();
   </script>
 </body>
 </html>
