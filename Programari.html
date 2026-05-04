@@ -346,6 +346,7 @@ const supabaseClient = window.supabase.createClient(
             id: b.id,
             status: 'blocare',
             mesaj: b.mesaj || 'Închis',
+            tipIndisponibilitate: b.tip || 'interval',
             interval: ((b.ora_start || '08:00').slice(0,5)) + ' - ' + ((b.ora_final || '22:00').slice(0,5)),
             zi: {
               dataIso: b.data_start || '',
@@ -412,7 +413,7 @@ const supabaseClient = window.supabase.createClient(
         const carduri = grupuri[dataIso].map(item => {
           const p = item.date;
 
-          const confirmare = stergereId === item.id ? `
+          const confirmare = String(stergereId) === String(item.id) ? `
             <div class="confirm-delete-box">
               <div class="confirm-delete-text">Confirmă ștergerea</div>
               <div class="confirm-delete-actions">
@@ -427,11 +428,11 @@ const supabaseClient = window.supabase.createClient(
               <div>
                 <div class="programare-card blocare-card">
                   <div class="programare-text">
-                    <div class="blocare-label">ÎNCHIS</div>
+                    <div class="blocare-label">${p.tipIndisponibilitate === 'concediu' ? 'CONCEDIU' : 'ÎNCHIS'}</div>
                     <div class="programare-detalii">${p.interval || '-'} · ${p.mesaj || 'Închis'}</div>
                   </div>
 
-                  <button class="delete-btn" onclick="cereStergere(${item.id})">🗑</button>
+                  <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
                 </div>
                 ${confirmare}
               </div>
@@ -457,7 +458,7 @@ const supabaseClient = window.supabase.createClient(
 
                 ${arataConfirmare ? `<button class="conf-btn" onclick="trimiteConfirmare(\'${item.id}\')">CONF</button>` : ``}
                 ${arataReminder ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder('${item.id}')">Rem</button>` : ``}
-                <button class="delete-btn" onclick="cereStergere(${item.id})">🗑</button>
+                <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
               </div>
               ${confirmare}
             </div>
@@ -580,7 +581,7 @@ const supabaseClient = window.supabase.createClient(
     /* BLOC 13 - TRIMITERE REMINDER WHATSAPP */
     async function trimiteReminder(id) {
       const p = programariOriginale.find(function(item) {
-        return item.id === id;
+        return String(item.id) === String(id);
       });
 
       if (!p || !p.client || !p.client.telefon) return;
@@ -617,7 +618,7 @@ Multumesc`
   
 /* BLOC 15 - TRIMITERE CONFIRMARE WHATSAPP */
 async function trimiteConfirmare(id) {
-  const p = programariOriginale.find(item => item.id === id);
+  const p = programariOriginale.find(item => String(item.id) === String(id));
   if (!p || !p.client || !p.client.telefon) return;
 
   const tel = p.client.telefon.replace(/[^0-9]/g, '');
