@@ -1,83 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Indisponibilitati</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indisponibilitati</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #020202;
-      color: #f2c94c;
-    }
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#020202;
+  color:#f2c94c;
+}
 
-    .btn {
-      flex:1;
-      text-align:center;
-      padding:12px;
-      border:1px solid #f2c94c;
-      color:#f2c94c;
-      border-radius:8px;
-      cursor:pointer;
-    }
+.btn {
+  flex:1;
+  text-align:center;
+  padding:12px;
+  border:1px solid #f2c94c;
+  color:#f2c94c;
+  border-radius:8px;
+  cursor:pointer;
+}
 
-    .active {
-      background:#f2c94c;
-      color:#000;
-    }
-  </style>
+.active {
+  background:#f2c94c;
+  color:#000;
+}
+
+.section {
+  padding:15px;
+}
+</style>
 
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <div style="display:flex; align-items:center; padding:15px;">
+<!-- HEADER -->
+<div style="display:flex; align-items:center; padding:15px;">
+  <div onclick="window.location.href='index_premium.html'" style="margin-right:15px; font-size:20px; cursor:pointer;">←</div>
+  <div style="font-size:22px; font-weight:700;">Indisponibilități</div>
+</div>
 
-    <div onclick="window.location.href='index_premium.html'" style="margin-right:15px; font-size:20px; cursor:pointer;">
-      ←
-    </div>
+<!-- TIP SELECTARE -->
+<div style="display:flex; gap:10px; padding:15px;">
+  <div class="btn" onclick="selectType(this,'interval')">Interval</div>
+  <div class="btn" onclick="selectType(this,'zi')">Zi întreagă</div>
+  <div class="btn" onclick="selectType(this,'concediu')">Concediu</div>
+</div>
 
-    <div style="font-size:22px; font-weight:700;">
-      Indisponibilități
-    </div>
+<!-- ZILE -->
+<div class="section">
+  Selectează ziua
+</div>
 
-  </div>
+<!-- ORE -->
+<div id="oreSection" class="section">
+  Selectează intervalul orar
+</div>
 
-  <!-- TIP SELECTARE -->
-  <div style="display:flex; gap:10px; padding:15px;">
+<!-- PERIOADA CONCEDIU -->
+<div id="concediuSection" class="section" style="display:none;">
+  Data început - Data final
+</div>
 
-    <div class="btn" onclick="selectType(this)">Interval</div>
-    <div class="btn" onclick="selectType(this)">Zi întreagă</div>
-    <div class="btn" onclick="selectType(this)">Concediu</div>
+<!-- MESAJ -->
+<div class="section">
+  Mesaj (opțional)
+</div>
 
-  </div>
-
-  <!-- ZILE -->
-  <div style="padding:15px;">
-    Zile aici
-  </div>
-
-  <!-- ORE -->
-  <div style="padding:15px;">
-    Ore aici
-  </div>
-
-  <!-- MESAJ -->
-  <div style="padding:15px;">
-    Mesaj aici
-  </div>
-
-  <!-- BUTON -->
-  <div style="padding:15px;">
+<!-- BUTON -->
+<div class="section">
+  <div style="background:#f2c94c; color:#000; text-align:center; padding:15px; border-radius:8px; cursor:pointer;">
     BLOCAZĂ
   </div>
+</div>
 
 <script>
-function selectType(el){
+function selectType(el,type){
   document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
+
+  if(type==='interval'){
+    document.getElementById('oreSection').style.display='block';
+    document.getElementById('concediuSection').style.display='none';
+  }
+
+  if(type==='zi'){
+    document.getElementById('oreSection').style.display='none';
+    document.getElementById('concediuSection').style.display='none';
+  }
+
+  if(type==='concediu'){
+    document.getElementById('oreSection').style.display='none';
+    document.getElementById('concediuSection').style.display='block';
+  }
 }
 </script>
 
