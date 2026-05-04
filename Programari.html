@@ -431,7 +431,7 @@ const supabaseClient = window.supabase.createClient(
                     <div class="programare-detalii">${p.interval || '-'} · ${p.mesaj || 'Închis'}</div>
                   </div>
 
-                  <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
+                  <button class="delete-btn" onclick="cereStergere(${item.id})">🗑</button>
                 </div>
                 ${confirmare}
               </div>
@@ -457,7 +457,7 @@ const supabaseClient = window.supabase.createClient(
 
                 ${arataConfirmare ? `<button class="conf-btn" onclick="trimiteConfirmare(\'${item.id}\')">CONF</button>` : ``}
                 ${arataReminder ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder('${item.id}')">Rem</button>` : ``}
-                <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
+                <button class="delete-btn" onclick="cereStergere(${item.id})">🗑</button>
               </div>
               ${confirmare}
             </div>
@@ -580,7 +580,7 @@ const supabaseClient = window.supabase.createClient(
     /* BLOC 13 - TRIMITERE REMINDER WHATSAPP */
     async function trimiteReminder(id) {
       const p = programariOriginale.find(function(item) {
-        return String(item.id) === String(id);
+        return item.id === id;
       });
 
       if (!p || !p.client || !p.client.telefon) return;
