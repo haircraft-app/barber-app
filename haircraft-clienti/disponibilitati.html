@@ -340,29 +340,85 @@
       return slots;
     }
 
-    /* BLOC 10 - CITIRE PROGRAMĂRI DIN SUPABASE */
+    /* BLOC 10 - CITIRE PROGRAMĂRI ȘI INDISPONIBILITĂȚI DIN SUPABASE */
     async function getProgramari() {
       try {
+        let rezultat = [];
+
         const { data, error } = await supabaseClient
           .from('programari')
           .select('*')
           .neq('status', 'stearsa');
 
         if (error) {
-          console.log('EROARE SUPABASE ORAR:', error);
-          return [];
+          console.log('EROARE SUPABASE DISPONIBILITATI:', error);
+        } else {
+          rezultat = rezultat.concat((data || []).map(function(p) {
+            return {
+              zi: {
+                dataIso: p.data
+              },
+              interval: p.ora_start + '-' + p.ora_final,
+              text: 'Ocupat'
+            };
+          }));
         }
 
-        return data.map(function(p) {
-          return {
-            zi: {
-              dataIso: p.data
-            },
-            interval: p.ora_start + '-' + p.ora_final
-          };
-        });
+        const { data: indisponibilitati, error: errorIndisponibilitati } = await supabaseClient
+          .from('indisponibilitati')
+          .select('tip, data_start, data_final, ora_start, ora_final, mesaj, activa')
+          .eq('activa', true);
+
+        if (errorIndisponibilitati) {
+          console.log('EROARE SUPABASE INDISPONIBILITATI DISPONIBILITATI:', errorIndisponibilitati);
+        } else {
+          (indisponibilitati || []).forEach(function(blocare) {
+            if (!blocare || !blocare.data_start) return;
+
+            const dataFinal = blocare.data_final || blocare.data_start;
+
+            if (blocare.tip === 'interval') {
+              rezultat.push({
+                zi: {
+                  dataIso: blocare.data_start
+                },
+                interval: (blocare.ora_start || '08:00') + '-' + (blocare.ora_final || '22:00'),
+                text: blocare.mesaj || 'Închis'
+              });
+            }
+
+            if (blocare.tip === 'zi') {
+              rezultat.push({
+                zi: {
+                  dataIso: blocare.data_start
+                },
+                interval: '08:00-22:00',
+                text: blocare.mesaj || 'Închis'
+              });
+            }
+
+            if (blocare.tip === 'concediu') {
+              const start = new Date(blocare.data_start);
+              const final = new Date(dataFinal);
+
+              for (let d = new Date(start); d <= final; d.setDate(d.getDate() + 1)) {
+                const iso = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toLocaleDateString('en-CA');
+
+                rezultat.push({
+                  zi: {
+                    dataIso: iso
+                  },
+                  interval: '08:00-22:00',
+                  text: blocare.mesaj || 'Concediu'
+                });
+              }
+            }
+          });
+        }
+
+        return rezultat;
       } catch(e) {
-        console.log('EROARE SUPABASE ORAR:', e);
+        console.log('EROARE SUPABASE DISPONIBILITATI:', e);
         return [];
       }
     }
@@ -383,8 +439,8 @@
     }
 
     /* BLOC 11 - VERIFICARE OCUPAT / LIBER */
-    function esteOcupat(dataIso, slot, programari) {
-      return programari.some(function(p) {
+    function getBlocarePentruSlot(dataIso, slot, programari) {
+      return programari.find(function(p) {
         if (!p || !p.zi || !p.zi.dataIso || !p.interval) return false;
         if (p.zi.dataIso !== dataIso) return false;
 
@@ -419,8 +475,9 @@
         html += `<div class="cell hour-cell col-sep">${slot.text}</div>`;
 
         zile.forEach(function(zi) {
-          const ocupat = esteOcupat(zi.dataIso, slot, programari);
-          html += `<div class="cell ${ocupat ? 'busy' : 'free'}">${ocupat ? 'Ocupat' : 'Liber'}</div>`;
+          const blocare = getBlocarePentruSlot(zi.dataIso, slot, programari);
+          const ocupat = !!blocare;
+          html += `<div class="cell ${ocupat ? 'busy' : 'free'}">${ocupat ? (blocare.text || 'Ocupat') : 'Liber'}</div>`;
         });
       });
 
