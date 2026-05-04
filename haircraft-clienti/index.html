@@ -201,7 +201,26 @@
         margin: 0 auto;
       }
     }
-  </style>
+  
+    /* BLOC X - MESAJ CONCEDIU CLIENT */
+    .concediu-box {
+      min-height: 30px;
+      border: 1px solid #f2c94c;
+      border-radius: 10px;
+      background: rgba(12,24,38,0.9);
+      display: none;
+      align-items: center;
+      padding: 4px 8px;
+    }
+
+    .concediu-text {
+      color: #ff3333;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 12px;
+    }
+
+</style>
 </head>
 
 <body>
@@ -222,6 +241,11 @@
         <div class="prefix">+4</div>
         <input id="telefonClient" class="phone-input" type="tel" inputmode="numeric" placeholder="0722222222" oninput="savePhone()">
       </div>
+    </div>
+
+    <!-- BLOC HTML X - CONCEDIU -->
+    <div id="concediuBox" class="concediu-box">
+      <span id="concediuText" class="concediu-text"></span>
     </div>
 
     <!-- BLOC HTML 4 - MENIU CLIENT -->
@@ -274,5 +298,42 @@
 
     loadPhone();
   </script>
+
+<script>
+async function loadConcediuClient() {
+  try {
+    const azi = new Date().toISOString().split('T')[0];
+
+    const { data } = await supabaseClient
+      .from('indisponibilitati')
+      .select('data_start, data_final, tip, activa')
+      .eq('tip', 'concediu')
+      .eq('activa', true)
+      .gte('data_final', azi)
+      .order('data_start', { ascending: true });
+
+    const box = document.getElementById('concediuBox');
+    const text = document.getElementById('concediuText');
+
+    if (!data || !data.length) {
+      box.style.display = 'none';
+      return;
+    }
+
+    const c = data[0];
+    const start = c.data_start.split('-').reverse().join('.');
+    const end = c.data_final.split('-').reverse().join('.');
+
+    text.innerText = "În perioada " + start + " - " + end + ", voi fi în concediu!";
+    box.style.display = 'flex';
+
+  } catch(e) {
+    console.log(e);
+  }
+}
+
+loadConcediuClient();
+</script>
+
 </body>
 </html>
