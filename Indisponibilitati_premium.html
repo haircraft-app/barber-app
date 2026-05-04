@@ -330,14 +330,71 @@ async function saveData() {
     return;
   }
 
+  const oraStartSalvare = selectedType === 'zi' ? '08:00' : selectedStart;
+  const oraFinalSalvare = selectedType === 'zi' ? '22:00' : selectedEnd;
+
+  const { data: blocariExistente, error: errorVerificareBlocari } = await supabaseClient
+    .from('indisponibilitati')
+    .select('*')
+    .eq('activa', true)
+    .eq('data_start', selectedDate);
+
+  if (errorVerificareBlocari) {
+    console.log('EROARE VERIFICARE BLOCARI:', errorVerificareBlocari);
+    alert('Eroare verificare blocări');
+    return;
+  }
+
+  const existaBlocareSuprapusa = (blocariExistente || []).some(function(b) {
+    const bStart = ((b.ora_start || '08:00').slice(0,5));
+    const bFinal = ((b.ora_final || '22:00').slice(0,5));
+
+    if (b.tip === 'zi') return true;
+    if (selectedType === 'zi') return true;
+
+    return oraStartSalvare < bFinal && oraFinalSalvare > bStart;
+  });
+
+  if (existaBlocareSuprapusa) {
+    alert('Această zi sau acest interval este deja blocat');
+    return;
+  }
+
+  const { data: programariExistente, error: errorVerificareProgramari } = await supabaseClient
+    .from('programari')
+    .select('*')
+    .eq('data', selectedDate);
+
+  if (errorVerificareProgramari) {
+    console.log('EROARE VERIFICARE PROGRAMARI:', errorVerificareProgramari);
+    alert('Eroare verificare programări');
+    return;
+  }
+
+  const existaProgramareSuprapusa = (programariExistente || []).some(function(p) {
+    if (p.status === 'stearsa') return false;
+
+    const pStart = ((p.ora_start || '').slice(0,5));
+    const pFinal = ((p.ora_final || '').slice(0,5));
+
+    if (!pStart || !pFinal) return false;
+
+    return oraStartSalvare < pFinal && oraFinalSalvare > pStart;
+  });
+
+  if (existaProgramareSuprapusa) {
+    alert('Există deja programare în această zi sau în acest interval');
+    return;
+  }
+
   const { error } = await supabaseClient
     .from('indisponibilitati')
     .insert([{
       tip: selectedType === 'zi' ? 'zi' : 'interval',
       data_start: selectedDate,
       data_final: selectedDate,
-      ora_start: selectedType === 'zi' ? '08:00' : selectedStart,
-      ora_final: selectedType === 'zi' ? '22:00' : selectedEnd,
+      ora_start: oraStartSalvare,
+      ora_final: oraFinalSalvare,
       mesaj: mesaj,
       activa: true
     }]);
