@@ -417,7 +417,7 @@ const supabaseClient = window.supabase.createClient(
             <div class="confirm-delete-box">
               <div class="confirm-delete-text">Confirmă ștergerea</div>
               <div class="confirm-delete-actions">
-                <button class="confirm-small-btn ok" onclick="confirmaStergere('${item.id}')">Confirm</button>
+                <button class="confirm-small-btn ok" onclick="confirmaStergere(${item.id})">Confirm</button>
                 <button class="confirm-small-btn cancel" onclick="renuntaStergere()">Renunț</button>
               </div>
             </div>
