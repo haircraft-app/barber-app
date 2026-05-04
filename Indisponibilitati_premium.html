@@ -5,103 +5,433 @@
 <title>Indisponibilitati</title>
 
 <style>
+/* ===== SETARI GENERALE ===== */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  margin:0;
+  margin: 0;
   font-family: Arial, sans-serif;
-  background:#020202;
-  color:#f2c94c;
+  background:
+    radial-gradient(circle at top center, rgba(170,120,20,0.55) 0%, rgba(35,24,8,0.95) 30%, #030303 72%),
+    linear-gradient(180deg, #080808 0%, #000 100%);
+  color: #f2c94c;
 }
 
-.btn {
-  flex:1;
-  text-align:center;
-  padding:12px;
-  border:1px solid #f2c94c;
-  color:#f2c94c;
-  border-radius:8px;
-  cursor:pointer;
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
 }
 
-.active {
-  background:#f2c94c;
-  color:#000;
+.back-btn {
+  margin-right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #f2c94c;
 }
 
+.title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ===== SELECTARE TIP ===== */
+.type-row {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+}
+
+.type-btn {
+  flex: 1;
+  text-align: center;
+  padding: 12px 6px;
+  border: 1px solid #f2c94c;
+  color: #f2c94c;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.type-btn.active {
+  background: #f2c94c;
+  color: #000;
+}
+
+/* ===== SECTIUNI ===== */
 .section {
-  padding:15px;
+  padding: 12px 15px;
+}
+
+.section-title {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* ===== ZILE ===== */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
+}
+
+.day-btn {
+  border: 1px solid #f2c94c;
+  border-radius: 10px;
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+  color: #f2c94c;
+  background: rgba(12, 24, 38, 0.82);
+}
+
+.day-btn.active {
+  background: #f2c94c;
+  color: #000;
+}
+
+.day-name {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.day-date {
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+/* ===== ORE ===== */
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+
+.time-btn {
+  border: 1px solid #f2c94c;
+  border-radius: 10px;
+  padding: 10px 4px;
+  text-align: center;
+  cursor: pointer;
+  color: #f2c94c;
+  background: rgba(12, 24, 38, 0.82);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.time-btn.active {
+  background: #f2c94c;
+  color: #000;
+}
+
+/* ===== CAMPURI ===== */
+.field {
+  width: 100%;
+  border: 1px solid #f2c94c;
+  border-radius: 12px;
+  background: rgba(12, 24, 38, 0.82);
+  color: #fff;
+  padding: 11px;
+  font-size: 15px;
+  outline: none;
+}
+
+textarea.field {
+  min-height: 80px;
+  resize: none;
+}
+
+/* ===== STATUS ===== */
+.summary-box {
+  border: 1px solid rgba(242,201,76,0.75);
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+  background: rgba(12, 24, 38, 0.70);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ===== BUTON FINAL ===== */
+.save-wrap {
+  padding: 15px;
+}
+
+.save-btn {
+  background: linear-gradient(145deg, #f6d257, #a96f10);
+  color: #000;
+  text-align: center;
+  padding: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 900;
 }
 </style>
 
+<!-- ===== SUPABASE ===== -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const supabase = window.supabase.createClient(
+const supabaseClient = window.supabase.createClient(
   'https://hnvqauxqxtdzgyqumkqa.supabase.co',
   'sb_publishable_k1pGTW92yAbLX3PKRQjFpQ_0AQBRker'
 );
 
+/* ===== DATE SELECTATE ===== */
 let selectedType = null;
+let selectedDate = null;
+let selectedStart = null;
+let selectedEnd = null;
 
-function selectType(el,type){
-  document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
+/* ===== SELECTARE TIP ===== */
+function selectType(el, type) {
+  document.querySelectorAll('.type-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+
   el.classList.add('active');
   selectedType = type;
 
-  document.getElementById('oreSection').style.display = (type==='interval') ? 'block':'none';
-  document.getElementById('concediuSection').style.display = (type==='concediu') ? 'block':'none';
+  document.getElementById('intervalArea').style.display = (type === 'interval') ? 'block' : 'none';
+  document.getElementById('dayArea').style.display = (type === 'zi') ? 'block' : 'none';
+  document.getElementById('concediuArea').style.display = (type === 'concediu') ? 'block' : 'none';
+
+  updateSummary();
 }
 
-async function saveData(){
-  if(!selectedType){
-    alert('Selecteaza tipul');
+/* ===== CREARE ZILE ===== */
+function buildDays() {
+  const box = document.getElementById('daysGrid');
+  const days = ['Du', 'Lu', 'Ma', 'Mi', 'Jo', 'Vi', 'Sa'];
+  const months = ['Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  box.innerHTML = '';
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const value = yyyy + '-' + mm + '-' + dd;
+
+    const btn = document.createElement('div');
+    btn.className = 'day-btn';
+    btn.dataset.date = value;
+    btn.innerHTML = '<div class="day-name">' + days[d.getDay()] + '</div><div class="day-date">' + d.getDate() + ' ' + months[d.getMonth()] + '</div>';
+    btn.onclick = function() {
+      selectDay(btn, value);
+    };
+
+    box.appendChild(btn);
+  }
+}
+
+/* ===== SELECTARE ZI ===== */
+function selectDay(el, dateValue) {
+  document.querySelectorAll('.day-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+
+  el.classList.add('active');
+  selectedDate = dateValue;
+  updateSummary();
+}
+
+/* ===== CREARE ORE ===== */
+function buildTimes() {
+  const box = document.getElementById('timeGrid');
+  box.innerHTML = '';
+
+  for (let h = 8; h <= 22; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      if (h === 22 && m > 0) continue;
+
+      const time = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+
+      const btn = document.createElement('div');
+      btn.className = 'time-btn';
+      btn.dataset.time = time;
+      btn.textContent = time;
+      btn.onclick = function() {
+        selectTime(btn, time);
+      };
+
+      box.appendChild(btn);
+    }
+  }
+}
+
+/* ===== SELECTARE INTERVAL ===== */
+function selectTime(el, timeValue) {
+  if (!selectedStart || (selectedStart && selectedEnd)) {
+    selectedStart = timeValue;
+    selectedEnd = null;
+
+    document.querySelectorAll('.time-btn').forEach(function(btn) {
+      btn.classList.remove('active');
+    });
+
+    el.classList.add('active');
+    updateSummary();
     return;
   }
 
-  const data = {
-    tip: selectedType,
-    activa: true
-  };
+  selectedEnd = timeValue;
 
-  const { error } = await supabase.from('indisponibilitati').insert([data]);
-
-  if(error){
-    alert('Eroare salvare');
+  if (selectedEnd <= selectedStart) {
+    alert('Ora finală trebuie să fie după ora de start');
+    selectedEnd = null;
     return;
   }
 
-  alert('Salvat');
-  window.location.href='index_premium.html';
+  document.querySelectorAll('.time-btn').forEach(function(btn) {
+    const t = btn.dataset.time;
+    if (t >= selectedStart && t <= selectedEnd) {
+      btn.classList.add('active');
+    }
+  });
+
+  updateSummary();
 }
+
+/* ===== REZUMAT ===== */
+function updateSummary() {
+  let text = '';
+
+  if (!selectedType) {
+    text = 'Alege tipul blocării.';
+  } else if (selectedType === 'interval') {
+    text = 'Tip: Interval<br>Zi: ' + (selectedDate || '-') + '<br>Interval: ' + (selectedStart || '-') + ' - ' + (selectedEnd || '-');
+  } else if (selectedType === 'zi') {
+    text = 'Tip: Zi întreagă<br>Zi: ' + (selectedDate || '-');
+  } else {
+    text = 'Tip: Concediu<br>Perioada se va seta la pasul următor.';
+  }
+
+  document.getElementById('summaryBox').innerHTML = text;
+}
+
+/* ===== SALVARE ===== */
+async function saveData() {
+  const mesaj = document.getElementById('mesaj').value.trim();
+
+  if (!selectedType) {
+    alert('Selectează tipul');
+    return;
+  }
+
+  if (selectedType === 'interval') {
+    if (!selectedDate) {
+      alert('Selectează ziua');
+      return;
+    }
+
+    if (!selectedStart || !selectedEnd) {
+      alert('Selectează intervalul');
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from('indisponibilitati')
+      .insert([{
+        tip: 'interval',
+        data_start: selectedDate,
+        data_final: selectedDate,
+        ora_start: selectedStart,
+        ora_final: selectedEnd,
+        mesaj: mesaj,
+        activa: true
+      }]);
+
+    if (error) {
+      console.log(error);
+      alert('Eroare salvare');
+      return;
+    }
+
+    alert('Salvat');
+    window.location.href = 'index_premium.html';
+    return;
+  }
+
+  alert('Acum este activ doar Pasul 1: Interval');
+}
+
+/* ===== PORNIRE PAGINA ===== */
+window.onload = function() {
+  buildDays();
+  buildTimes();
+  updateSummary();
+};
 </script>
-
 </head>
 
 <body>
 
-<div style="display:flex; align-items:center; padding:15px;">
-  <div onclick="window.location.href='index_premium.html'" style="margin-right:15px; font-size:20px; cursor:pointer;">←</div>
-  <div style="font-size:22px; font-weight:700;">Indisponibilități</div>
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="back-btn" onclick="window.location.href='index_premium.html'">←</div>
+  <div class="title">Indisponibilități</div>
 </div>
 
-<div style="display:flex; gap:10px; padding:15px;">
-  <div class="btn" onclick="selectType(this,'interval')">Interval</div>
-  <div class="btn" onclick="selectType(this,'zi')">Zi întreagă</div>
-  <div class="btn" onclick="selectType(this,'concediu')">Concediu</div>
+<!-- ===== SELECTARE TIP ===== -->
+<div class="type-row">
+  <div class="type-btn" onclick="selectType(this, 'interval')">Interval</div>
+  <div class="type-btn" onclick="selectType(this, 'zi')">Zi întreagă</div>
+  <div class="type-btn" onclick="selectType(this, 'concediu')">Concediu</div>
 </div>
 
-<div class="section">Zile aici</div>
+<!-- ===== ZONE INTERVAL ===== -->
+<div id="intervalArea">
 
-<div id="oreSection" class="section">Ore aici</div>
-
-<div id="concediuSection" class="section" style="display:none;">
-Data început - Data final
-</div>
-
-<div class="section">Mesaj</div>
-
-<div class="section">
-  <div onclick="saveData()" style="background:#f2c94c; color:#000; text-align:center; padding:15px; border-radius:8px; cursor:pointer;">
-    BLOCHEAZĂ
+  <div class="section">
+    <div class="section-title">Selectează ziua</div>
+    <div id="daysGrid" class="days-grid"></div>
   </div>
+
+  <div class="section">
+    <div class="section-title">Selectează intervalul</div>
+    <div id="timeGrid" class="time-grid"></div>
+  </div>
+
+</div>
+
+<!-- ===== ZONA ZI INTREAGA ===== -->
+<div id="dayArea" style="display:none;">
+  <div class="section">
+    <div class="section-title">Zi întreagă se va face la pasul următor</div>
+  </div>
+</div>
+
+<!-- ===== ZONA CONCEDIU ===== -->
+<div id="concediuArea" style="display:none;">
+  <div class="section">
+    <div class="section-title">Concediu se va face la pasul următor</div>
+  </div>
+</div>
+
+<!-- ===== MESAJ ===== -->
+<div class="section">
+  <div class="section-title">Mesaj opțional</div>
+  <textarea id="mesaj" class="field" placeholder="Ex: Indisponibil în acest interval"></textarea>
+</div>
+
+<!-- ===== REZUMAT ===== -->
+<div class="section">
+  <div id="summaryBox" class="summary-box"></div>
+</div>
+
+<!-- ===== BUTON FINAL ===== -->
+<div class="save-wrap">
+  <div class="save-btn" onclick="saveData()">BLOCHEAZĂ</div>
 </div>
 
 </body>
