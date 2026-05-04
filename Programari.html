@@ -347,6 +347,7 @@ const supabaseClient = window.supabase.createClient(
             status: 'blocare',
             mesaj: b.mesaj || 'Închis',
             tipIndisponibilitate: b.tip || 'interval',
+            data_final: b.data_final || '',
             interval: ((b.ora_start || '08:00').slice(0,5)) + ' - ' + ((b.ora_final || '22:00').slice(0,5)),
             zi: {
               dataIso: b.data_start || '',
