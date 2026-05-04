@@ -340,20 +340,55 @@ const supabaseClient = window.supabase.createClient(
         console.log('EROARE INDISPONIBILITATI SUPABASE:', errorBlocari);
         blocariOriginale = [];
       } else {
-        blocariOriginale = (blocari || []).map(function(b) {
-          return {
-            tipCard: 'blocare',
-            id: b.id,
-            status: 'blocare',
-            mesaj: b.mesaj || 'Închis',
-            tipIndisponibilitate: b.tip || 'interval',
-            data_final: b.data_final || '',
-            interval: ((b.ora_start || '08:00').slice(0,5)) + ' - ' + ((b.ora_final || '22:00').slice(0,5)),
-            zi: {
-              dataIso: b.data_start || '',
-              titlu: b.data_start || ''
+        blocariOriginale = (blocari || []).flatMap(function(b) {
+          const tip = b.tip || 'interval';
+          const start = b.data_start || '';
+          const end = b.data_final || b.data_start || '';
+
+          // Dacă NU e concediu -> comportament normal
+          if (tip !== 'concediu' || !start) {
+            return [{
+              tipCard: 'blocare',
+              id: b.id,
+              status: 'blocare',
+              mesaj: b.mesaj || 'Închis',
+              tipIndisponibilitate: tip,
+              data_final: b.data_final || '',
+              interval: ((b.ora_start || '08:00').slice(0,5)) + ' - ' + ((b.ora_final || '22:00').slice(0,5)),
+              zi: {
+                dataIso: start,
+                titlu: start
+              }
+            }];
+          }
+
+          // Concediu -> generăm câte un card pe fiecare zi
+          const rezultate = [];
+          try {
+            const dStart = new Date(start);
+            const dEnd = new Date(end);
+
+            for (let d = new Date(dStart); d <= dEnd; d.setDate(d.getDate() + 1)) {
+              const iso = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toLocaleDateString('en-CA');
+              rezultate.push({
+                tipCard: 'blocare',
+                id: b.id + '_' + iso, // id unic per zi
+                status: 'blocare',
+                mesaj: b.mesaj || 'Concediu',
+                tipIndisponibilitate: 'concediu',
+                data_final: end,
+                interval: ((b.ora_start || '08:00').slice(0,5)) + ' - ' + ((b.ora_final || '22:00').slice(0,5)),
+                zi: {
+                  dataIso: iso,
+                  titlu: iso
+                }
+              });
             }
-          };
+          } catch(e) {
+            return [];
+          }
+
+          return rezultate;
         });
       }
 
