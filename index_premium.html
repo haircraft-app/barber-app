@@ -584,8 +584,7 @@ const client = window.supabase.createClient(
           if (!programare) return false;
           if (programare.status === 'stearsa') return false;
           if (esteProgramareTerminataSupabase(programare)) return false;
-          if (aInceputProgramareaSupabase(programare)) return false;
-          return true;
+         return true;
         }).length;
 
         document.getElementById('nrProgramariAzi').innerText = nr;
