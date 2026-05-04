@@ -918,6 +918,49 @@
             ocupatePeZile[ziIndex].push(i);
           }
         });
+
+        /* BLOC SUPABASE - CITIRE INDISPONIBILITATI */
+        const { data: indisponibilitati, error: errorIndisponibilitati } = await supabaseClient
+          .from('indisponibilitati')
+          .select('tip, data_start, data_final, ora_start, ora_final, activa')
+          .eq('activa', true)
+          .gte('data_final', dateStart)
+          .lte('data_start', dateFinal);
+
+        if (errorIndisponibilitati) {
+          console.log('EROARE SUPABASE INDISPONIBILITATI:', errorIndisponibilitati);
+          return;
+        }
+
+        (indisponibilitati || []).forEach(function(blocare) {
+          if (!blocare || !blocare.data_start || !blocare.data_final) return;
+
+          zile.forEach(function(zi, ziIndex) {
+            if (zi.dataIso < blocare.data_start || zi.dataIso > blocare.data_final) return;
+
+            if (blocare.tip === 'interval') {
+              if (!blocare.ora_start || !blocare.ora_final) return;
+
+              var startIndex = sloturi.indexOf(blocare.ora_start.slice(0, 5));
+              var finalIndex = sloturi.indexOf(blocare.ora_final.slice(0, 5));
+
+              if (startIndex === -1) return;
+              if (finalIndex === -1) {
+                finalIndex = sloturi.length;
+              }
+
+              for (var i = startIndex; i < finalIndex; i++) {
+                ocupatePeZile[ziIndex].push(i);
+              }
+            }
+
+            if (blocare.tip === 'zi' || blocare.tip === 'concediu') {
+              for (var j = 0; j < sloturi.length; j++) {
+                ocupatePeZile[ziIndex].push(j);
+              }
+            }
+          });
+        });
       } catch(e) {
         console.log('EROARE SUPABASE OCUPATE:', e);
       }
