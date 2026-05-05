@@ -163,6 +163,11 @@
       color: #f2c94c;
     }
 
+    .busy-past {
+      background: rgba(128, 128, 128, 0.5);
+      color: #f2c94c;
+    }
+
     .legend {
       display: flex;
       gap: 8px;
@@ -319,6 +324,7 @@
                 dataIso: p.data
               },
               interval: p.ora_start + '-' + p.ora_final,
+              oraStart: p.ora_start,
               text: 'Ocupat'
             };
           }));
@@ -409,6 +415,23 @@
       });
     }
 
+    function esteProgramareInceputa(dataIso, blocare) {
+      if (!blocare || blocare.text !== 'Ocupat' || !blocare.oraStart) return false;
+
+      const acum = new Date();
+      const aziIso = new Date(acum.getFullYear(), acum.getMonth(), acum.getDate()).toLocaleDateString('en-CA');
+
+      if (dataIso !== aziIso) return false;
+
+      const partiOra = blocare.oraStart.split(':');
+      if (partiOra.length < 2) return false;
+
+      const dataInceput = new Date(dataIso);
+      dataInceput.setHours(Number(partiOra[0]), Number(partiOra[1]), 0, 0);
+
+      return acum > dataInceput;
+    }
+
     /* BLOC 12 - AFIȘARE TABEL */
     async function renderOrar() {
       const grid = document.getElementById('orarGrid');
@@ -435,7 +458,9 @@
         zile.forEach(function(zi) {
           const blocare = getBlocarePentruSlot(zi.dataIso, slot, programari);
           const ocupat = !!blocare;
-          html += `<div class="cell ${ocupat ? 'busy' : 'free'}">${ocupat ? (blocare.text || 'Ocupat') : 'Liber'}</div>`;
+          const programareInceputa = ocupat && esteProgramareInceputa(zi.dataIso, blocare);
+          const clasaCelula = ocupat ? (programareInceputa ? 'busy-past' : 'busy') : 'free';
+          html += `<div class="cell ${clasaCelula}">${ocupat ? (blocare.text || 'Ocupat') : 'Liber'}</div>`;
         });
       });
 
