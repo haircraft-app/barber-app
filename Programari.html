@@ -545,9 +545,9 @@ ${p.tipIndisponibilitate === 'concediu'
 
     /* BLOC 6 - ȘTERGERE LOGICĂ ÎN SUPABASE */
     async function confirmaStergere(id, tipCard) {
-      const idNumeric = Number(id);
+      const idFinal = /^[0-9]+$/.test(String(id)) ? Number(id) : String(id);
 
-      if (!id || Number.isNaN(idNumeric)) {
+      if (!idFinal) {
         console.log('ID INVALID PENTRU STERGERE:', id, tipCard);
         return;
       }
@@ -556,10 +556,11 @@ ${p.tipIndisponibilitate === 'concediu'
         const { error } = await supabaseClient
           .from('indisponibilitati')
           .update({ activa: false })
-          .eq('id', idNumeric);
+          .eq('id', idFinal);
 
         if (error) {
           console.log('EROARE STERGERE BLOCARE SUPABASE:', error);
+          alert('Eroare ștergere blocare');
           return;
         }
 
@@ -571,10 +572,11 @@ ${p.tipIndisponibilitate === 'concediu'
       const { error } = await supabaseClient
         .from('programari')
         .update({ status: 'stearsa' })
-        .eq('id', idNumeric);
+        .eq('id', idFinal);
 
       if (error) {
         console.log('EROARE STERGERE PROGRAMARE SUPABASE:', error);
+        alert('Eroare ștergere programare');
         return;
       }
 
