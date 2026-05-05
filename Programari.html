@@ -315,6 +315,9 @@ const supabaseClient = window.supabase.createClient(
         return {
           tipCard: 'programare',
           id: p.id,
+          deleteKey: 'programare_' + p.id,
+          deleteId: p.id,
+          deleteTip: 'programare',
           status: p.status || 'noua',
           client: {
             nume: p.nume_client || '-',
@@ -351,6 +354,9 @@ const supabaseClient = window.supabase.createClient(
               tipCard: 'blocare',
               id: b.id,
               originalId: b.id,
+              deleteKey: 'blocare_' + b.id,
+              deleteId: b.id,
+              deleteTip: 'blocare',
               status: 'blocare',
               mesaj: b.mesaj || 'Închis',
               tipIndisponibilitate: tip,
@@ -375,6 +381,9 @@ const supabaseClient = window.supabase.createClient(
                 tipCard: 'blocare',
                 id: b.id + '_' + iso,
                 originalId: b.id,
+                deleteKey: 'blocare_' + b.id + '_' + iso,
+                deleteId: b.id,
+                deleteTip: 'blocare',
                 status: 'blocare',
                 mesaj: b.mesaj || 'Concediu',
                 tipIndisponibilitate: 'concediu',
@@ -419,7 +428,10 @@ const supabaseClient = window.supabase.createClient(
         .map(function(p) {
           return {
             date: p,
-            id: p.id
+            id: p.id,
+            deleteKey: p.deleteKey || String(p.id),
+            deleteId: p.deleteId || p.id,
+            deleteTip: p.deleteTip || p.tipCard
           };
         });
 
@@ -455,11 +467,11 @@ const supabaseClient = window.supabase.createClient(
         const carduri = grupuri[dataIso].map(item => {
           const p = item.date;
 
-          const confirmare = String(stergereId) === String(item.id) ? `
+          const confirmare = String(stergereId) === String(item.deleteKey) ? `
             <div class="confirm-delete-box">
               <div class="confirm-delete-text">Confirmă ștergerea</div>
               <div class="confirm-delete-actions">
-                <button class="confirm-small-btn ok" onclick="confirmaStergere('${p.tipCard === 'blocare' ? p.originalId : item.id}', '${p.tipCard}')">Confirm</button>
+                <button class="confirm-small-btn ok" onclick="confirmaStergere('${item.deleteId}', '${item.deleteTip}')">Confirm</button>
                 <button class="confirm-small-btn cancel" onclick="renuntaStergere()">Renunț</button>
               </div>
             </div>
@@ -478,7 +490,7 @@ ${p.tipIndisponibilitate === 'concediu'
 </div>
                   </div>
 
-                  <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
+                  <button class="delete-btn" onclick="cereStergere('${item.deleteKey}')">🗑</button>
                 </div>
                 ${confirmare}
               </div>
@@ -504,7 +516,7 @@ ${p.tipIndisponibilitate === 'concediu'
 
                 ${arataConfirmare ? `<button class="conf-btn" onclick="trimiteConfirmare(\'${item.id}\')">CONF</button>` : ``}
                 ${arataReminder ? `<button style="background:#1fae4b;font-size:10px" class="delete-btn" onclick="trimiteReminder('${item.id}')">Rem</button>` : ``}
-                <button class="delete-btn" onclick="cereStergere('${item.id}')">🗑</button>
+                <button class="delete-btn" onclick="cereStergere('${item.deleteKey}')">🗑</button>
               </div>
               ${confirmare}
             </div>
@@ -533,11 +545,18 @@ ${p.tipIndisponibilitate === 'concediu'
 
     /* BLOC 6 - ȘTERGERE LOGICĂ ÎN SUPABASE */
     async function confirmaStergere(id, tipCard) {
+      const idNumeric = Number(id);
+
+      if (!id || Number.isNaN(idNumeric)) {
+        console.log('ID INVALID PENTRU STERGERE:', id, tipCard);
+        return;
+      }
+
       if (tipCard === 'blocare') {
         const { error } = await supabaseClient
           .from('indisponibilitati')
           .update({ activa: false })
-          .eq('id', Number(id));
+          .eq('id', idNumeric);
 
         if (error) {
           console.log('EROARE STERGERE BLOCARE SUPABASE:', error);
@@ -545,22 +564,22 @@ ${p.tipIndisponibilitate === 'concediu'
         }
 
         stergereId = null;
-        incarcaProgramari();
+        await incarcaProgramari();
         return;
       }
 
       const { error } = await supabaseClient
         .from('programari')
         .update({ status: 'stearsa' })
-        .eq('id', Number(id));
+        .eq('id', idNumeric);
 
       if (error) {
-        console.log('EROARE STERGERE SUPABASE:', error);
+        console.log('EROARE STERGERE PROGRAMARE SUPABASE:', error);
         return;
       }
 
       stergereId = null;
-      incarcaProgramari();
+      await incarcaProgramari();
     }
 
     /* BLOC 7 - VERIFICARE PROGRAMARE ÎNCEPUTĂ */
