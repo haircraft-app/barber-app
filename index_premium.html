@@ -306,6 +306,63 @@
       color: #f2c94c;
     }
 
+
+    /* BLOC 10A - CADRU TELEFON PE DESKTOP */
+    @media (min-width: 701px) {
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .app {
+        position: relative;
+        width: 430px;
+        max-width: 430px;
+        min-height: 860px;
+        max-height: 920px;
+        overflow-y: auto;
+        margin: 0 auto;
+        border-radius: 48px;
+        padding: 92px 18px 28px;
+        background:
+          linear-gradient(180deg, rgba(18,18,18,0.98) 0%, rgba(7,7,7,0.98) 100%);
+        border: 3px solid rgba(242,201,76,0.92);
+        box-shadow:
+          0 0 0 3px rgba(255,255,255,0.05),
+          0 0 0 12px #000000,
+          0 0 35px rgba(242,201,76,0.30),
+          0 45px 90px rgba(0,0,0,0.85);
+      }
+
+      .app::before {
+        content: "";
+        position: absolute;
+        top: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 170px;
+        height: 35px;
+        background: #000000;
+        border-radius: 28px;
+        z-index: 5;
+      }
+
+      .app::after {
+        content: "";
+        position: absolute;
+        top: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 58px;
+        height: 7px;
+        background: #222222;
+        border-radius: 20px;
+        z-index: 6;
+      }
+    }
+
     /* BLOC 11 - TELEFOANE MAI ÎNALTE */
     @media (min-height: 720px) {
       .app { gap: 10px; }
@@ -315,13 +372,7 @@
       .next-client { height: 34px; }
     }
 
-    /* BLOC 12 - PC / TABLETĂ */
-    @media (min-width: 701px) {
-      .app {
-        max-width: 430px;
-        margin: 0 auto;
-      }
-    }
+    /* BLOC 12 - PC / TABLETĂ - inclus în cadrul de telefon desktop */
   </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
