@@ -460,7 +460,7 @@ const supabaseClient = window.supabase.createClient(
           },
           interval: (p.ora_start || '') + ' - ' + (p.ora_final || ''),
           confirmare_trimisa: p.confirmare_trimisa === true,
-          created_at: p.created_at || '',
+          reminder_trimis: p.reminder_trimis === true,
           zi: {
             dataIso: p.data || '',
             titlu: p.data || ''
@@ -540,20 +540,6 @@ const supabaseClient = window.supabase.createClient(
       }
 
       renderProgramari();
-    }
-
-
-    /* BLOC 3A - VERIFICARE PROGRAMARE CREATĂ AZI */
-    function esteCreataAzi(programare) {
-      if (!programare || !programare.created_at) return false;
-
-      const dataCreare = new Date(programare.created_at);
-      if (isNaN(dataCreare.getTime())) return false;
-
-      const azi = new Date();
-      return dataCreare.getFullYear() === azi.getFullYear() &&
-             dataCreare.getMonth() === azi.getMonth() &&
-             dataCreare.getDate() === azi.getDate();
     }
 
     /* BLOC 4 - AFIȘARE PROGRAMĂRI */
@@ -653,9 +639,8 @@ ${p.tipIndisponibilitate === 'concediu'
 
           const arataReminder =
             filtruActiv === 'azi' &&
-            p.status !== 'reminder_trimis' &&
-            !aInceputProgramarea(p) &&
-            !esteCreataAzi(p);
+            p.reminder_trimis !== true &&
+            !aInceputProgramarea(p);
 
           return `
             <div>
@@ -816,7 +801,7 @@ Multumesc`
 
       const { error } = await supabaseClient
         .from('programari')
-        .update({ status: 'reminder_trimis' })
+        .update({ reminder_trimis: true })
         .eq('id', id);
 
       if (error) {
