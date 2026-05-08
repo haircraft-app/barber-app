@@ -415,9 +415,35 @@
     font-size: 20px;
   }
 
-  .client-list {
-    overflow-y: auto;
+  .screen.active {
+    display: flex;
     flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #screenList {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .client-list {
+    flex: 1;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 3px;
+  }
+
+  #screenForm {
+    overflow-y: auto;
+    padding-right: 3px;
+  }
+
+  #screenDetails {
+    overflow-y: auto;
+    padding-right: 3px;
   }
 }
 
