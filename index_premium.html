@@ -731,7 +731,7 @@ const client = window.supabase.createClient(
         const nr = (lista || []).filter(programare => {
           if (!programare) return false;
           if (programare.status === 'stearsa') return false;
-          if (programare.status === 'reminder_trimis') return false;
+          if (programare.reminder_trimis === true) return false;
           if (esteProgramareTerminataSupabase(programare)) return false;
           if (aInceputProgramareaSupabase(programare)) return false;
           return true;
