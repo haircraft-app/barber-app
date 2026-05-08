@@ -346,9 +346,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 0;
     background:
-      radial-gradient(circle at top center, rgba(242,201,76,0.10) 0%, rgba(0,0,0,0.985) 28%, #000000 62%, #000000 100%);
+      radial-gradient(circle at top center, rgba(120, 82, 10, 0.34) 0%, rgba(0,0,0,0.96) 42%, #000 100%);
   }
 
   .page {
@@ -373,7 +373,7 @@
       0 45px 90px rgba(0,0,0,0.85);
     overflow: hidden;
     transform-origin: center center;
-    transform: scale(min(calc((100vw - 80px) / 430), calc((100vh - 80px) / 920)));
+    transform: scale(var(--desktop-phone-scale, 1));
   }
 
   .page::before {
@@ -541,6 +541,12 @@
 }
 
 
+
+/* ===== AUTOSCALING IDENTIC INDEX ===== */
+:root {
+  --desktop-phone-scale: 1;
+}
+
 </style>
 </head>
 
@@ -668,5 +674,29 @@ function goBack() {
   loadClientsFromSupabase();
 </script>
 
+
+<script>
+function ajusteazaTelefonDesktop() {
+  if (window.innerWidth < 701) {
+    document.documentElement.style.setProperty('--desktop-phone-scale', '1');
+    return;
+  }
+
+  const latimeTelefon = 430;
+  const inaltimeTelefon = 920;
+  const margineSiguranta = 32;
+
+  const scalaLatime = (window.innerWidth - margineSiguranta) / latimeTelefon;
+  const scalaInaltime = (window.innerHeight - margineSiguranta) / inaltimeTelefon;
+  const scalaFinala = Math.min(1, scalaLatime, scalaInaltime);
+
+  document.documentElement.style.setProperty('--desktop-phone-scale', scalaFinala.toFixed(3));
+}
+
+window.addEventListener('load', ajusteazaTelefonDesktop);
+window.addEventListener('resize', ajusteazaTelefonDesktop);
+</script>
+
 </body>
 </html>
+
