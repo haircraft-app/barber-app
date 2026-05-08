@@ -307,22 +307,27 @@
     }
 
 
-    /* BLOC 10A - CADRU TELEFON PE DESKTOP */
+    /* BLOC 10A - CADRU TELEFON PE DESKTOP CU AUTOSCALING */
     @media (min-width: 701px) {
       body {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 30px;
+        width: 100vw;
+        height: 100vh;
+        min-height: 100vh;
+        padding: 0;
+        overflow: hidden;
       }
 
       .app {
         position: relative;
         width: 430px;
         max-width: 430px;
-        min-height: 860px;
+        height: 920px;
+        min-height: 920px;
         max-height: 920px;
-        overflow-y: auto;
+        overflow: hidden;
         margin: 0 auto;
         border-radius: 48px;
         padding: 92px 18px 28px;
@@ -334,6 +339,8 @@
           0 0 0 12px #000000,
           0 0 35px rgba(242,201,76,0.30),
           0 45px 90px rgba(0,0,0,0.85);
+        transform: scale(var(--desktop-phone-scale, 1));
+        transform-origin: center center;
       }
 
       .app::before {
@@ -782,6 +789,30 @@ const client = window.supabase.createClient(
         }
       }
     }
+  </script>
+
+
+  <!-- BLOC 18A - AUTOSCALING DESKTOP PENTRU CADRUL DE TELEFON -->
+  <script>
+    function ajusteazaTelefonDesktop() {
+      if (window.innerWidth < 701) {
+        document.documentElement.style.setProperty('--desktop-phone-scale', '1');
+        return;
+      }
+
+      const latimeTelefon = 430;
+      const inaltimeTelefon = 920;
+      const margineSiguranta = 32;
+
+      const scalaLatime = (window.innerWidth - margineSiguranta) / latimeTelefon;
+      const scalaInaltime = (window.innerHeight - margineSiguranta) / inaltimeTelefon;
+      const scalaFinala = Math.min(1, scalaLatime, scalaInaltime);
+
+      document.documentElement.style.setProperty('--desktop-phone-scale', scalaFinala.toFixed(3));
+    }
+
+    window.addEventListener('load', ajusteazaTelefonDesktop);
+    window.addEventListener('resize', ajusteazaTelefonDesktop);
   </script>
 
   <!-- BLOC 18 - PORNIRE DATE DIN SUPABASE -->
