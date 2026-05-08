@@ -355,12 +355,14 @@
     position: relative;
     width: 430px;
     max-width: 430px;
-    height: 860px;
-    min-height: 860px;
-    max-height: 860px;
+    height: 920px;
+    min-height: 920px;
+    max-height: 920px;
     margin: 0 auto;
     border-radius: 48px;
     padding: 92px 18px 28px;
+    display: flex;
+    flex-direction: column;
     background:
       linear-gradient(180deg, rgba(18,18,18,0.98) 0%, rgba(7,7,7,0.98) 100%);
     border: 3px solid rgba(242,201,76,0.92);
@@ -371,7 +373,7 @@
       0 45px 90px rgba(0,0,0,0.85);
     overflow: hidden;
     transform-origin: center center;
-    transform: scale(min(calc((100vw - 80px) / 430), calc((100vh - 80px) / 860)));
+    transform: scale(min(calc((100vw - 80px) / 430), calc((100vh - 80px) / 920)));
   }
 
   .page::before {
