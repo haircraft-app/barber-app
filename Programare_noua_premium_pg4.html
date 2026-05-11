@@ -630,8 +630,6 @@ MODIFICARI:
   var telefon = (client.telefon || "").replace(/\D/g, "");
   var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
 
-  var fereastraWhatsApp = window.open("about:blank", "_blank");
-
   if (data.id) {
     const rezultatUpdate = await supabaseClient
       .from('programari')
@@ -648,11 +646,7 @@ MODIFICARI:
     console.log('PG4 FARA ID PROGRAMARE:', data);
   }
 
-  if (fereastraWhatsApp) {
-    fereastraWhatsApp.location.href = url;
-  } else {
-    window.location.href = url;
-  }
+  window.location.href = url;
 }
   </script>
 </body>
