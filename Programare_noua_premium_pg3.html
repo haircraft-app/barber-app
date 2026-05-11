@@ -944,6 +944,7 @@
     var ziSelectataIndex = 0;
     var oraSelectataIndex = null;
     var confirmata = false;
+    var salvareSupabaseFinalizata = false;
 
     var zile = [];
     var zileNume = ['Du', 'Lu', 'Ma', 'Mi', 'Joi', 'Vi', 'Sa'];
@@ -1341,6 +1342,7 @@
         } else if (data && data.id) {
           programareNoua.id = data.id;
           localStorage.setItem('programare_rezultat', JSON.stringify(programareNoua));
+          salvareSupabaseFinalizata = true;
         }
       } catch(e) {
         console.log('EROARE SUPABASE PROGRAMARE:', e);
@@ -1378,6 +1380,16 @@
           '<span class="message-red">Confirmă programarea !</span>';
 
         speakText('Confirmă programarea');
+        return;
+      }
+
+      if (!salvareSupabaseFinalizata) {
+        document.getElementById('messageIcon').textContent = '!';
+        document.getElementById('messageIcon').style.borderColor = '#ff4040';
+        document.getElementById('messageIcon').style.color = '#ff4040';
+        document.getElementById('messageText').innerHTML =
+          '<span class="message-red">Se salvează programarea...</span>';
+
         return;
       }
 
