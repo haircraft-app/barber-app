@@ -630,6 +630,8 @@ MODIFICARI:
   var telefon = (client.telefon || "").replace(/\D/g, "");
   var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
 
+  var fereastraWhatsApp = window.open("about:blank", "_blank");
+
   if (data.id) {
     const { error } = await supabaseClient
       .from('programari')
@@ -641,7 +643,11 @@ MODIFICARI:
     }
   }
 
-  window.open(url, "_blank");
+  if (fereastraWhatsApp) {
+    fereastraWhatsApp.location.href = url;
+  } else {
+    window.location.href = url;
+  }
 }
   </script>
 </body>
