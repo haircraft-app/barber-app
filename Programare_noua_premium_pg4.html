@@ -614,6 +614,8 @@ MODIFICARI:
 
     var data = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
 
+    console.log('PG4 programare_rezultat:', data);
+
     if (!data) {
     alert("Nu există programare.");
     return;
