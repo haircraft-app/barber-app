@@ -614,8 +614,6 @@ MODIFICARI:
 
     var data = JSON.parse(localStorage.getItem('programare_rezultat') || 'null');
 
-    console.log('PG4 programare_rezultat:', data);
-
     if (!data) {
     alert("Nu există programare.");
     return;
@@ -635,14 +633,19 @@ MODIFICARI:
   var fereastraWhatsApp = window.open("about:blank", "_blank");
 
   if (data.id) {
-    const { error } = await supabaseClient
+    const rezultatUpdate = await supabaseClient
       .from('programari')
       .update({ confirmare_trimisa: true })
-      .eq('id', data.id);
+      .eq('id', data.id)
+      .select();
 
-    if (error) {
-      console.log('EROARE CONFIRMARE SUPABASE:', error);
+    console.log('UPDATE CONFIRMARE SUPABASE:', rezultatUpdate);
+
+    if (rezultatUpdate.error) {
+      console.log('EROARE CONFIRMARE SUPABASE:', rezultatUpdate.error);
     }
+  } else {
+    console.log('PG4 FARA ID PROGRAMARE:', data);
   }
 
   if (fereastraWhatsApp) {
