@@ -630,8 +630,6 @@ MODIFICARI:
   var telefon = (client.telefon || "").replace(/\D/g, "");
   var url = "https://wa.me/" + telefon + "?text=" + encodeURIComponent(mesaj);
 
-  window.open(url, "_blank");
-
   if (data.id) {
     const { error } = await supabaseClient
       .from('programari')
@@ -640,8 +638,11 @@ MODIFICARI:
 
     if (error) {
       console.log('EROARE CONFIRMARE SUPABASE:', error);
+      return;
     }
   }
+
+  window.open(url, "_blank");
 }
   </script>
 </body>
