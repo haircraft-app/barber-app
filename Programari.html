@@ -787,11 +787,19 @@ ${p.tipIndisponibilitate === 'concediu'
 
       const tel = p.client.telefon.replace(/[^0-9]/g, '');
       const mesaj = encodeURIComponent(
-`*---HAIR CRAFT---*
-Salut,
-Reminder programare azi *${p.interval}*
-Daca intarzii sau nu poti ajunge te rog sa ma anunti din timp!
-Multumesc`
+`*HAIR CRAFT*
+
+Salut ! 👋
+
+⏰ Reminder programare:
+
+📅 *${p.zi.titlu}*
+🕒 *Ora: ${p.interval}*
+
+📍 Locație:
+*Str. Elena Caragiani 27*
+
+Dacă nu poți ajunge, te rog să mă anunți din timp. 🙏`
       );
 
       let finalTel = tel;
