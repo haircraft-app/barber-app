@@ -674,9 +674,11 @@
         telefon = '40' + telefon.substring(1);
       }
 
-      var mesaj = `Salut, ${c.nume}!
-Te salut de la Hair Craft. Am observat că nu ai mai trecut pe la noi de ceva timp.
-Dacă vrei să te programezi, îmi poți scrie aici.`;
+      var mesaj = `Salut!
+
+Am observat că nu ai mai venit de ${c.zile_inactiv} zile.
+Dacă vrei să te programezi, mă poți suna sau îmi poți scrie aici.
+Mulțumesc!`;
 
       window.open('https://wa.me/' + telefon + '?text=' + encodeURIComponent(mesaj), '_blank');
     }
