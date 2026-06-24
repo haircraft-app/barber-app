@@ -154,6 +154,21 @@
       padding: 7px 6px;
     }
 
+    /* ===== BUTON CLIENTI FARA PROGRAMARI ===== */
+    .no-programari-btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: linear-gradient(145deg, #f6d257, #a96f10);
+      color: #111;
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+      cursor: pointer;
+    }
+
+
     /* ===== LISTA CLIENTI INACTIVI ===== */
     .client-list {
       display: flex;
@@ -420,6 +435,8 @@
         </div>
       </div>
 
+      <button id="noProgramariBtn" class="no-programari-btn" onclick="toggleClientiFaraProgramari()">CLIENȚI FĂRĂ PROGRAMĂRI</button>
+
       <div id="clientList" class="client-list"></div>
     </div>
 
@@ -456,6 +473,7 @@
     var programariIstoric = [];
     var inactiveClients = [];
     var currentClientId = null;
+    var afiseazaFaraProgramari = false;
 
     /* ===== CURATARE TELEFON ===== */
     function curataTelefon(telefon) {
@@ -602,6 +620,11 @@
       var q = document.getElementById('searchInput').value.toLowerCase().trim();
       var zileMinime = Number(document.getElementById('daysInput').value || 0);
 
+      if (afiseazaFaraProgramari === true) {
+        renderClientiFaraProgramari();
+        return;
+      }
+
       if (!zileMinime || zileMinime < 1) {
         box.innerHTML = '<div class="empty-card">Introdu numărul minim de zile.</div>';
         return;
@@ -635,6 +658,49 @@
       }).join('');
     }
 
+    /* ===== AFISARE CLIENTI FARA PROGRAMARI ===== */
+    function toggleClientiFaraProgramari() {
+      afiseazaFaraProgramari = !afiseazaFaraProgramari;
+
+      var btn = document.getElementById('noProgramariBtn');
+      if (btn) {
+        btn.textContent = afiseazaFaraProgramari ? 'ÎNAPOI LA CLIENȚI INACTIVI' : 'CLIENȚI FĂRĂ PROGRAMĂRI';
+      }
+
+      renderInactiveClients();
+    }
+
+    function renderClientiFaraProgramari() {
+      var box = document.getElementById('clientList');
+      var q = document.getElementById('searchInput').value.toLowerCase().trim();
+
+      inactiveClients = clients
+        .filter(function(c) {
+          if (Number(c.nr_programari || 0) !== 0) return false;
+
+          return String(c.nume || '').toLowerCase().indexOf(q) !== -1 ||
+                 String(c.telefon || '').toLowerCase().indexOf(q) !== -1;
+        })
+        .sort(function(a, b) {
+          return String(a.nume || '').localeCompare(String(b.nume || ''));
+        });
+
+      if (!inactiveClients.length) {
+        box.innerHTML = '<div class="empty-card">Nu există clienți fără programări.</div>';
+        return;
+      }
+
+      box.innerHTML = inactiveClients.map(function(c) {
+        return `
+          <div class="client-card" onclick="openDetails('${c.id}')">
+            <div class="client-name">${escapeHtml(c.nume)}</div>
+            <div class="client-days">fără programări</div>
+            <div class="arrow">›</div>
+          </div>
+        `;
+      }).join('');
+    }
+
     /* ===== DETALII CLIENT INACTIV ===== */
     function openDetails(id) {
       currentClientId = id;
@@ -653,7 +719,7 @@
       document.getElementById('detailEmail').textContent = c.email ? 'Email: ' + c.email : 'Email: -';
       document.getElementById('detailBirthday').textContent = c.data_nastere ? 'Data naștere: ' + c.data_nastere : 'Data naștere: -';
       document.getElementById('detailLastAppointment').textContent = ultima ? 'Ultima programare: ' + formateazaData(ultima.data) + ' · ' + interval : 'Ultima programare: -';
-      document.getElementById('detailInactiveDays').textContent = 'Nu a mai venit de: ' + Number(c.zile_inactiv || 0) + ' zile';
+      document.getElementById('detailInactiveDays').textContent = c.zile_inactiv === null || c.zile_inactiv === undefined ? 'Nu a mai venit de: fără programări' : 'Nu a mai venit de: ' + Number(c.zile_inactiv || 0) + ' zile';
       document.getElementById('detailNrProgramari').textContent = 'Programări realizate: ' + Number(c.nr_programari || 0);
       document.getElementById('detailLastService').textContent = c.ultimul_serviciu ? 'Ultimul serviciu: ' + c.ultimul_serviciu : 'Ultimul serviciu: -';
       document.getElementById('detailNotes').textContent = c.notite ? c.notite : '';
@@ -675,7 +741,7 @@
       }
 
       var mesaj = `Salut!
-Am observat că nu ai mai venit de ${c.zile_inactiv} zile.
+Am observat că nu ai mai venit de ${c.zile_inactiv || 0} zile.
 Dacă vrei să te programezi, mă poți suna sau îmi poți scrie aici.
 Mulțumesc!`;
 
