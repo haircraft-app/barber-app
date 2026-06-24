@@ -691,7 +691,9 @@ Mulțumesc!`;
 
       if (!c || !c.telefon) return;
 
-      window.location.href = 'tel:' + curataTelefon(c.telefon);
+      var telefonApel = String(c.telefon || '').replace(/[^0-9+]/g, '');
+
+      window.location.href = 'tel:' + telefonApel;
     }
 
     /* ===== NAVIGARE ===== */
